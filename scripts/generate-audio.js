@@ -72,9 +72,11 @@ function buildWav(samples, sampleRate) {
 }
 
 for (const item of allItems) {
+  // Use the 'pronounce' field if provided, otherwise the 'word'.
   // Adding punctuation helps TTS engines articulate short words better.
-  let textToSpeak = item.word;
-  if (item.id === 'stop') {
+  let textToSpeak = item.pronounce || item.word;
+  
+  if (item.id === 'stop' && !item.pronounce) {
     textToSpeak = 'Stop.';
   }
 

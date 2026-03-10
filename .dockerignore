@@ -1,0 +1,6 @@
+node_modules
+dist
+tts-models
+k8s
+*.md
+.git

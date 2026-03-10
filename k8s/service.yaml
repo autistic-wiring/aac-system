@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aac-board
+  namespace: asd
+spec:
+  selector:
+    app: aac-board
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aac-board
+  namespace: asd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aac-board
+  template:
+    metadata:
+      labels:
+        app: aac-board
+    spec:
+      containers:
+        - name: aac-board
+          image: registry.nexvision.cc/nexvisioncc/aac-board:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

@@ -6,15 +6,16 @@
 
 <p align="center">
   <a href="https://github.com/autistic-wiring/aac-system/actions"><img src="https://img.shields.io/github/actions/workflow/status/autistic-wiring/aac-system/docker-image.yml?branch=main&style=for-the-badge" alt="CI status"></a>
+  <a href="https://autistic-wiring.github.io/aac-system/"><img src="https://img.shields.io/badge/Live%20Demo-Visit%20Site-green?style=for-the-badge&logo=github" alt="Live Demo"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
-  <a href="https://www.buymeacoffee.com/autisticwiring"><img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-orange?style=for-the-badge&logo=buy-me-a-coffee" alt="Buy Me A Coffee"></a>
+  <a href="https://autistic-wiring.github.io/aac-system/donate.html"><img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-orange?style=for-the-badge&logo=buy-me-a-coffee" alt="Buy Me A Coffee"></a>
 </p>
 
 **AAC System** is an open-source Augmentative and Alternative Communication (AAC) web application designed with a focus on motor planning and immediate accessibility. 
 
 Built specifically to be responsive, fast, and feature offline Text-to-Speech (TTS) capabilities — so it always works, even without an internet connection. The system is designed to grow with the user, slowly expanding its vocabulary.
 
-[GitHub](https://github.com/autistic-wiring/aac-system) · [Support Us](#-support-us-non-profit)
+[GitHub](https://github.com/autistic-wiring/aac-system) · [Live Demo](https://autistic-wiring.github.io/aac-system/) · [Support Us](#-support-us-non-profit)
 
 ---
 

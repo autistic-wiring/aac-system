@@ -93,7 +93,10 @@
 
     .custom-input::placeholder { color: rgba(255,255,255,0.35); }
 
-    #paypal-button-container { min-height: 50px; }
+    #paypal-button-container {
+      min-height: 50px;
+      margin-top: 10px;
+    }
 
     .back-link {
       display: inline-block;
@@ -127,6 +130,12 @@
       color: #fca5a5;
       display: block;
     }
+
+    .loading {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      padding: 15px;
+    }
   </style>
 </head>
 <body>
@@ -158,10 +167,14 @@
     style="display:none"
   />
 
-  <div id="paypal-button-container" style="display: none;"></div>
   <button id="checkout-btn" class="amount-btn" style="width: 100%; background: #6C63FF; margin-bottom: 12px; height: 50px;">
     Proceed to PayPal
   </button>
+
+  <div id="paypal-button-container" style="display: none;">
+    <div class="loading">Loading PayPal...</div>
+  </div>
+
   <div id="status-msg"></div>
 
   <a href="/aac-system/" class="back-link">← Back to AAC Board</a>
@@ -169,6 +182,7 @@
 
 <script>
   let selectedAmount = 10;
+  let paypalInitialized = false;
 
   function setAmount(val, btn) {
     const customInput = document.getElementById('custom-amount');
@@ -198,10 +212,22 @@
   }
 
   document.getElementById('checkout-btn').addEventListener('click', function() {
+    // Validate custom amount if selected
+    if (selectedAmount === null) {
+      const custom = parseFloat(document.getElementById('custom-amount').value);
+      if (!custom || custom < 1) {
+        showStatus('error', 'Please enter a valid amount');
+        return;
+      }
+    }
+
     this.style.display = 'none';
     document.getElementById('paypal-button-container').style.display = 'block';
-    // The user then clicks the actual PayPal button that appears
-    showStatus('', 'Please complete your donation using the button below:');
+
+    // Initialize PayPal only when container is visible
+    if (!paypalInitialized && window.paypal) {
+      initPayPal();
+    }
   });
 </script>
 
@@ -214,6 +240,9 @@
       setTimeout(initPayPal, 100);
       return;
     }
+
+    paypalInitialized = true;
+
     paypal.Buttons({
       style: {
         layout: 'vertical',
@@ -246,8 +275,6 @@
       }
     }).render('#paypal-button-container');
   }
-
-  initPayPal();
 </script>
 
 </body>

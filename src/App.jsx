@@ -68,7 +68,7 @@ function App() {
     {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
     <div className="app-container">
       <a
-        href="/donate.html"
+        href="/aac-system/donate.html"
         className="donate-fab"
         title="Support this project"
         aria-label="Donate"

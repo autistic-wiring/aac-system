@@ -74,6 +74,11 @@
       transform: translateY(-2px);
     }
 
+    .amount-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .custom-input {
       width: 100%;
       background: rgba(255,255,255,0.08);
@@ -167,13 +172,11 @@
     style="display:none"
   />
 
-  <button id="checkout-btn" class="amount-btn" style="width: 100%; background: #6C63FF; margin-bottom: 12px; height: 50px;">
-    Proceed to PayPal
+  <button id="checkout-btn" class="amount-btn" style="width: 100%; background: #6C63FF; margin-bottom: 12px; height: 50px;" disabled>
+    Loading PayPal...
   </button>
 
-  <div id="paypal-button-container" style="display: none;">
-    <div class="loading">Loading PayPal...</div>
-  </div>
+  <div id="paypal-button-container" style="display: none;"></div>
 
   <div id="status-msg"></div>
 
@@ -182,7 +185,7 @@
 
 <script>
   let selectedAmount = 10;
-  let paypalInitialized = false;
+  let paypalReady = false;
 
   function setAmount(val, btn) {
     const customInput = document.getElementById('custom-amount');
@@ -211,7 +214,16 @@
     el.textContent = msg;
   }
 
+  function onPayPalReady() {
+    paypalReady = true;
+    const btn = document.getElementById('checkout-btn');
+    btn.disabled = false;
+    btn.textContent = 'Donate with PayPal';
+  }
+
   document.getElementById('checkout-btn').addEventListener('click', function() {
+    if (!paypalReady) return;
+
     // Validate custom amount if selected
     if (selectedAmount === null) {
       const custom = parseFloat(document.getElementById('custom-amount').value);
@@ -224,25 +236,7 @@
     this.style.display = 'none';
     document.getElementById('paypal-button-container').style.display = 'block';
 
-    // Initialize PayPal only when container is visible
-    if (!paypalInitialized && window.paypal) {
-      initPayPal();
-    }
-  });
-</script>
-
-<!-- PayPal JS SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AYWxcB5n6Hfq5a8bsK4JaIbWE2pTJ0klFA6Bgkr5hBxsK8NWyKEqrkU2DqU00OxP88zHFBY8PVtSisBB&currency=USD&intent=capture"></script>
-
-<script>
-  function initPayPal() {
-    if (!window.paypal) {
-      setTimeout(initPayPal, 100);
-      return;
-    }
-
-    paypalInitialized = true;
-
+    // Render PayPal button
     paypal.Buttons({
       style: {
         layout: 'vertical',
@@ -274,8 +268,11 @@
         showStatus('error', '⚠️ PayPal error. Please refresh and try again.');
       }
     }).render('#paypal-button-container');
-  }
+  });
 </script>
+
+<!-- PayPal JS SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AYWxcB5n6Hfq5a8bsK4JaIbWE2pTJ0klFA6Bgkr5hBxsK8NWyKEqrkU2DqU00OxP88zHFBY8PVtSisBB&currency=USD&intent=capture" onload="onPayPalReady()"></script>
 
 </body>
 </html>

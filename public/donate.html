@@ -140,12 +140,12 @@
   </p>
 
   <div class="amount-grid">
-    <button class="amount-btn" onclick="setAmount(5)">$5</button>
-    <button class="amount-btn selected" onclick="setAmount(10)">$10</button>
-    <button class="amount-btn" onclick="setAmount(25)">$25</button>
-    <button class="amount-btn" onclick="setAmount(50)">$50</button>
-    <button class="amount-btn" onclick="setAmount(100)">$100</button>
-    <button class="amount-btn" onclick="setAmount(null)">Custom</button>
+    <button class="amount-btn" onclick="setAmount(5, this)">$5</button>
+    <button class="amount-btn selected" onclick="setAmount(10, this)">$10</button>
+    <button class="amount-btn" onclick="setAmount(25, this)">$25</button>
+    <button class="amount-btn" onclick="setAmount(50, this)">$50</button>
+    <button class="amount-btn" onclick="setAmount(100, this)">$100</button>
+    <button class="amount-btn" onclick="setAmount(null, this)">Custom</button>
   </div>
 
   <input
@@ -158,19 +158,22 @@
     style="display:none"
   />
 
-  <div id="paypal-button-container"></div>
+  <div id="paypal-button-container" style="display: none;"></div>
+  <button id="checkout-btn" class="amount-btn" style="width: 100%; background: #6C63FF; margin-bottom: 12px; height: 50px;">
+    Proceed to PayPal
+  </button>
   <div id="status-msg"></div>
 
-  <a href="/" class="back-link">← Back to AAC Board</a>
+  <a href="/aac-system/" class="back-link">← Back to AAC Board</a>
 </div>
 
 <script>
   let selectedAmount = 10;
 
-  function setAmount(val) {
+  function setAmount(val, btn) {
     const customInput = document.getElementById('custom-amount');
     document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
-    event.target.classList.add('selected');
+    btn.classList.add('selected');
 
     if (val === null) {
       customInput.style.display = 'block';
@@ -193,22 +196,30 @@
     el.className = type;
     el.textContent = msg;
   }
+
+  document.getElementById('checkout-btn').addEventListener('click', function() {
+    this.style.display = 'none';
+    document.getElementById('paypal-button-container').style.display = 'block';
+    // The user then clicks the actual PayPal button that appears
+    showStatus('', 'Please complete your donation using the button below:');
+  });
 </script>
 
 <!-- PayPal JS SDK -->
-<script
-  src="https://www.paypal.com/sdk/js?client-id=AYWxcB5n6Hfq5a8bsK4JaIbWE2pTJ0klFA6Bgkr5hBxsK8NWyKEqrkU2DqU00OxP88zHFBY8PVtSisBB&currency=USD&intent=capture"
-  onload="initPayPal()"
-></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AYWxcB5n6Hfq5a8bsK4JaIbWE2pTJ0klFA6Bgkr5hBxsK8NWyKEqrkU2DqU00OxP88zHFBY8PVtSisBB&currency=USD&intent=capture"></script>
 
 <script>
   function initPayPal() {
+    if (!window.paypal) {
+      setTimeout(initPayPal, 100);
+      return;
+    }
     paypal.Buttons({
       style: {
         layout: 'vertical',
-        color:  'blue',
+        color:  'gold',
         shape:  'pill',
-        label:  'donate',
+        label:  'paypal',
         height: 50
       },
       createOrder(data, actions) {
@@ -220,26 +231,23 @@
               currency_code: 'USD',
               value: amount
             }
-          }],
-          application_context: {
-            shipping_preference: 'NO_SHIPPING'
-          }
+          }]
         });
       },
       onApprove(data, actions) {
         return actions.order.capture().then(details => {
-          showStatus('success', `✅ Thank you, ${details.payer.name.given_name}! Your $${getAmount()} donation means the world to us. 💜`);
+          document.getElementById('paypal-button-container').style.display = 'none';
+          showStatus('success', `✅ Thank you, ${details.payer.name.given_name}! Your $${getAmount()} donation was successful. 💜`);
         });
       },
       onError(err) {
         console.error(err);
-        showStatus('error', '⚠️ Something went wrong. Please try again or contact us.');
-      },
-      onCancel() {
-        showStatus('error', 'Donation cancelled. Feel free to try again anytime.');
+        showStatus('error', '⚠️ PayPal error. Please refresh and try again.');
       }
     }).render('#paypal-button-container');
   }
+
+  initPayPal();
 </script>
 
 </body>

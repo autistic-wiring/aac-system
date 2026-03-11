@@ -33,7 +33,7 @@ export const defaultVocabulary = {
 
     // Verbs
     { id: 'go', word: 'Go', icon: '🟢', color: colors.verb },
-    { id: 'stop', word: 'Stop', pronounce: 'stopp', icon: '🛑', color: colors.verb },
+    { id: 'stop', word: 'Stop', icon: '🛑', color: colors.verb },
     { id: 'want', word: 'Want', icon: '🤲', color: colors.verb },
     { id: 'need', word: 'Need', icon: '🙏', color: colors.verb },
     { id: 'like', word: 'Like', icon: '👍', color: colors.verb, hidden: true },

@@ -72,7 +72,7 @@ function _fallbackSpeak(word) {
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(word);
-  utterance.rate = 0.55;
+  utterance.rate = 0.72;
   utterance.pitch = 1.1;
   window.speechSynthesis.speak(utterance);
 }

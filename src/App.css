@@ -164,6 +164,38 @@
   line-height: 1;
 }
 
+/* ── Donate FAB ── */
+.donate-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(108, 99, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(108, 99, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  text-decoration: none;
+  z-index: 999;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.donate-fab:hover {
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 8px 28px rgba(108, 99, 255, 0.7);
+}
+
+.donate-fab:active {
+  transform: scale(0.95);
+}
+
+/* ── Word text ── */
 .word-text {
   font-weight: 700;
   font-size: clamp(0.8rem, 2dvh, 1.2rem);

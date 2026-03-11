@@ -26,6 +26,8 @@ However, if you'd like to support the ongoing development, server costs, and tim
 
 <a href="https://www.buymeacoffee.com/autisticwiring" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
+<a href="https://autistic-wiring.github.io/aac-system/donate.html" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate with PayPal" style="height: 60px !important;width: 217px !important;"></a>
+
 ## ✨ Highlights
 
 - **Motor Planning Optimized** — Vocabulary items remain in consistent locations over time. Unused or upcoming buttons are hidden invisibly to build spatial and motor memory safely.

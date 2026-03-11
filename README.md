@@ -24,7 +24,7 @@ We are a non-profit initiative dedicated to providing free, high-quality AAC sys
 
 However, if you'd like to support the ongoing development, server costs, and time required to keep the project alive, we graciously accept donations. Every bit helps us build a better tool for those who need it most!
 
-<a href="https://www.buymeacoffee.com/autisticwiring" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+<a href="https://autistic-wiring.github.io/aac-system/donate.html" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 <a href="https://autistic-wiring.github.io/aac-system/donate.html" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate with PayPal" style="height: 60px !important;width: 217px !important;"></a>
 

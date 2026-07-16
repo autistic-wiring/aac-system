@@ -15,7 +15,10 @@ body {
   display: flex;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  touch-action: manipulation;
+  touch-action: none;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
   overflow: hidden;
   /* extend into safe areas on notched/rounded devices */
   padding-top: env(safe-area-inset-top);

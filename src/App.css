@@ -97,11 +97,12 @@
   background: linear-gradient(145deg, var(--card-color, #ffffff), color-mix(in srgb, var(--card-color, #ffffff) 90%, black));
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 8px;
+  padding: 6px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   width: 100%;
   height: 100%;
   cursor: pointer;
@@ -156,8 +157,10 @@
 }
 
 .word-icon {
-  font-size: clamp(2rem, 5dvh, 3.5rem);
-  margin-bottom: 6px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  font-size: clamp(2rem, 10vmin, 5rem);
   filter: drop-shadow(0 3px 4px rgba(0,0,0,0.15));
   z-index: 1;
   line-height: 1;
@@ -167,9 +170,8 @@
 }
 
 .word-card-image {
-  height: clamp(2.2rem, 5.5dvh, 3.8rem);
-  width: auto;
-  max-width: 90%;
+  height: 100%;
+  width: 100%;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   display: block;
@@ -208,11 +210,14 @@
 
 /* ── Word text ── */
 .word-text {
-  font-weight: 700;
-  font-size: clamp(0.8rem, 2dvh, 1.2rem);
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: clamp(0.9rem, 3.5vmin, 1.6rem);
   color: #2b2b2b;
   text-transform: capitalize;
   letter-spacing: 0.5px;
   z-index: 1;
   text-align: center;
+  line-height: 1.1;
+  margin-bottom: 2px;
 }

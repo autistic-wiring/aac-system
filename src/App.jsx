@@ -100,14 +100,6 @@ function App() {
     <>
     {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
     <div className="app-container">
-      <a
-        href="/donate.html"
-        className="donate-fab"
-        title="Support this project"
-        aria-label="Donate"
-      >
-        💜
-      </a>
       <main>
         {currentCategory !== 'home' && (
           <div className="navigation-bar">

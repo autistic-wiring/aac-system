@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Board from './components/Board';
 import SplashScreen from './components/SplashScreen';
 import { defaultVocabulary } from './data/defaultVocabulary';
@@ -8,9 +8,9 @@ import './App.css';
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [currentCategory, setCurrentCategory] = useState('home');
+  const fullscreenLock = useRef(false);
 
   useEffect(() => {
-    // Preload all words (core + folders + all subcategories)
     const allWordsToPreload = [
       ...defaultVocabulary.core,
       ...defaultVocabulary.folders,
@@ -27,12 +27,9 @@ function App() {
     const acquire = async () => {
       try {
         wakeLock = await navigator.wakeLock.request('screen');
-      } catch {
-        // silently ignore — device may deny (e.g. low battery)
-      }
+      } catch { /* device may deny (e.g. low battery) */ }
     };
 
-    // re-acquire when tab becomes visible again (wake lock is released on hide)
     const onVisibilityChange = () => {
       if (document.visibilityState === 'visible') acquire();
     };
@@ -43,6 +40,42 @@ function App() {
     return () => {
       document.removeEventListener('visibilitychange', onVisibilityChange);
       wakeLock?.release();
+    };
+  }, []);
+
+  useEffect(() => {
+    const enterFullscreen = async () => {
+      if (document.fullscreenElement) return;
+      try {
+        await document.documentElement.requestFullscreen();
+        if (screen.orientation?.lock) {
+          try { await screen.orientation.lock('landscape'); } catch { /* not supported */ }
+        }
+      } catch { /* needs user gesture on some browsers */ }
+    };
+
+    const startFullscreen = () => {
+      if (fullscreenLock.current) return;
+      fullscreenLock.current = true;
+      enterFullscreen();
+    };
+
+    const onFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        fullscreenLock.current = false;
+        document.addEventListener('click', startFullscreen, { once: true });
+        document.addEventListener('touchstart', startFullscreen, { once: true });
+      }
+    };
+
+    enterFullscreen();
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('click', startFullscreen, { once: true });
+
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('click', startFullscreen);
+      document.removeEventListener('touchstart', startFullscreen);
     };
   }, []);
 
@@ -68,7 +101,7 @@ function App() {
     {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
     <div className="app-container">
       <a
-        href="/aac-system/donate.html"
+        href="/donate.html"
         className="donate-fab"
         title="Support this project"
         aria-label="Donate"

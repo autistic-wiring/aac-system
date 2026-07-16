@@ -30,3 +30,19 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+:fullscreen,
+::backdrop {
+  background-color: #6C63FF;
+}
+
+:fullscreen body {
+  height: 100dvh;
+  width: 100dvw;
+}
+
+:-webkit-full-screen,
+:-webkit-full-screen body {
+  height: 100dvh;
+  width: 100dvw;
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">55 nodes &middot; 26 edges &middot; 32 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "project-overview", "label": "Project Overview Document", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Project Overview Document", "community": 1, "community_name": "Memory Documentation Hub", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 4}, {"id": "speech-pipeline", "label": "Speech Pipeline Document", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Speech Pipeline Document", "community": 1, "community_name": "Memory Documentation Hub", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 2}, {"id": "vocabulary-system", "label": "Vocabulary System Document", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Vocabulary System Document", "community": 1, "community_name": "Memory Documentation Hub", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 3}, {"id": "component-tree", "label": "Component Tree Document", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Component Tree Document", "community": 1, "community_name": "Memory Documentation Hub", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 3}, {"id": "deployment", "label": "Deployment & Infrastructure Document", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Deployment &amp; Infrastructure Document", "community": 1, "community_name": "Memory Documentation Hub", "source_file": "memory/deployment.md", "file_type": "document", "degree": 2}, {"id": "project-overview_motor-planning", "label": "Motor Planning Design Principle", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Motor Planning Design Principle", "community": 7, "community_name": "Motor Planning Design", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_progressive-disclosure", "label": "Progressive Disclosure Pattern", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Progressive Disclosure Pattern", "community": 11, "community_name": "Progressive Disclosure", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 0}, {"id": "project-overview_3-layer-fallback", "label": "3-Layer Speech Fallback Architecture", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "3-Layer Speech Fallback Architecture", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_folder-navigation", "label": "Folder-Based Navigation by React State", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Folder-Based Navigation by React State", "community": 3, "community_name": "Folder Navigation Pattern", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_wake-lock", "label": "Screen Wake Lock API", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Screen Wake Lock API", "community": 4, "community_name": "Wake Lock Integration", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_haptic-feedback", "label": "Haptic Feedback via navigator.vibrate()", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Haptic Feedback via navigator.vibrate()", "community": 5, "community_name": "Haptic Feedback System", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_sherpa-piper", "label": "Sherpa-ONNX + Piper VITS TTS Engine", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Sherpa-ONNX + Piper VITS TTS Engine", "community": 6, "community_name": "TTS Engine & Model", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_pwa-workbox", "label": "PWA with Workbox Service Worker", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "PWA with Workbox Service Worker", "community": 9, "community_name": "PWA Service Worker", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_docker-k8s", "label": "Docker + nginx + Kubernetes Infrastructure", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Docker + nginx + Kubernetes Infrastructure", "community": 2, "community_name": "Kubernetes Deployment Stack", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 1}, {"id": "project-overview_pure-js", "label": "Pure JS/JSX (No TypeScript)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Pure JS/JSX (No TypeScript)", "community": 12, "community_name": "Language Choice (JS)", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 0}, {"id": "project-overview_no-tests", "label": "No Automated Test Framework", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "No Automated Test Framework", "community": 13, "community_name": "Testing Status", "source_file": "memory/project-overview.md", "file_type": "document", "degree": 0}, {"id": "speech-pipeline_speech-pipeline", "label": "Speech Synthesis Pipeline", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Speech Synthesis Pipeline", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 4}, {"id": "speech-pipeline_tts-server", "label": "tts-server.js TTS HTTP Server (Port 5050)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "tts-server.js TTS HTTP Server (Port 5050)", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 1}, {"id": "speech-pipeline_layer1-wav", "label": "Layer 1: Pre-generated WAV AudioBuffer Cache", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 1: Pre-generated WAV AudioBuffer Cache", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 3}, {"id": "speech-pipeline_layer2-tts", "label": "Layer 2: TTS HTTP Server Fallback", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 2: TTS HTTP Server Fallback", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 2}, {"id": "speech-pipeline_layer3-browser", "label": "Layer 3: Browser SpeechSynthesis API Fallback", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 3: Browser SpeechSynthesis API Fallback", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 1}, {"id": "speech-pipeline_generate-audio", "label": "generate-audio.js Pre-generation Script", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "generate-audio.js Pre-generation Script", "community": 14, "community_name": "Audio Generation Scripts", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 0}, {"id": "speech-pipeline_pad-audio", "label": "pad-audio.mjs 150ms Silence Padding", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "pad-audio.mjs 150ms Silence Padding", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 1}, {"id": "speech-pipeline_fix-onset", "label": "fix-onset.mjs Quiet Onset Boost", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "fix-onset.mjs Quiet Onset Boost", "community": 0, "community_name": "Speech Pipeline Implementation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 1}, {"id": "speech-pipeline_piper-model", "label": "Piper VITS en_US-lessac-medium ONNX Model", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Piper VITS en_US-lessac-medium ONNX Model", "community": 6, "community_name": "TTS Engine & Model", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 1}, {"id": "speech-pipeline_custom-pronounce", "label": "Custom Pronunciation Override (pronounce field)", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Custom Pronunciation Override (pronounce field)", "community": 8, "community_name": "Vocabulary Pronunciation", "source_file": "memory/speech-pipeline.md", "file_type": "document", "degree": 1}, {"id": "vocabulary-system_vocabulary-system", "label": "Vocabulary System", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Vocabulary System", "community": 15, "community_name": "Vocabulary System Core", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 0}, {"id": "vocabulary-system_fitzgerald-key", "label": "Modified Fitzgerald Key Color Coding", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Modified Fitzgerald Key Color Coding", "community": 16, "community_name": "Fitzgerald Key Colors", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 0}, {"id": "vocabulary-system_core", "label": "42 Core Vocabulary Items", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "42 Core Vocabulary Items", "community": 17, "community_name": "Core Vocabulary Items", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 0}, {"id": "vocabulary-system_folders", "label": "6 Vocabulary Folders", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "6 Vocabulary Folders", "community": 18, "community_name": "Vocabulary Folders", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 0}, {"id": "vocabulary-system_categories", "label": "6 Category Subarrays", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "6 Category Subarrays", "community": 19, "community_name": "Vocabulary Categories", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 0}, {"id": "vocabulary-system_hidden-field", "label": "Hidden Grid Reservation for Motor Planning", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Hidden Grid Reservation for Motor Planning", "community": 7, "community_name": "Motor Planning Design", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 1}, {"id": "vocabulary-system_word-schema", "label": "Word Item Schema (text, pronounce, emoji, color, hidden)", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Word Item Schema (text, pronounce, emoji, color, hidden)", "community": 8, "community_name": "Vocabulary Pronunciation", "source_file": "memory/vocabulary-system.md", "file_type": "document", "degree": 1}, {"id": "component-tree_component-tree", "label": "React Component Tree", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "React Component Tree", "community": 20, "community_name": "Component Architecture", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_app", "label": "App.jsx Root Component", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "App.jsx Root Component", "community": 21, "community_name": "App Root Component", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_board", "label": "Board.jsx Grid Component", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Board.jsx Grid Component", "community": 22, "community_name": "Board Grid Component", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_wordcard", "label": "WordCard.jsx Button Component", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "WordCard.jsx Button Component", "community": 23, "community_name": "WordCard Button", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_splashscreen", "label": "SplashScreen.jsx PWA Update Component", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "SplashScreen.jsx PWA Update Component", "community": 24, "community_name": "Splash Screen", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_main", "label": "main.jsx Entry Point", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "main.jsx Entry Point", "community": 25, "community_name": "Entry Point", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_currentcategory", "label": "currentCategory State (Folder Navigation)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "currentCategory State (Folder Navigation)", "community": 3, "community_name": "Folder Navigation Pattern", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 1}, {"id": "component-tree_wakelock-api", "label": "navigator.wakeLock API Integration", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "navigator.wakeLock API Integration", "community": 4, "community_name": "Wake Lock Integration", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 1}, {"id": "component-tree_haptic-api", "label": "navigator.vibrate Haptic API Integration", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "navigator.vibrate Haptic API Integration", "community": 5, "community_name": "Haptic Feedback System", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 1}, {"id": "component-tree_yesno-bar", "label": "Yes/No Fixed Bottom Bar", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Yes/No Fixed Bottom Bar", "community": 26, "community_name": "Yes/No Bar", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_landscape-first", "label": "Landscape-First CSS Design", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Landscape-First CSS Design", "community": 27, "community_name": "Landscape Layout", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "component-tree_handwritten-css", "label": "Hand-Written CSS (No Framework)", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Hand-Written CSS (No Framework)", "community": 28, "community_name": "CSS Strategy", "source_file": "memory/component-tree.md", "file_type": "document", "degree": 0}, {"id": "deployment_deployment", "label": "Deployment & CI/CD Infrastructure", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Deployment &amp; CI/CD Infrastructure", "community": 29, "community_name": "Deployment Docs", "source_file": "memory/deployment.md", "file_type": "document", "degree": 0}, {"id": "deployment_vite-build", "label": "Vite 7 Production Build", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Vite 7 Production Build", "community": 30, "community_name": "Vite Build System", "source_file": "memory/deployment.md", "file_type": "document", "degree": 0}, {"id": "deployment_vite-pwa", "label": "vite-plugin-pwa Configuration", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "vite-plugin-pwa Configuration", "community": 9, "community_name": "PWA Service Worker", "source_file": "memory/deployment.md", "file_type": "document", "degree": 1}, {"id": "deployment_base-path", "label": "Base Path /aac-system/", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Base Path /aac-system/", "community": 10, "community_name": "CI/CD Pipeline", "source_file": "memory/deployment.md", "file_type": "document", "degree": 1}, {"id": "deployment_deploy-yml", "label": ".github/workflows/deploy.yml", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": ".github/workflows/deploy.yml", "community": 10, "community_name": "CI/CD Pipeline", "source_file": "memory/deployment.md", "file_type": "document", "degree": 1}, {"id": "deployment_dockerfile", "label": "Multi-Stage Dockerfile (node:22 \u2192 nginx)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Multi-Stage Dockerfile (node:22 \u2192 nginx)", "community": 2, "community_name": "Kubernetes Deployment Stack", "source_file": "memory/deployment.md", "file_type": "document", "degree": 2}, {"id": "deployment_nginx-config", "label": "nginx SPA Fallback + Asset Cache", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "nginx SPA Fallback + Asset Cache", "community": 2, "community_name": "Kubernetes Deployment Stack", "source_file": "memory/deployment.md", "file_type": "document", "degree": 1}, {"id": "deployment_k8s-infra", "label": "Kubernetes Infrastructure (asd ns, 1 replica)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Kubernetes Infrastructure (asd ns, 1 replica)", "community": 2, "community_name": "Kubernetes Deployment Stack", "source_file": "memory/deployment.md", "file_type": "document", "degree": 3}, {"id": "deployment_cert-manager", "label": "cert-manager + Let's Encrypt TLS", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "cert-manager + Let&#x27;s Encrypt TLS", "community": 2, "community_name": "Kubernetes Deployment Stack", "source_file": "memory/deployment.md", "file_type": "document", "degree": 1}, {"id": "deployment_donate", "label": "donate.html PayPal Donation Page", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "donate.html PayPal Donation Page", "community": 31, "community_name": "Donation System", "source_file": "memory/deployment.md", "file_type": "document", "degree": 0}];
+const RAW_EDGES = [{"from": "project-overview", "to": "speech-pipeline", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "project-overview", "to": "vocabulary-system", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "project-overview", "to": "component-tree", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "project-overview", "to": "deployment", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "speech-pipeline", "to": "vocabulary-system", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "vocabulary-system", "to": "component-tree", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "component-tree", "to": "deployment", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "project-overview_motor-planning", "to": "vocabulary-system_hidden-field", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_3-layer-fallback", "to": "speech-pipeline_speech-pipeline", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_folder-navigation", "to": "component-tree_currentcategory", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_wake-lock", "to": "component-tree_wakelock-api", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_haptic-feedback", "to": "component-tree_haptic-api", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_sherpa-piper", "to": "speech-pipeline_piper-model", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_pwa-workbox", "to": "deployment_vite-pwa", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "project-overview_docker-k8s", "to": "deployment_k8s-infra", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "speech-pipeline_speech-pipeline", "to": "speech-pipeline_layer3-browser", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "speech-pipeline_speech-pipeline", "to": "speech-pipeline_layer1-wav", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "speech-pipeline_speech-pipeline", "to": "speech-pipeline_layer2-tts", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "speech-pipeline_tts-server", "to": "speech-pipeline_layer2-tts", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "speech-pipeline_layer1-wav", "to": "speech-pipeline_pad-audio", "label": "references", "title": "references [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "speech-pipeline_layer1-wav", "to": "speech-pipeline_fix-onset", "label": "references", "title": "references [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "speech-pipeline_custom-pronounce", "to": "vocabulary-system_word-schema", "label": "shares_data_with", "title": "shares_data_with [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "deployment_base-path", "to": "deployment_deploy-yml", "label": "references", "title": "references [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "deployment_dockerfile", "to": "deployment_k8s-infra", "label": "references", "title": "references [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "deployment_dockerfile", "to": "deployment_nginx-config", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "deployment_k8s-infra", "to": "deployment_cert-manager", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Speech Pipeline Implementation", "count": 8}, {"cid": 1, "color": "#F28E2B", "label": "Memory Documentation Hub", "count": 5}, {"cid": 2, "color": "#E15759", "label": "Kubernetes Deployment Stack", "count": 5}, {"cid": 3, "color": "#76B7B2", "label": "Folder Navigation Pattern", "count": 2}, {"cid": 4, "color": "#59A14F", "label": "Wake Lock Integration", "count": 2}, {"cid": 5, "color": "#EDC948", "label": "Haptic Feedback System", "count": 2}, {"cid": 6, "color": "#B07AA1", "label": "TTS Engine &amp; Model", "count": 2}, {"cid": 7, "color": "#FF9DA7", "label": "Motor Planning Design", "count": 2}, {"cid": 8, "color": "#9C755F", "label": "Vocabulary Pronunciation", "count": 2}, {"cid": 9, "color": "#BAB0AC", "label": "PWA Service Worker", "count": 2}, {"cid": 10, "color": "#4E79A7", "label": "CI/CD Pipeline", "count": 2}, {"cid": 11, "color": "#F28E2B", "label": "Progressive Disclosure", "count": 1}, {"cid": 12, "color": "#E15759", "label": "Language Choice (JS)", "count": 1}, {"cid": 13, "color": "#76B7B2", "label": "Testing Status", "count": 1}, {"cid": 14, "color": "#59A14F", "label": "Audio Generation Scripts", "count": 1}, {"cid": 15, "color": "#EDC948", "label": "Vocabulary System Core", "count": 1}, {"cid": 16, "color": "#B07AA1", "label": "Fitzgerald Key Colors", "count": 1}, {"cid": 17, "color": "#FF9DA7", "label": "Core Vocabulary Items", "count": 1}, {"cid": 18, "color": "#9C755F", "label": "Vocabulary Folders", "count": 1}, {"cid": 19, "color": "#BAB0AC", "label": "Vocabulary Categories", "count": 1}, {"cid": 20, "color": "#4E79A7", "label": "Component Architecture", "count": 1}, {"cid": 21, "color": "#F28E2B", "label": "App Root Component", "count": 1}, {"cid": 22, "color": "#E15759", "label": "Board Grid Component", "count": 1}, {"cid": 23, "color": "#76B7B2", "label": "WordCard Button", "count": 1}, {"cid": 24, "color": "#59A14F", "label": "Splash Screen", "count": 1}, {"cid": 25, "color": "#EDC948", "label": "Entry Point", "count": 1}, {"cid": 26, "color": "#B07AA1", "label": "Yes/No Bar", "count": 1}, {"cid": 27, "color": "#FF9DA7", "label": "Landscape Layout", "count": 1}, {"cid": 28, "color": "#9C755F", "label": "CSS Strategy", "count": 1}, {"cid": 29, "color": "#BAB0AC", "label": "Deployment Docs", "count": 1}, {"cid": 30, "color": "#4E79A7", "label": "Vite Build System", "count": 1}, {"cid": 31, "color": "#F28E2B", "label": "Donation System", "count": 1}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.onclick = () => {
+    if (hiddenCommunities.has(c.cid)) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: hiddenCommunities.has(c.cid) }));
+    nodesDS.update(updates);
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [{"id": "three_layer_speech_fallback", "label": "Three-Layer Speech Fallback Chain", "nodes": ["speech-pipeline_layer1-wav", "speech-pipeline_layer2-tts", "speech-pipeline_layer3-browser"], "relation": "form", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "memory/speech-pipeline.md"}, {"id": "kubernetes_deployment_stack", "label": "Kubernetes Container Deployment Stack", "nodes": ["deployment_k8s-infra", "deployment_dockerfile", "deployment_nginx-config", "deployment_cert-manager"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "memory/deployment.md"}];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>

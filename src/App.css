@@ -161,6 +161,18 @@
   filter: drop-shadow(0 3px 4px rgba(0,0,0,0.15));
   z-index: 1;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.word-card-image {
+  height: clamp(2.2rem, 5.5dvh, 3.8rem);
+  width: auto;
+  max-width: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  display: block;
 }
 
 /* ── Donate FAB ── */

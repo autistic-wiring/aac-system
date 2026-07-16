@@ -21,6 +21,7 @@ const WordCard = ({ item, onItemClick }) => {
 
   const isFolder = item.type === 'folder';
   const isHidden = item.hidden;
+  const imageUrl = item.image ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${item.image.replace(/^\//, '')}` : null;
 
   return (
     <button 
@@ -35,7 +36,11 @@ const WordCard = ({ item, onItemClick }) => {
         <>
           <span className="word-icon" aria-hidden="true">
             {isFolder && <span className="folder-indicator">📁</span>}
-            {item.icon}
+            {imageUrl ? (
+              <img src={imageUrl} alt="" className="word-card-image" />
+            ) : (
+              item.icon
+            )}
           </span>
           <span className="word-text">{item.word}</span>
         </>

@@ -19,73 +19,35 @@ const colors = {
 };
 
 export const defaultVocabulary = {
+  // Core communication board — 20 cards in a 5×4 grid (matches LessonPix board).
+  // Cards are listed row-by-row so grid order is deterministic.
+  // `audioId` lets duplicate cards reuse a shared audio file instead of regenerating.
   core: [
-    // Pronouns
-    { id: 'i', word: 'I', icon: '🙋', color: colors.pronoun, hidden: true },
-    { id: 'me', word: 'Me', icon: '👈', color: colors.pronoun, hidden: true },
-    { id: 'my', word: 'My', icon: '🎁', color: colors.pronoun, hidden: true }, // Abstract
-    { id: 'you', word: 'You', icon: '👉', color: colors.pronoun, hidden: true },
-    { id: 'it', word: 'It', icon: '📦', color: colors.pronoun, hidden: true },
-    { id: 'he', word: 'He', icon: '👨', color: colors.pronoun, hidden: true },
-    { id: 'she', word: 'She', icon: '👩', color: colors.pronoun, hidden: true },
-    { id: 'we', word: 'We', icon: '🫂', color: colors.pronoun, hidden: true },
-    { id: 'they', word: 'They', icon: '🧑‍🤝‍🧑', color: colors.pronoun, hidden: true },
-
-    // Verbs
-    { id: 'go', word: 'Go', icon: '🟢', color: colors.verb },
-    { id: 'stop', word: 'Stop', icon: '🛑', color: colors.verb },
-    { id: 'want', word: 'Want', icon: '🤲', color: colors.verb },
-    { id: 'need', word: 'Need', icon: '🙏', color: colors.verb },
-    { id: 'like', word: 'Like', icon: '👍', color: colors.verb, hidden: true },
-    { id: 'make', word: 'Make', icon: '🔨', color: colors.verb, hidden: true },
-    { id: 'get', word: 'Get', icon: '👐', color: colors.verb, hidden: true },
-    { id: 'put', word: 'Put', icon: '⬇️', color: colors.verb, hidden: true },
-    { id: 'open', word: 'Open', icon: '📖', color: colors.verb, hidden: true },
-    { id: 'close', word: 'Close', icon: '📕', color: colors.verb, hidden: true },
-    { id: 'eat', word: 'Eat', icon: '🍎', color: colors.verb },
-    { id: 'drink', word: 'Drink', icon: '🧃', color: colors.verb },
-    { id: 'see', word: 'See', icon: '👀', color: colors.verb, hidden: true },
-    { id: 'look', word: 'Look', icon: '🔍', color: colors.verb, hidden: true },
-    { id: 'come', word: 'Come', icon: '👋', color: colors.verb, hidden: true },
-    { id: 'help', word: 'Help', icon: '🤝', color: colors.verb, hidden: true },
-    { id: 'say', word: 'Say', icon: '🗣️', color: colors.verb, hidden: true },
-    { id: 'do', word: 'Do', icon: '✨', color: colors.verb, hidden: true },
-    { id: 'have', word: 'Have', icon: '🤲', color: colors.verb, hidden: true },
-
-    // Adjectives
-    { id: 'more', word: 'More', icon: '➕', color: colors.adjective },
-    { id: 'big', word: 'Big', icon: '🐘', color: colors.adjective, hidden: true },
-    { id: 'little', word: 'Little', icon: '🐁', color: colors.adjective, hidden: true },
-    { id: 'good', word: 'Good', icon: '😊', color: colors.adjective, hidden: true },
-    { id: 'bad', word: 'Bad', icon: '☹️', color: colors.adjective, hidden: true },
-    { id: 'new', word: 'New', icon: '✨', color: colors.adjective, hidden: true },
-    { id: 'old', word: 'Old', icon: '👴', color: colors.adjective, hidden: true },
-    { id: 'happy', word: 'Happy', icon: '😄', color: colors.adjective, hidden: true },
-    { id: 'sad', word: 'Sad', icon: '😢', color: colors.adjective, hidden: true },
-    { id: 'different', word: 'Different', icon: '🔀', color: colors.adjective, hidden: true },
-    { id: 'same', word: 'Same', icon: '🔄', color: colors.adjective, hidden: true },
-
-    // Prepositions
-    { id: 'in', word: 'In', icon: '📥', color: colors.preposition, hidden: true },
-    { id: 'out', word: 'Out', icon: '📤', color: colors.preposition, hidden: true },
-    { id: 'on', word: 'On', icon: '🔛', color: colors.preposition, hidden: true },
-    { id: 'off', word: 'Off', icon: '📴', color: colors.preposition, hidden: true },
-    { id: 'up', word: 'Up', icon: '⬆️', color: colors.preposition, hidden: true },
-    { id: 'down', word: 'Down', icon: '⬇️', color: colors.preposition, hidden: true },
-    { id: 'to', word: 'To', icon: '➡️', color: colors.preposition, hidden: true },
-
-    // Questions
-    { id: 'what', word: 'What', icon: '❓', color: colors.question, hidden: true },
-    { id: 'where', word: 'Where', icon: '🗺️', color: colors.question, hidden: true },
-    { id: 'who', word: 'Who', icon: '👤', color: colors.question, hidden: true },
-    { id: 'why', word: 'Why', icon: '🤔', color: colors.question, hidden: true },
-    { id: 'how', word: 'How', icon: '🤷', color: colors.question, hidden: true },
-
-    // Social
-    { id: 'yes', word: 'Yes', icon: '✅', color: colors.social },
-    { id: 'no', word: 'No', icon: '❌', color: colors.social },
-    { id: 'please', word: 'Please', icon: '🥺', color: colors.social, hidden: true },
-    { id: 'thank_you', word: 'Thank you', icon: '🙇', color: colors.social, hidden: true },
+    // Row 1
+    { id: 'help',      word: 'Help',      icon: '🤝', color: colors.verb },
+    { id: 'me',        word: 'Me',        icon: '👈', color: colors.pronoun },
+    { id: 'i',         word: 'I',         icon: '🙋', color: colors.pronoun },
+    { id: 'want',      word: 'Want',      icon: '🤲', color: colors.verb },
+    // Row 2
+    { id: 'give',      word: 'Give',      icon: '👐', color: colors.verb },
+    { id: 'me2',       word: 'Me',        icon: '👈', color: colors.pronoun, audioId: 'me' },
+    { id: 'yes',       word: 'Yes',       icon: '✅', color: colors.social },
+    { id: 'no',        word: 'No',        icon: '❌', color: colors.social },
+    // Row 3
+    { id: 'hi',        word: 'Hi',        icon: '👋', color: colors.social },
+    { id: 'bye',       word: 'Bye',       icon: '👋', color: colors.social },
+    { id: 'my_turn',   word: 'My turn',   icon: '🙋', color: colors.pronoun },
+    { id: 'your_turn', word: 'Your turn', icon: '👉', color: colors.pronoun },
+    // Row 4
+    { id: 'more',      word: 'More',      icon: '➕', color: colors.adjective },
+    { id: 'all_done',  word: 'All done',  icon: '🏁', color: colors.social, audioId: 'all-done' },
+    { id: 'washroom',  word: 'Washroom',  icon: '🚻', color: colors.noun },
+    { id: 'wait',      word: 'Wait',      icon: '✋', color: colors.verb },
+    // Row 5
+    { id: 'i_eat',     word: 'I eat',     icon: '🍽️', color: colors.verb, pronounce: 'I eat' },
+    { id: 'i_drink',   word: 'I drink',   icon: '🥤', color: colors.verb, pronounce: 'I drink' },
+    { id: 'hi2',       word: 'Hi',        icon: '👋', color: colors.social, audioId: 'hi' },
+    { id: 'bye2',      word: 'Bye',       icon: '👋', color: colors.social, audioId: 'bye' },
   ],
   folders: [
     { id: 'food', word: 'Foods', icon: '🍔', type: 'folder', color: colors.folder },

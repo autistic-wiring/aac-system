@@ -6,7 +6,7 @@ const WordCard = ({ item, onItemClick }) => {
     if (item.hidden) return;
     
     if (item.type !== 'folder') {
-      speakWord(item.id, item.word, item.pronounce).catch(() => {});
+      speakWord(item.audioId || item.id, item.word, item.pronounce).catch(() => {});
     }
     
     if (onItemClick) {

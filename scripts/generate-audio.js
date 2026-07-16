@@ -72,10 +72,16 @@ function buildWav(samples, sampleRate) {
 }
 
 for (const item of allItems) {
+  // Cards with `audioId` reuse another card's audio file — skip regenerating.
+  if (item.audioId) {
+    console.log(`  · ${item.id}.wav  (reuses ${item.audioId}.wav)`);
+    continue;
+  }
+
   // Use the 'pronounce' field if provided, otherwise the 'word'.
   // Adding punctuation helps TTS engines articulate short words better.
   let textToSpeak = item.pronounce || item.word;
-  
+
   if (item.id === 'stop' && !item.pronounce) {
     textToSpeak = 'Stop.';
   }

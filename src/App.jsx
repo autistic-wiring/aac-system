@@ -91,7 +91,7 @@ function App() {
 
   let currentItems = [];
   if (currentCategory === 'home') {
-    currentItems = [...defaultVocabulary.core, ...defaultVocabulary.folders];
+    currentItems = defaultVocabulary.core;
   } else {
     currentItems = defaultVocabulary.categories[currentCategory] || [];
   }

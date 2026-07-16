@@ -20,10 +20,11 @@ async function fetchAndDecode(url) {
 // Preload all vocabulary audio from static files into memory.
 // id = vocabulary item id (e.g. "want", "all-done")
 export async function preloadWords(items) {
-  await Promise.all(items.map(async ({ id, word }) => {
+  await Promise.all(items.map(async ({ id, audioId }) => {
+    const key = audioId || id;
     try {
-      const buf = await fetchAndDecode(`/audio/${id}.wav`);
-      audioCache.set(id, buf);
+      const buf = await fetchAndDecode(`/audio/${key}.wav`);
+      audioCache.set(key, buf);
     } catch {
       // static file missing, will fall back to TTS server or speech API on click
     }

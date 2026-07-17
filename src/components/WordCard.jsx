@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { speakWord } from '../utils/speechAdapter';
 
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -12,13 +12,6 @@ const WordCard = ({ item, onItemClick }) => {
   const imageUrl = resolveAsset(item.image);
   const animationUrl = resolveAsset(item.animation);
   const showAnimation = isPressed && animationUrl;
-
-  // Preload the animation so the first press is instant.
-  useEffect(() => {
-    if (!animationUrl) return;
-    const img = new Image();
-    img.src = animationUrl;
-  }, [animationUrl]);
 
   const triggerAction = () => {
     if (item.hidden) return;
@@ -40,12 +33,19 @@ const WordCard = ({ item, onItemClick }) => {
   const handlePointerDown = (e) => {
     if (e.button !== 0) return; // only left click / primary touch
     setIsPressed(true);
-    setPressCount((n) => n + 1); // remount the animated img -> replay from frame 0
+    setPressCount((n) => n + 1); // remount video -> replay from frame 0
     pointerDownTime.current = Date.now();
     triggerAction();
   };
 
   const handlePointerUp = () => {
+    setIsPressed(false);
+  };
+
+  // Stop animation when pointer leaves (touch drags off, mouse moves away).
+  // Only fires for mouse; touch with `pointerleave` won't fire during a
+  // stationary press per the Pointer Events spec.
+  const handlePointerLeave = () => {
     setIsPressed(false);
   };
 
@@ -67,7 +67,7 @@ const WordCard = ({ item, onItemClick }) => {
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      onPointerLeave={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
       onClick={handleClick}
       aria-label={item.word}
       disabled={isHidden}
@@ -77,16 +77,21 @@ const WordCard = ({ item, onItemClick }) => {
         <>
           <span className="word-icon" aria-hidden="true">
             {isFolder && <span className="folder-indicator">📁</span>}
-            {imageUrl ? (
-              // key by pressCount so each press replays the animated WebP from frame 0;
-              // the static PNG is the animation's first frame, so the swap is seamless.
-              <img
-                key={showAnimation ? `anim-${pressCount}` : 'static'}
-                src={showAnimation ? animationUrl : imageUrl}
-                alt=""
-                className="word-card-image"
-                draggable={false}
+            {showAnimation ? (
+              // key changes each press -> React remounts the <video> ->
+              // autoPlay starts from frame 0. muted + playsInline required
+              // for autoPlay on mobile browsers.
+              <video
+                key={`vid-${pressCount}`}
+                src={animationUrl}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="word-card-video"
               />
+            ) : imageUrl ? (
+              <img src={imageUrl} alt="" className="word-card-image" draggable={false} />
             ) : (
               item.icon
             )}

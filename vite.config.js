@@ -49,7 +49,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mp4}'],
         runtimeCaching: [
           {
             urlPattern: /^http:\/\/127\.0\.0\.1:5050\//,

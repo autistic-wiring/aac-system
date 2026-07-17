@@ -179,6 +179,13 @@
   display: block;
 }
 
+.word-card-video {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 /* ── Word text ── */
 .word-text {
   flex-shrink: 0;

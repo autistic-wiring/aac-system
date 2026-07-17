@@ -80,7 +80,8 @@
   box-shadow: 0 6px 12px rgba(0,0,0,0.1);
 }
 
-.back-button:active {
+.back-button:active,
+.back-button.pressed {
   transform: translateY(1px);
 }
 
@@ -151,7 +152,8 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255,255,255,0.9);
 }
 
-.word-card:active {
+.word-card:active,
+.word-card.pressed {
   transform: scale(0.96) translateY(2px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255,255,255,0.5);
 }

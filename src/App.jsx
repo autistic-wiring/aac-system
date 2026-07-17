@@ -79,6 +79,9 @@ function App() {
     };
   }, []);
 
+  const [backPressed, setBackPressed] = useState(false);
+  const backPointerDownTime = useRef(0);
+
   const handleItemClick = (item) => {
     if (item.type === 'folder') {
       setCurrentCategory(item.id);
@@ -87,6 +90,24 @@ function App() {
 
   const handleBack = () => {
     setCurrentCategory('home');
+  };
+
+  const handleBackPointerDown = (e) => {
+    if (e.button !== 0) return;
+    setBackPressed(true);
+    backPointerDownTime.current = Date.now();
+    handleBack();
+  };
+
+  const handleBackPointerUp = () => {
+    setBackPressed(false);
+  };
+
+  const handleBackClick = () => {
+    if (Date.now() - backPointerDownTime.current < 800) {
+      return;
+    }
+    handleBack();
   };
 
   let currentItems = [];
@@ -103,7 +124,13 @@ function App() {
       <main>
         {currentCategory !== 'home' && (
           <div className="navigation-bar">
-            <button className="back-button" onClick={handleBack}>
+            <button 
+              className={`back-button ${backPressed ? 'pressed' : ''}`}
+              onPointerDown={handleBackPointerDown}
+              onPointerUp={handleBackPointerUp}
+              onPointerCancel={handleBackPointerUp}
+              onClick={handleBackClick}
+            >
               <span className="icon">🔙</span> Back to Home
             </button>
             <h2 className="category-title">

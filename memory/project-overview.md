@@ -36,6 +36,7 @@ See [[speech-pipeline]] [[vocabulary-system]] [[component-tree]] [[deployment]].
 4. **Folder Navigation** — pure React state (`currentCategory`), no router
 5. **Wake Lock** — prevents screen sleep during AAC use
 6. **Haptic Feedback** — `navigator.vibrate()`: double pulse for folders, single for words
+7. **Instant Pointer Triggers** — WordCard and Back buttons trigger immediately on `pointerdown` (touch/mouse press) to prevent missed activations if users drag their fingers away before releasing.
 
 ### Source Layout
 

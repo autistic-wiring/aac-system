@@ -7,11 +7,16 @@ const resolveAsset = (p) => (p ? `${baseUrl}/${p.replace(/^\//, '')}` : null);
 const WordCard = ({ item, onItemClick }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [pressCount, setPressCount] = useState(0);
+  const [animating, setAnimating] = useState(false);
   const pointerDownTime = useRef(0);
+  const isPressedRef = useRef(false);
 
   const imageUrl = resolveAsset(item.image);
   const animationUrl = resolveAsset(item.animation);
-  const showAnimation = isPressed && animationUrl;
+  // Decoupled from isPressed: a quick tap mounts/unmounts <video> in ~100ms,
+  // so the user never sees it. Keep the video mounted until it finishes its
+  // cycle (looping while held, ending once on release).
+  const showAnimation = animating && animationUrl;
 
   const triggerAction = () => {
     if (item.hidden) return;
@@ -33,13 +38,16 @@ const WordCard = ({ item, onItemClick }) => {
   const handlePointerDown = (e) => {
     if (e.button !== 0) return; // only left click / primary touch
     setIsPressed(true);
+    isPressedRef.current = true;
     setPressCount((n) => n + 1); // remount video -> replay from frame 0
+    setAnimating(true);
     pointerDownTime.current = Date.now();
     triggerAction();
   };
 
   const handlePointerUp = () => {
     setIsPressed(false);
+    isPressedRef.current = false;
   };
 
   // Stop animation when pointer leaves (touch drags off, mouse moves away).
@@ -47,6 +55,13 @@ const WordCard = ({ item, onItemClick }) => {
   // stationary press per the Pointer Events spec.
   const handlePointerLeave = () => {
     setIsPressed(false);
+    isPressedRef.current = false;
+  };
+
+  // When the current playback cycle ends: keep looping only while held.
+  // Once released, let it finish this cycle (handled by loop=false) then hide.
+  const handleVideoEnded = () => {
+    if (!isPressedRef.current) setAnimating(false);
   };
 
   const handleClick = () => {
@@ -80,14 +95,16 @@ const WordCard = ({ item, onItemClick }) => {
             {showAnimation ? (
               // key changes each press -> React remounts the <video> ->
               // autoPlay starts from frame 0. muted + playsInline required
-              // for autoPlay on mobile browsers.
+              // for autoPlay on mobile browsers. loop only while held so a
+              // tap plays exactly one cycle then reverts to the static image.
               <video
                 key={`vid-${pressCount}`}
                 src={animationUrl}
                 autoPlay
                 muted
-                loop
+                loop={isPressed}
                 playsInline
+                onEnded={handleVideoEnded}
                 className="word-card-video"
               />
             ) : imageUrl ? (

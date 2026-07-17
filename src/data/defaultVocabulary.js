@@ -24,7 +24,7 @@ export const defaultVocabulary = {
   // `audioId` lets duplicate cards reuse a shared audio file instead of regenerating.
   core: [
     // Row 1
-    { id: 'help',      word: 'Help',      icon: '🤝', color: colors.verb, image: 'images/core/help.png', animation: 'images/core/animated/help.mp4' },
+    { id: 'help',      word: 'Help',      icon: '🤝', color: colors.verb, image: 'images/core/help.png', animation: 'images/core/animated/help.webp', animationDuration: 3.857 },
     { id: 'me',        word: 'Me',        icon: '👈', color: colors.pronoun, image: 'images/core/me.png' },
     { id: 'i',         word: 'I',         icon: '🙋', color: colors.pronoun, image: 'images/core/i.png' },
     { id: 'want',      word: 'Want',      icon: '🤲', color: colors.verb, image: 'images/core/want.png' },

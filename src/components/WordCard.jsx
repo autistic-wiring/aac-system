@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { speakWord } from '../utils/speechAdapter';
 
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -9,14 +9,25 @@ const WordCard = ({ item, onItemClick }) => {
   const [pressCount, setPressCount] = useState(0);
   const [animating, setAnimating] = useState(false);
   const pointerDownTime = useRef(0);
-  const isPressedRef = useRef(false);
+  const pressStartRef = useRef(0);
+  const endTimerRef = useRef(null);
 
   const imageUrl = resolveAsset(item.image);
   const animationUrl = resolveAsset(item.animation);
-  // Decoupled from isPressed: a quick tap mounts/unmounts <video> in ~100ms,
-  // so the user never sees it. Keep the video mounted until it finishes its
-  // cycle (looping while held, ending once on release).
+  // One full animation cycle in ms. Needed because <img> (APNG/WebP) has no
+  // `ended` event, so we time the cycle ourselves to revert to the static image
+  // after a tap. Falls back to 4s if a future entry omits the duration.
+  const animMs = animationUrl
+    ? Math.round((item.animationDuration ?? 4) * 1000)
+    : 0;
+  // Decoupled from isPressed: a quick tap mounts/unmounts the element in ~100ms,
+  // so the user never sees it. Keep it mounted until it finishes its cycle
+  // (looping while held, finishing once on release).
   const showAnimation = animating && animationUrl;
+
+  useEffect(() => () => {
+    if (endTimerRef.current) clearTimeout(endTimerRef.current);
+  }, []);
 
   const triggerAction = () => {
     if (item.hidden) return;
@@ -35,35 +46,38 @@ const WordCard = ({ item, onItemClick }) => {
     }
   };
 
+  const clearEndTimer = () => {
+    if (endTimerRef.current) {
+      clearTimeout(endTimerRef.current);
+      endTimerRef.current = null;
+    }
+  };
+
   const handlePointerDown = (e) => {
     if (e.button !== 0) return; // only left click / primary touch
+    clearEndTimer();
     setIsPressed(true);
-    isPressedRef.current = true;
-    setPressCount((n) => n + 1); // remount video -> replay from frame 0
+    setPressCount((n) => n + 1); // remount <img> -> replay from frame 0
     setAnimating(true);
+    pressStartRef.current = Date.now();
     pointerDownTime.current = Date.now();
     triggerAction();
   };
 
-  const handlePointerUp = () => {
+  const handleRelease = () => {
     setIsPressed(false);
-    isPressedRef.current = false;
+    if (!animationUrl) return;
+    // Finish the current cycle, then revert to the static image. APNG/WebP
+    // have no `ended` event, so time it: remaining = full cycle - current phase.
+    const elapsed = Date.now() - pressStartRef.current;
+    const remaining = animMs - (elapsed % animMs);
+    clearEndTimer();
+    endTimerRef.current = setTimeout(() => setAnimating(false), remaining);
   };
 
   // Stop animation when pointer leaves (touch drags off, mouse moves away).
   // Only fires for mouse; touch with `pointerleave` won't fire during a
   // stationary press per the Pointer Events spec.
-  const handlePointerLeave = () => {
-    setIsPressed(false);
-    isPressedRef.current = false;
-  };
-
-  // When the current playback cycle ends: keep looping only while held.
-  // Once released, let it finish this cycle (handled by loop=false) then hide.
-  const handleVideoEnded = () => {
-    if (!isPressedRef.current) setAnimating(false);
-  };
-
   const handleClick = () => {
     // If pointerdown triggered the action recently, ignore the subsequent click
     if (Date.now() - pointerDownTime.current < 800) {
@@ -80,9 +94,9 @@ const WordCard = ({ item, onItemClick }) => {
       className={`word-card ${isFolder ? 'folder-card' : ''} ${isHidden ? 'hidden-card' : ''} ${isPressed ? 'pressed' : ''}`}
       style={{ '--card-color': item.color }}
       onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      onPointerLeave={handlePointerLeave}
+      onPointerUp={handleRelease}
+      onPointerCancel={handleRelease}
+      onPointerLeave={handleRelease}
       onClick={handleClick}
       aria-label={item.word}
       disabled={isHidden}
@@ -93,19 +107,16 @@ const WordCard = ({ item, onItemClick }) => {
           <span className="word-icon" aria-hidden="true">
             {isFolder && <span className="folder-indicator">📁</span>}
             {showAnimation ? (
-              // key changes each press -> React remounts the <video> ->
-              // autoPlay starts from frame 0. muted + playsInline required
-              // for autoPlay on mobile browsers. loop only while held so a
-              // tap plays exactly one cycle then reverts to the static image.
-              <video
-                key={`vid-${pressCount}`}
+              // Transparent looping animation (APNG/WebP). key changes each
+              // press -> React remounts the <img> -> plays from frame 0.
+              // The .word-icon ancestor's drop-shadow filter does NOT freeze
+              // playback (verified via headless-Chrome CDP pixel-delta test).
+              <img
+                key={`anim-${pressCount}`}
                 src={animationUrl}
-                autoPlay
-                muted
-                loop={isPressed}
-                playsInline
-                onEnded={handleVideoEnded}
-                className="word-card-video"
+                alt=""
+                className="word-card-anim"
+                draggable={false}
               />
             ) : imageUrl ? (
               <img src={imageUrl} alt="" className="word-card-image" draggable={false} />

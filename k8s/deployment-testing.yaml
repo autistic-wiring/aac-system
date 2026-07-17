@@ -1,33 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aac-board
+  name: aac-board-testing
   namespace: asd
   labels:
-    app: aac-board
-    env: prod
+    app: aac-board-testing
+    env: testing
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aac-board
+      app: aac-board-testing
   template:
     metadata:
       labels:
-        app: aac-board
-        env: prod
+        app: aac-board-testing
+        env: testing
     spec:
       containers:
         - name: aac-board
-          # Mutable tag — promote.sh points this at the promoted version.
-          # Keep imagePullPolicy: Always so retag-and-restart rolls out fast.
-          image: registry.nexvision.cc/nexvisioncc/aac-board:stable
+          # Mutable tag — deploy.sh points this at the latest main build.
+          # Rollback/promote never touch this; promote updates prod instead.
+          image: registry.nexvision.cc/nexvisioncc/aac-board:testing
           imagePullPolicy: Always
           ports:
             - containerPort: 80
           # Tight budget — single-node cluster is CPU-saturated. Static nginx
-          # needs very little; keeping prod and testing symmetric lets the
-          # default RollingUpdate strategy spin the new pod before killing the old.
+          # needs very little; this fits alongside prod without scheduling conflicts.
           resources:
             requests:
               cpu: 10m

@@ -1,0 +1,88 @@
+name: Deploy to Testing (k8s)
+
+# SDLC: every push to a non-main branch builds :testing + :sha-<short> and rolls
+# out to aac-testing.nexvision.cc. Merging to main triggers deploy-prod.yml,
+# which promotes to aac.nexvision.cc.
+#
+# Runner: self-hosted k8s runner in openclaw namespace. Kubeconfig is mounted
+# from a k8s Secret (see k8s/ci-runner/) — no GitHub Secret needed.
+
+on:
+  push:
+    branches-ignore: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - 'memory/**'
+      - 'docs/**'
+      - '.gitignore'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-testing
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-testing:
+    runs-on: [self-hosted, k8s]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kubectl if missing
+        run: |
+          if ! command -v kubectl >/dev/null 2>&1; then
+            VER=$(curl -fsSL https://dl.k8s.io/release/stable.txt)
+            curl -fsSL "https://dl.k8s.io/release/${VER}/bin/linux/amd64/kubectl" \
+              -o /usr/local/bin/kubectl
+            chmod +x /usr/local/bin/kubectl
+          fi
+          kubectl version --client
+
+      - name: Resolve version info
+        id: v
+        run: |
+          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          # Slug the branch name into a valid image tag (foo/bar -> foo-bar).
+          SLUG=$(git rev-parse --abbrev-ref HEAD | tr -c 'a-zA-Z0-9._-' '-' | sed 's/--*/-/g; s/^-//; s/-$//')
+          echo "branch=${SLUG}" >> "$GITHUB_OUTPUT"
+
+      - name: Build & push image
+        env:
+          REGISTRY: registry.nexvision.cc/nexvisioncc/aac-board
+        run: |
+          REG="$REGISTRY"
+          docker build --pull \
+            -t "$REG:testing" \
+            -t "$REG:sha-${{ steps.v.outputs.sha }}" \
+            -t "$REG:branch-${{ steps.v.outputs.branch }}" \
+            .
+          docker push "$REG:testing"
+          docker push "$REG:sha-${{ steps.v.outputs.sha }}"
+          docker push "$REG:branch-${{ steps.v.outputs.branch }}"
+
+      - name: Apply k8s manifests
+        run: |
+          # KUBECONFIG is set in the runner pod env, pointing at the mounted
+          # Secret from openclaw/aac-deployer-kubeconfig.
+          kubectl -n asd apply -f k8s/certificate-testing.yaml
+          kubectl -n asd apply -f k8s/deployment-testing.yaml
+          kubectl -n asd apply -f k8s/service-testing.yaml
+          kubectl -n asd apply -f k8s/ingress-testing.yaml
+          kubectl -n asd rollout restart deployment/aac-board-testing
+          kubectl -n asd rollout status  deployment/aac-board-testing --timeout=120s
+
+      - name: Summary
+        run: |
+          {
+            echo "### Deployed to testing"
+            echo "URL: https://aac-testing.nexvision.cc"
+            echo "Branch: \`${{ steps.v.outputs.branch }}\`"
+            echo "Image: \`registry.nexvision.cc/nexvisioncc/aac-board:sha-${{ steps.v.outputs.sha }}\`"
+            echo ""
+            echo "Smoke-test the URL, then open a PR against \`main\`. Merge will auto-deploy to prod."
+          } >> "$GITHUB_STEP_SUMMARY"

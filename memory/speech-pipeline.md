@@ -31,4 +31,12 @@ TTS server at `http://127.0.0.1:5050/` uses `NetworkOnly` Workbox strategy — n
 
 Vocabulary items can have a `pronounce` field to override TTS text for words the engine mispronounces.
 
+## Autoplay Policy & Gesture Unlock
+
+Modern browsers restrict `AudioContext` playback to protect users from unwanted sound:
+- Buttons trigger actions immediately on `pointerdown` (touch start), which is not a browser-recognized user gesture for audio.
+- To solve this, a gesture unlock helper listens globally for standard activation events (`pointerup`, `click`, `touchend`, `mouseup`) to resume/unlock the context.
+- If the first interaction is on `pointerdown` and the context is suspended, the spoken text is queued in a `pendingSpeech` reference and automatically spoken on the subsequent gesture release (`pointerup`).
+- Once unlocked, all subsequent touches play sound instantly on `pointerdown`.
+
 See [[vocabulary-system]] for the data model.

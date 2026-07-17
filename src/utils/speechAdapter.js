@@ -45,26 +45,71 @@ function playBuffer(audioBuffer) {
   source.start();
 }
 
+let pendingSpeech = null;
+
+// Helper to resume context on any valid user gesture
+function setupGestureUnlock() {
+  if (typeof window === 'undefined') return;
+
+  const unlock = async () => {
+    const ctx = getAudioContext();
+    if (ctx.state === 'suspended') {
+      await ctx.resume().catch(() => {});
+    }
+    if (ctx.state === 'running') {
+      if (pendingSpeech) {
+        const { id, word, pronounce } = pendingSpeech;
+        pendingSpeech = null;
+        speakWord(id, word, pronounce);
+      }
+      window.removeEventListener('pointerup', unlock);
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('touchend', unlock);
+      window.removeEventListener('mouseup', unlock);
+    }
+  };
+
+  window.addEventListener('pointerup', unlock, { passive: true });
+  window.addEventListener('click', unlock, { passive: true });
+  window.addEventListener('touchend', unlock, { passive: true });
+  window.addEventListener('mouseup', unlock, { passive: true });
+}
+
+setupGestureUnlock();
+
 export const speakWord = async (id, word, pronounce) => {
   const ttsText = pronounce || word;
   const ctx = getAudioContext();
-  if (ctx.state === 'suspended') await ctx.resume();
-
-  // Instant play from cache
-  if (audioCache.has(id)) {
-    playBuffer(audioCache.get(id));
-    return;
+  
+  if (ctx.state === 'suspended') {
+    pendingSpeech = { id, word, pronounce };
+    try {
+      await ctx.resume();
+    } catch {
+      // Expected if blocked by browser autoplay policy
+    }
   }
 
-  // Fallback: try TTS server
-  try {
-    const TTS_SERVER = `http://${window.location.hostname}:5050/speak`;
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 3000);
-    const buf = await fetchAndDecode(`${TTS_SERVER}?text=${encodeURIComponent(ttsText)}`);
-    audioCache.set(id, buf);
-    playBuffer(buf);
-  } catch {
+  if (ctx.state === 'running') {
+    // Instant play from cache
+    if (audioCache.has(id)) {
+      playBuffer(audioCache.get(id));
+      return;
+    }
+
+    // Fallback: try TTS server
+    try {
+      const TTS_SERVER = `http://${window.location.hostname}:5050/speak`;
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(), 3000);
+      const buf = await fetchAndDecode(`${TTS_SERVER}?text=${encodeURIComponent(ttsText)}`);
+      audioCache.set(id, buf);
+      playBuffer(buf);
+    } catch {
+      _fallbackSpeak(ttsText);
+    }
+  } else {
+    // Try fallback speak if context is still suspended (might be blocked, but serves as a last resort)
     _fallbackSpeak(ttsText);
   }
 };

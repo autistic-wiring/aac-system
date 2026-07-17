@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: aac-board-testing-tls
+  namespace: asd
+spec:
+  secretName: aac-board-testing-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - aac-testing.nexvision.cc
+  usages:
+    - digital signature
+    - key encipherment

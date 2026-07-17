@@ -60,20 +60,62 @@ node tts-server.js
 
 ## 🐳 Deployment (Docker & K8s)
 
-The repository includes a ready-to-use Dockerfile and K8s configuration (`k8s/deployment.yaml`).
+The repository includes a ready-to-use Dockerfile and K8s configuration (`k8s/`).
 
-1. **Build image**:
-   ```bash
-   docker build -t your-registry/aac-board:latest .
-   ```
-2. **Push image**:
-   ```bash
-   docker push your-registry/aac-board:latest
-   ```
-3. **Deploy (Kubernetes)**:
-   ```bash
-   kubectl apply -f k8s/deployment.yaml
-   ```
+### SDLC
+
+Two environments, fully automated on push:
+
+| Env     | URL                                  | Trigger                        | Image tag    |
+|---------|--------------------------------------|--------------------------------|--------------|
+| Testing | https://aac-testing.nexvision.cc     | push to any non-main branch    | `:testing`   |
+| Prod    | https://aac.nexvision.cc             | push to `main` (PR merge)      | `:stable`    |
+
+```
+  feature branch
+      │  git push
+      ▼
+  [auto] CI builds :testing + :sha-<short> + :branch-<slug>
+         deploys to aac-testing.nexvision.cc
+      │  smoke-test, open PR, review
+      ▼
+  merge PR to main
+      │
+      ▼
+  [auto] CI builds :stable + :sha-<short> + :vX.Y.Z
+         git-tags the release, deploys to aac.nexvision.cc
+```
+
+Every prod release is a git tag (`vX.Y.Z`) and an immutable image tag, so rollback is one command:
+
+```bash
+./scripts/deploy.sh rollback v1.0.0     # repoints prod at the previous release
+```
+
+### Local deploy / hotfix
+
+If GitHub Actions is down or you need to deploy a hotfix manually:
+
+```bash
+./scripts/deploy.sh testing             # build HEAD, deploy to testing
+./scripts/deploy.sh prod                # build HEAD, tag vX.Y.Z, deploy to prod
+./scripts/deploy.sh status              # show testing/prod versions + recent tags
+```
+
+### CI runner access
+
+The self-hosted runner (in cluster namespace `openclaw`) mounts a kubeconfig
+from a Kubernetes Secret — no GitHub Secrets involved. RBAC is scoped to a
+dedicated `aac-deployer` ServiceAccount with rights only on `asd` namespace
+resources for this repo. See [`k8s/ci-runner/`](k8s/ci-runner) for manifests.
+
+### Manual build
+
+```bash
+docker build -t registry.nexvision.cc/nexvisioncc/aac-board:latest .
+docker push registry.nexvision.cc/nexvisioncc/aac-board:latest
+kubectl apply -f k8s/
+```
 
 ## ⚙️ Customization
 

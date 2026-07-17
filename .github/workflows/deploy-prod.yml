@@ -1,0 +1,102 @@
+name: Deploy to Prod (k8s)
+
+# SDLC: every push to main (typically via PR merge) rebuilds, tags an
+# immutable :vX.Y.Z release, git-tags the commit, and rolls out to
+# aac.nexvision.cc. The previous :stable is recoverable via rollback.
+#
+# Runner: self-hosted k8s runner. Kubeconfig mounted from a k8s Secret.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - 'memory/**'
+      - 'docs/**'
+      - '.gitignore'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false   # let an in-flight prod deploy finish
+
+permissions:
+  contents: write   # needed to push the vX.Y.Z git tag
+
+jobs:
+  deploy-prod:
+    runs-on: [self-hosted, k8s]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need tags to detect duplicates
+
+      - name: Install kubectl if missing
+        run: |
+          if ! command -v kubectl >/dev/null 2>&1; then
+            VER=$(curl -fsSL https://dl.k8s.io/release/stable.txt)
+            curl -fsSL "https://dl.k8s.io/release/${VER}/bin/linux/amd64/kubectl" \
+              -o /usr/local/bin/kubectl
+            chmod +x /usr/local/bin/kubectl
+          fi
+          kubectl version --client
+
+      - name: Resolve version
+        id: v
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          PKG=$(node -p 'require("./package.json").version')
+          VERSION="v${PKG}"
+          # Append -rN if this semver already has a tag (e.g. v1.0.0 exists -> v1.0.0-r1).
+          if git tag -l "${VERSION}" | grep -q .; then
+            N=$(git tag -l "${VERSION}-r*" | wc -l)
+            VERSION="${VERSION}-r$((N+1))"
+          fi
+          echo "sha=${SHA}"        >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Releasing ${VERSION} at sha ${SHA}"
+
+      - name: Build & push image
+        env:
+          REGISTRY: registry.nexvision.cc/nexvisioncc/aac-board
+        run: |
+          REG="$REGISTRY"
+          docker build --pull \
+            -t "$REG:stable" \
+            -t "$REG:sha-${{ steps.v.outputs.sha }}" \
+            -t "$REG:${{ steps.v.outputs.version }}" \
+            .
+          docker push "$REG:stable"
+          docker push "$REG:sha-${{ steps.v.outputs.sha }}"
+          docker push "$REG:${{ steps.v.outputs.version }}"
+
+      - name: Git tag the release
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.v.outputs.version }}" \
+                  -m "Release ${{ steps.v.outputs.version }} (auto-tagged on merge to main)"
+          git push origin "${{ steps.v.outputs.version }}"
+
+      - name: Apply k8s manifests + roll out
+        run: |
+          kubectl -n asd apply -f k8s/certificate.yaml
+          kubectl -n asd apply -f k8s/deployment.yaml
+          kubectl -n asd apply -f k8s/service.yaml
+          kubectl -n asd apply -f k8s/ingress.yaml
+          kubectl -n asd rollout restart deployment/aac-board
+          kubectl -n asd rollout status  deployment/aac-board --timeout=180s
+
+      - name: Summary
+        run: |
+          {
+            echo "### Released to prod :rocket:"
+            echo "URL: https://aac.nexvision.cc"
+            echo "Version: \`${{ steps.v.outputs.version }}\`"
+            echo "Image: \`registry.nexvision.cc/nexvisioncc/aac-board:${{ steps.v.outputs.version }}\`"
+            echo ""
+            echo "Roll back with: \`./scripts/deploy.sh rollback ${{ steps.v.outputs.version }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

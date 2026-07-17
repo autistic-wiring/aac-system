@@ -1,0 +1,87 @@
+# CI Runner Access — least-privilege RBAC for the GitHub Actions runner.
+#
+# The runner pod (github-runner-autistic-wiring in namespace `openclaw`) needs
+# to deploy to namespace `asd` on behalf of this repo's deploy-testing workflow.
+# Instead of putting KUBECONFIG in GitHub Secrets, we:
+#   1. Create a dedicated ServiceAccount `aac-deployer` in `asd`.
+#   2. Grant it just enough rights to roll out aac-board + aac-board-testing.
+#   3. Mint a long-lived token for it (k8s >= 1.24 doesn't issue them automatically).
+#   4. Build a kubeconfig from that token (see scripts/build-ci-kubeconfig.sh).
+#   5. Store the kubeconfig as a Secret in `openclaw` namespace.
+#   6. Mount that Secret into the runner pod + set KUBECONFIG env (see runner-patch.yaml).
+#
+# The runner never sees GitHub Secrets for cluster access. Compromise of the
+# runner pod only yields a token scoped to aac-board resources in `asd`.
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aac-deployer
+  namespace: asd
+  labels:
+    app: aac-board
+automountServiceAccountToken: false
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aac-deployer
+  namespace: asd
+  labels:
+    app: aac-board
+rules:
+  # Deployments — apply specs, restart rollouts, check status.
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  # Pods — `rollout status` reads these.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  # Services + Ingresses + Certificates — apply manifests.
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "create", "update", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "create", "update", "patch"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificates"]
+    verbs: ["get", "list", "create", "update", "patch"]
+  # Events — helpful when debugging rollout failures from CI.
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aac-deployer
+  namespace: asd
+  labels:
+    app: aac-board
+subjects:
+  - kind: ServiceAccount
+    name: aac-deployer
+    namespace: asd
+roleRef:
+  kind: Role
+  name: aac-deployer
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Long-lived token for the SA (k8s >= 1.24). The runner reads `token` + `ca.crt`
+# from this Secret to build a kubeconfig that lives outside of GitHub.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aac-deployer-token
+  namespace: asd
+  labels:
+    app: aac-board
+  annotations:
+    kubernetes.io/service-account.name: aac-deployer
+type: kubernetes.io/service-account-token

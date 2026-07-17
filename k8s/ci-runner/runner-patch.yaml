@@ -1,0 +1,29 @@
+# Strategic merge patch for the github-runner-autistic-wiring Deployment.
+#
+# This mounts the kubeconfig Secret built by scripts/build-ci-kubeconfig.sh
+# into the runner container and points KUBECONFIG at it. The autoscaler still
+# owns replica count — applying this only changes the pod template.
+#
+# Apply with:
+#   kubectl -n openclaw patch deployment github-runner-autistic-wiring \
+#       --type=strategic --patch-file k8s/ci-runner/runner-patch.yaml
+#
+# (Re-runnable. To roll back: kubectl -n openclaw rollout undo deployment/github-runner-autistic-wiring)
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: github-runner
+          env:
+            - name: KUBECONFIG
+              value: /etc/kubeconfig/config
+          volumeMounts:
+            - name: aac-deployer-kubeconfig
+              mountPath: /etc/kubeconfig
+              readOnly: true
+      volumes:
+        - name: aac-deployer-kubeconfig
+          secret:
+            secretName: aac-deployer-kubeconfig
+            defaultMode: 0400

@@ -58,7 +58,11 @@ All in `registry.nexvision.cc/nexvisioncc/aac-board` (anonymous read+write):
 
 ## CI Runner Access (no GitHub Secrets)
 
-Self-hosted runner: Deployment `github-runner-autistic-wiring` in namespace `openclaw`. Labels: `k8s,self-hosted,nexvision` → workflows use `runs-on: [self-hosted, k8s]`. DinD sidecar provides docker at `tcp://localhost:2375`. Autoscaled by `github-runner-autoscaler` CronJob (checks GitHub queue every minute).
+Self-hosted runner: Deployment `github-runner-autistic-wiring` in namespace `openclaw`. Labels: `k8s,self-hosted,nexvision` → workflows use `runs-on: [self-hosted, k8s]`. DinD sidecar provides docker at `tcp://localhost:2375`. Autoscaled by `github-runner-autoscaler` CronJob (checks GitHub queue every minute). Script lives in `k8s/ci-runner/autoscaler.sh` and is applied as ConfigMap `github-runner-autoscaler-config`.
+
+**Runner token requirements:** Classic PAT with `repo`, `workflow`, and `admin:org` scopes stored in Secret `github-runner-secret` (key: `ACCESS_TOKEN`). Token expires periodically; when it does, the autoscaler silently fails (see Troubleshooting).
+
+**Max runners:** 1 for autistic-wiring (single-node cluster, ~50m CPU headroom, concurrency group prevents parallel deploys anyway).
 
 Kubeconfig is mounted as a file, not passed through GitHub:
 

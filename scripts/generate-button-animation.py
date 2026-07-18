@@ -90,10 +90,279 @@ PROMPTS = {
         "extra objects, no background change. The first and last frames must be "
         "identical to the input image."
     ),
+    "me": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat brown skin-tone fill, "
+        "solid teal shirt, PURE SOLID WHITE background #FFFFFF in every frame. "
+        "The image shows a young person (male, brown skin, short black hair, "
+        "teal shirt) pointing at their chest with their index finger. "
+        "MOTION: the pointing index finger taps the chest twice — a gentle, "
+        "rhythmic double-tap inward toward the body, about 1cm of motion per "
+        "tap, with the rest of the arm and body remaining still. The tap is "
+        "smooth and educational, self-referential. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical to "
+        "the input image."
+    ),
+    "i": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat peach skin-tone fill, "
+        "solid red shirt, PURE SOLID WHITE background #FFFFFF in every frame. "
+        "The image shows a young person (male, light skin, short brown hair, "
+        "red shirt) pointing at their own chest with their index finger. "
+        "MOTION: the pointing index finger taps the chest twice — a gentle, "
+        "rhythmic double-tap inward, about 1cm of motion, with the arm and body "
+        "remaining still. Smooth and educational, self-referential. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "want": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat tan skin-tone fill, "
+        "solid teal sleeve, two bidirectional arrows, PURE SOLID WHITE "
+        "background #FFFFFF in every frame. "
+        "The image shows two forearms extended from a teal sleeve on the left, "
+        "hands open and cupped with palms facing upward, with arrows pointing "
+        "toward the palms. "
+        "MOTION: both hands gently pull inward toward the body (toward the "
+        "sleeve on the left), curling the fingers slightly as if grasping or "
+        "receiving, then extend back outward to the starting open-palm position. "
+        "The arrows remain static. A smooth, cyclical reaching-and-receiving "
+        "motion, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "give": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat tan skin-tone fill, "
+        "solid teal sleeve, two directional arrows, PURE SOLID WHITE background "
+        "#FFFFFF in every frame. "
+        "The image shows two arms extending from a teal sleeve, both hands open "
+        "with palms facing upward in an offering gesture, with arrows pointing "
+        "left toward the cupped palms. "
+        "MOTION: both hands gently extend outward away from the body (away from "
+        "the sleeve), as if offering or presenting something. The fingers stay "
+        "open and cupped. Then the hands withdraw back slightly to the starting "
+        "position. A smooth, cyclical giving-and-returning motion, gentle and "
+        "educational. The arrows remain static. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "me2": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat brown skin-tone fill, "
+        "solid teal shirt, PURE SOLID WHITE background #FFFFFF in every frame. "
+        "The image shows a young person (male, brown skin, short black hair, "
+        "teal shirt) pointing at their chest with their index finger. "
+        "MOTION: the pointing index finger taps the chest twice — a gentle, "
+        "rhythmic double-tap inward toward the body, about 1cm of motion, with "
+        "the body and other arm remaining still. Smooth and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "yes": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: bold black outlines, solid green fill, hand-drawn "
+        "checkmark, PURE SOLID WHITE background #FFFFFF in every frame. "
+        "MOTION: the checkmark performs a small, cheerful bounce — the entire "
+        "checkmark scales up slightly (about 8%) and settles back, like a "
+        "nodding confirmation. One smooth elastic bounce cycle, gentle and "
+        "educational. No drawing/writing effect — the full checkmark is always "
+        "present. "
+        "CONSTRAINTS: hold the art style pixel-tight (same outline weight, same "
+        "green fill). No camera movement, no zoom, no text, no extra objects. "
+        "First and last frames identical to the input image."
+    ),
+    "no": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: bold black outlines, red gradient fill circle with "
+        "a diagonal slash, PURE SOLID WHITE background #FFFFFF in every frame. "
+        "MOTION: the entire no-symbol performs a small horizontal sway — a "
+        "gentle shake left-right-left, like a shaking head, about 3-4 pixels "
+        "of total displacement. One smooth head-shake cycle returning to center. "
+        "CONSTRAINTS: hold the art style pixel-tight (same outline weight, same "
+        "red gradient). No camera movement, no zoom, no text, no extra objects. "
+        "First and last frames identical."
+    ),
+    "hi": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat skin-tone fill, solid "
+        "green shirt, wavy blonde hair, motion lines, PURE SOLID WHITE "
+        "background #FFFFFF in every frame. "
+        "The image shows a smiling person (female-presenting, blonde wavy hair, "
+        "green long-sleeve shirt) waving with palm forward. "
+        "MOTION: the raised hand waves side-to-side in a friendly greeting — a "
+        "smooth pendulum-like sway of the hand at the wrist, about 15 degrees "
+        "left and right of center, with motion lines subtly pulsing. The face "
+        "and body remain still. Two full wave cycles, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "bye": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat skin-tone fill, solid "
+        "red shirt, brown hair, rear view, motion lines, PURE SOLID WHITE "
+        "background #FFFFFF in every frame. "
+        "The image shows a person from behind (brown hair, red long-sleeve "
+        "shirt) with one hand raised and waving. "
+        "MOTION: the raised hand waves side-to-side in a friendly goodbye — a "
+        "smooth pendulum-like sway of the hand at the wrist, about 15 degrees "
+        "left and right of center, with motion lines subtly pulsing. The body "
+        "and head remain still. Two full wave cycles, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "my_turn": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat light skin-tone fill, "
+        "solid red shirt, short brown hair, PURE SOLID WHITE background #FFFFFF "
+        "in every frame. "
+        "The image shows a young person (male, light skin, brown hair, red "
+        "shirt) with their hand resting flat on their chest. "
+        "MOTION: the hand on the chest lifts off slightly (about 1cm) and "
+        "gently pats the chest twice — two soft taps, then returns to resting "
+        "flat. A self-identifying gesture, gentle and educational. The body "
+        "remains still. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "your_turn": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat light pink skin-tone "
+        "fill, yellow rectangular border, drop shadow, PURE SOLID WHITE "
+        "background #FFFFFF in every frame. "
+        "The image shows a hand pointing directly at the viewer with the index "
+        "finger extended, thumb folded down. "
+        "MOTION: the pointing hand bounces forward slightly — the entire hand "
+        "translates toward the viewer by about 2-3 pixels, then back to the "
+        "starting position. A gentle, inviting point gesture, like indicating "
+        "'you'. One smooth bounce cycle, educational. "
+        "CONSTRAINTS: hold the art style pixel-tight (same outline weight, "
+        "skin tone, yellow border). No camera movement, no zoom, no text, no "
+        "extra objects. First and last frames identical."
+    ),
+    "more": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat peach skin-tone fill, "
+        "two directional arrows, PURE SOLID WHITE background #FFFFFF in every "
+        "frame. "
+        "The image shows two hands with all fingertips touching and pointing "
+        "toward each other, with arrows above pointing inward. "
+        "MOTION: the two hands move apart slightly (about 5 pixels each side), "
+        "then come back together to touch fingertips again. This is the classic "
+        "ASL 'more' sign — a gentle tapping together of the fingertips. Two "
+        "full tap-apart-together cycles, smooth and educational. The arrows "
+        "remain static. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "all_done": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat tan skin-tone fill, "
+        "ghost silhouettes, red curved arrows, PURE SOLID WHITE background "
+        "#FFFFFF in every frame. "
+        "The image shows two hands with ghost silhouettes and curved red arrows "
+        "indicating outward twisting motion — the ASL 'all done' sign. "
+        "MOTION: both hands twist outward from a palms-facing-inward position "
+        "to a palms-facing-outward position, like brushing something away. "
+        "The ghost silhouettes and arrows remain static as visual guides. "
+        "A smooth, decisive outward twist completing one full cycle and "
+        "returning to the starting palms-in position. Gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "washroom": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat skin-tone fill, "
+        "solid purple shirt, blonde hair, white toilet, PURE SOLID WHITE "
+        "background #FFFFFF in every frame. "
+        "The image shows a person (blonde hair, purple shirt) sitting on a "
+        "toilet, hands clasped together, leaning slightly forward. "
+        "MOTION: the person performs a subtle seated wiggle or shift — a gentle "
+        "side-to-side sway of the upper body, about 2-3 pixels, as if settling "
+        "in the seat. The hands stay clasped. One smooth cycle, gentle and "
+        "educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "wait": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, solid red fill, open palm "
+        "hand with five fingers spread, PURE SOLID WHITE background #FFFFFF "
+        "in every frame. "
+        "The image shows a single red open hand, palm facing outward in a "
+        "'stop' or 'wait' gesture. "
+        "MOTION: the hand pulses forward gently — the entire hand scales up "
+        "slightly (about 5%) as if pushing toward the viewer, then settles "
+        "back to the original size. A smooth, firm but non-aggressive pulse, "
+        "like politely saying 'wait' with a hand gesture. One cycle, "
+        "educational. "
+        "CONSTRAINTS: hold the art style pixel-tight (same red fill, same "
+        "outline weight, same finger count). No camera movement, no zoom, no "
+        "text, no extra objects. First and last frames identical. EXACTLY "
+        "FIVE fingers — never six."
+    ),
+    "i_eat": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat peach skin-tone fill, "
+        "horizontal double-headed arrow, person profile facing left, PURE "
+        "SOLID WHITE background #FFFFFF in every frame. "
+        "The image shows a person's profile on the right with a cupped hand and "
+        "a horizontal arrow indicating back-and-forth motion toward the mouth. "
+        "MOTION: the cupped hand moves toward the mouth (about 3-4 pixels "
+        "right), as if bringing food to the lips, then moves back to the "
+        "starting position. A smooth eating gesture — hand to mouth and back. "
+        "The head remains still. Two complete cycles, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "i_drink": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat tan skin-tone fill, "
+        "solid purple long-sleeve shirt, glass of liquid, PURE SOLID WHITE "
+        "background #FFFFFF in every frame. "
+        "The image shows a smiling person (dark hair, purple shirt) holding a "
+        "clear glass of white liquid near their face. "
+        "MOTION: the hand holding the glass tilts the glass upward slightly "
+        "toward the mouth — a gentle tipping motion as if taking a sip — then "
+        "returns the glass to the starting position. The face and body remain "
+        "still. One smooth drinking cycle, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "hi2": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat skin-tone fill, solid "
+        "green long-sleeve shirt, wavy blonde hair, motion lines, PURE SOLID "
+        "WHITE background #FFFFFF in every frame. "
+        "The image shows a smiling person (female-presenting, blonde wavy hair, "
+        "green shirt) waving with palm forward. "
+        "MOTION: the raised hand waves side-to-side in a friendly greeting — a "
+        "smooth pendulum sway of the hand at the wrist, about 15 degrees left "
+        "and right, with motion lines subtly pulsing. The body stays still. Two "
+        "full wave cycles, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
+    "bye2": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat peach skin-tone fill, "
+        "solid red long-sleeve shirt, brown hair, rear view, motion lines, "
+        "PURE SOLID WHITE background #FFFFFF in every frame. "
+        "The image shows a person from behind (brown hair, red shirt) with one "
+        "hand raised waving. "
+        "MOTION: the raised hand waves side-to-side — a smooth pendulum sway "
+        "of the hand at the wrist, about 15 degrees left and right, with "
+        "motion lines subtly pulsing. The body and head remain still. Two "
+        "full wave cycles, gentle and educational. "
+        "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
+        "zoom, no text, no extra objects. First and last frames identical."
+    ),
 }
 
 
-def generate(client: genai.Client, button_id: str, model: str, duration: int) -> Path:
+def generate(client: genai.Client, button_id: str, model: str, duration: int,
+              use_reference: bool = True) -> Path:
     src = IMG_DIR / f"{button_id}.png"
     if not src.exists():
         raise FileNotFoundError(src)
@@ -107,19 +376,25 @@ def generate(client: genai.Client, button_id: str, model: str, duration: int) ->
     image = types.Image(image_bytes=img_bytes, mime_type="image/png")
 
     print(f"[{button_id}] model={model} duration={duration}s")
-    print(f"[{button_id}] submitting to Veo (first+last frame = {src.name})...")
+    if use_reference:
+        print(f"[{button_id}] submitting to Veo (first+last frame = {src.name})...")
+    else:
+        print(f"[{button_id}] submitting to Veo (text-to-video, no ref image)...")
+
+    config_kwargs = {
+        "aspect_ratio": "16:9",
+        "duration_seconds": duration,
+        "number_of_videos": 1,
+        "person_generation": "allow_all",
+    }
+    if use_reference:
+        config_kwargs["last_frame"] = image
 
     op = client.models.generate_videos(
         model=model,
         prompt=prompt,
-        image=image,
-        config=types.GenerateVideosConfig(
-            last_frame=image,          # loop back to the original pose
-            # Veo 3.1 fast has no 1:1; generate 16:9 then center-crop to square.
-            aspect_ratio="16:9",
-            duration_seconds=duration,
-            number_of_videos=1,
-        ),
+        image=image if use_reference else None,
+        config=types.GenerateVideosConfig(**config_kwargs),
     )
     print(f"[{button_id}] operation: {op.name}")
 
@@ -133,7 +408,15 @@ def generate(client: genai.Client, button_id: str, model: str, duration: int) ->
     if op.error:
         raise RuntimeError(f"Veo failed: {op.error}")
 
-    video_bytes = op.response.generated_videos[0].video.video_bytes
+    gvs = op.response.generated_videos
+    if not gvs:
+        reason = getattr(op.response, 'rai_media_filtered_reason', None) or ""
+        safety = getattr(op.response, 'rai_media_filtered_count', None)
+        raise RuntimeError(
+            f"Veo returned no videos (filtered={safety}, reason={reason}, "
+            f"response_keys={list(op.response.model_fields.keys())})"
+        )
+    video_bytes = gvs[0].video.video_bytes
     mp4 = OUT_DIR / f"{button_id}.mp4"
     mp4.write_bytes(video_bytes)
     print(f"[{button_id}] saved {mp4} ({len(video_bytes)} bytes)")
@@ -232,20 +515,23 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("button", help="button id (e.g. help)")
     ap.add_argument("--model", default=DEFAULT_MODEL)
-    ap.add_argument("--duration", type=int, default=5)
+    ap.add_argument("--duration", type=int, default=4)
     ap.add_argument("--mp4-only", action="store_true", help="skip WebP conversion")
     ap.add_argument("--fps", type=int, default=12)
     ap.add_argument("--scale", type=int, default=320)
     ap.add_argument("--white-bg", action="store_true",
                     help="restore white bg Veo darkens (border flood-fill)")
     ap.add_argument("--from-mp4", help="skip generation; convert existing MP4 path")
+    ap.add_argument("--no-reference", action="store_true",
+                    help="text-to-video only (skip reference image — bypasses face filter)")
     args = ap.parse_args()
 
     if args.from_mp4:
         mp4 = Path(args.from_mp4)
     else:
         client = make_client()
-        mp4 = generate(client, args.button, args.model, args.duration)
+        mp4 = generate(client, args.button, args.model, args.duration,
+                       use_reference=not args.no_reference)
     if not args.mp4_only:
         to_webp(mp4, args.button, fps=args.fps, scale=args.scale,
                 white_bg=args.white_bg)

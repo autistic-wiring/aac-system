@@ -9,6 +9,8 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [currentCategory, setCurrentCategory] = useState('home');
   const fullscreenLock = useRef(false);
+  const [isDimmed, setIsDimmed] = useState(false);
+  const inactivityTimer = useRef(null);
 
   useEffect(() => {
     const allWordsToPreload = [
@@ -79,6 +81,30 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (showSplash) return;
+
+    const IDLE_TIMEOUT = 20000;
+    const wake = () => {
+      setIsDimmed(false);
+      clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = setTimeout(() => setIsDimmed(true), IDLE_TIMEOUT);
+    };
+
+    wake();
+    window.addEventListener('pointerdown', wake);
+    window.addEventListener('keydown', wake);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') wake();
+    });
+
+    return () => {
+      clearTimeout(inactivityTimer.current);
+      window.removeEventListener('pointerdown', wake);
+      window.removeEventListener('keydown', wake);
+    };
+  }, [showSplash]);
+
   const [backPressed, setBackPressed] = useState(false);
   const backPointerDownTime = useRef(0);
 
@@ -120,6 +146,15 @@ function App() {
   return (
     <>
     {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
+    {!showSplash && (
+      <div
+        className="dim-overlay"
+        style={{
+          opacity: isDimmed ? 0.7 : 0,
+          transition: isDimmed ? 'opacity 4s ease' : 'opacity 0.4s ease',
+        }}
+      />
+    )}
     <div className="app-container">
       <main>
         {currentCategory !== 'home' && (

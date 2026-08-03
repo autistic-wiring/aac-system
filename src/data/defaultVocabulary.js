@@ -19,35 +19,24 @@ const colors = {
 };
 
 export const defaultVocabulary = {
-  // Core communication board — 20 cards in a 5×4 grid (matches LessonPix board).
-  // Cards are listed row-by-row so grid order is deterministic.
-  // `audioId` lets duplicate cards reuse a shared audio file instead of regenerating.
+  // Core communication board — dynamically laid out; cards are listed in
+  // display order. `audioId` lets a card reuse a shared audio file instead
+  // of regenerating. Cards with `image` + `animation` get a button that
+  // animates on press; new words currently use emoji placeholders.
   core: [
-    // Row 1
-    { id: 'help',      word: 'Help',      icon: '🤝', color: colors.verb, image: 'images/core/help.png', animation: 'images/core/animated/help.webp', animationDuration: 3.857 },
-    { id: 'me',        word: 'Me',        icon: '👈', color: colors.pronoun, image: 'images/core/me.png', animation: 'images/core/animated/me.webp', animationDuration: 4.01 },
-    { id: 'i',         word: 'I',         icon: '🙋', color: colors.pronoun, image: 'images/core/i.png', animation: 'images/core/animated/i.webp', animationDuration: 4.01 },
-    { id: 'want',      word: 'Want',      icon: '🤲', color: colors.verb, image: 'images/core/want.png', animation: 'images/core/animated/want.webp', animationDuration: 4.01 },
-    // Row 2
-    { id: 'give',      word: 'Give',      icon: '👐', color: colors.verb, image: 'images/core/give.png', animation: 'images/core/animated/give.webp', animationDuration: 4.01 },
-    { id: 'me2',       word: 'Me',        icon: '👈', color: colors.pronoun, audioId: 'me', image: 'images/core/me2.png', animation: 'images/core/animated/me2.webp', animationDuration: 4.01 },
-    { id: 'yes',       word: 'Yes',       icon: '✅', color: colors.social, image: 'images/core/yes.png', animation: 'images/core/animated/yes.webp', animationDuration: 4.01 },
-    { id: 'no',        word: 'No',        icon: '❌', color: colors.social, image: 'images/core/no.png', animation: 'images/core/animated/no.webp', animationDuration: 4.01 },
-    // Row 3
-    { id: 'hi',        word: 'Hi',        icon: '👋', color: colors.social, image: 'images/core/hi.png', animation: 'images/core/animated/hi.webp', animationDuration: 4.01 },
-    { id: 'bye',       word: 'Bye',       icon: '👋', color: colors.social, image: 'images/core/bye.png', animation: 'images/core/animated/bye.webp', animationDuration: 4.01 },
-    { id: 'my_turn',   word: 'My turn',   icon: '🙋', color: colors.pronoun, image: 'images/core/my_turn.png', animation: 'images/core/animated/my_turn.webp', animationDuration: 4.01 },
-    { id: 'your_turn', word: 'Your turn', icon: '👉', color: colors.pronoun, image: 'images/core/your_turn.png', animation: 'images/core/animated/your_turn.webp', animationDuration: 4.01 },
-    // Row 4
-    { id: 'more',      word: 'More',      icon: '➕', color: colors.adjective, image: 'images/core/more.png', animation: 'images/core/animated/more.webp', animationDuration: 4.01 },
-    { id: 'all_done',  word: 'All done',  icon: '🏁', color: colors.social, audioId: 'all-done', image: 'images/core/all_done.png', animation: 'images/core/animated/all_done.webp', animationDuration: 4.01 },
-    { id: 'washroom',  word: 'Washroom',  icon: '🚻', color: colors.noun, image: 'images/core/washroom.png', animation: 'images/core/animated/washroom.webp', animationDuration: 4.01 },
-    { id: 'wait',      word: 'Wait',      icon: '✋', color: colors.verb, image: 'images/core/wait.png', animation: 'images/core/animated/wait.webp', animationDuration: 4.01 },
-    // Row 5
-    { id: 'i_eat',     word: 'I eat',     icon: '🍽️', color: colors.verb, pronounce: 'I eat', image: 'images/core/i_eat.png', animation: 'images/core/animated/i_eat.webp', animationDuration: 4.01 },
-    { id: 'i_drink',   word: 'I drink',   icon: '🥤', color: colors.verb, pronounce: 'I drink', image: 'images/core/i_drink.png', animation: 'images/core/animated/i_drink.webp', animationDuration: 4.01 },
-    { id: 'hi2',       word: 'Hi',        icon: '👋', color: colors.social, audioId: 'hi', image: 'images/core/hi2.png', animation: 'images/core/animated/hi2.webp', animationDuration: 4.01 },
-    { id: 'bye2',      word: 'Bye',       icon: '👋', color: colors.social, audioId: 'bye', image: 'images/core/bye2.png', animation: 'images/core/animated/bye2.webp', animationDuration: 4.01 },
+    { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.noun, image: 'images/core/strawberry.png' },
+    { id: 'orange',     word: 'Orange',     icon: '🍊', color: colors.noun, image: 'images/core/orange.png' },
+    { id: 'apple',      word: 'Apple',      icon: '🍎', color: colors.noun, image: 'images/core/apple.png' },
+    { id: 'cracker',    word: 'Cracker',    icon: '🍘', color: colors.noun, image: 'images/core/cracker.png' },
+    { id: 'bread',      word: 'Bread',      icon: '🍞', color: colors.noun, image: 'images/core/bread.png' },
+    { id: 'toast',      word: 'Toast',      icon: '🍞', color: colors.noun, image: 'images/core/toast.png' },
+    { id: 'water',      word: 'Water',      icon: '💧', color: colors.noun, image: 'images/core/water.png' },
+    { id: 'all_done',   word: 'All done',   icon: '🏁', color: colors.social, audioId: 'all-done', image: 'images/core/all_done.png', animation: 'images/core/animated/all_done.webp', animationDuration: 1.0 },
+    { id: 'wipe',       word: 'Wipe',       icon: '🧻', color: colors.verb, image: 'images/core/wipe.png' },
+    { id: 'yes',        word: 'Yes',        icon: '✅', color: colors.social, image: 'images/core/yes.png', animation: 'images/core/animated/yes.webp', animationDuration: 1.0 },
+    { id: 'no',         word: 'No',         icon: '❌', color: colors.social, image: 'images/core/no.png', animation: 'images/core/animated/no.webp', animationDuration: 1.0 },
+    { id: 'wait',       word: 'Wait',       icon: '✋', color: colors.verb, image: 'images/core/wait.png', animation: 'images/core/animated/wait.webp', animationDuration: 1.0 },
+    { id: 'stop',       word: 'Stop',       icon: '🛑', color: colors.verb, pronounce: 'Stop!', image: 'images/core/stop.png' },
   ],
   folders: [
     { id: 'food', word: 'Foods', icon: '🍔', type: 'folder', color: colors.folder },

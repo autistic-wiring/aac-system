@@ -64,6 +64,21 @@ def make_client() -> genai.Client:
 
 # Per-button motion prompts. Original PNG is the rest pose and first+last frame,
 # so the animation loops seamlessly while the button is held.
+#
+# Shared context prepended to every prompt below: this is an AAC board for
+# non-verbal children, and most gestures are widely-recognized American Sign
+# Language (ASL). The motion must be educational, gentle, exaggerated enough
+# for a child to imitate, and locked to the source image's art style.
+PREAMBLE = (
+    "AUDIENCE AND PURPOSE: this animation is for an Augmentative and "
+    "Alternative Communication (AAC) board used by non-verbal children. "
+    "Most gestures are widely-recognized American Sign Language (ASL) — "
+    "perform them correctly and clearly so a child can learn and imitate "
+    "the sign. The motion must be educational, gentle, calm, and slightly "
+    "exaggerated for visibility. Hold the source image's art style, line "
+    "weight, colors, and composition pixel-tight in every frame. Keep the "
+    "camera, framing, and zoom perfectly static. "
+)
 PROMPTS = {
     "help": (
         "Clean minimalist 2D line-art animation that EXACTLY matches the reference "
@@ -371,6 +386,7 @@ def generate(client: genai.Client, button_id: str, model: str, duration: int,
     prompt = PROMPTS.get(button_id)
     if not prompt:
         raise KeyError(f"No motion prompt defined for button '{button_id}'")
+    prompt = PREAMBLE + prompt
 
     img_bytes = src.read_bytes()
     image = types.Image(image_bytes=img_bytes, mime_type="image/png")

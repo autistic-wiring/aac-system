@@ -28,7 +28,7 @@ function App() {
     const scheduleUpdate = () => {
       if (updateScheduled) return;
       updateScheduled = true;
-      console.log('[PWA] Update detected. Reloading page in 3 seconds...');
+      console.log('[PWA] New version detected. Reloading page in 3 seconds...');
       setTimeout(() => {
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistration().then((reg) => {
@@ -44,6 +44,9 @@ function App() {
     const triggerUpdateCheck = async () => {
       if (!('serviceWorker' in navigator)) return;
       try {
+        // Force HTTP revalidation of sw.js
+        fetch('/sw.js', { cache: 'no-store' }).catch(() => {});
+
         const reg = await navigator.serviceWorker.getRegistration();
         if (!reg) return;
 

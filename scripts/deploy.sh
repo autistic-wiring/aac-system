@@ -40,6 +40,29 @@ current_pkg_version() {
     || grep -m1 '"version"' "${K8S_DIR}/../package.json" | sed -E 's/[^0-9.]//g'
 }
 
+bump_patch_version() {
+  local pkg_file="${K8S_DIR}/../package.json"
+  local current_v; current_v="$(current_pkg_version)"
+  local major minor patch
+  IFS='.' read -r major minor patch <<< "${current_v}"
+  patch=$((patch + 1))
+  local new_v="${major}.${minor}.${patch}"
+
+  log "Auto-bumping patch version (+0.0.1): ${current_v} -> ${new_v}"
+
+  node -e "
+    const fs = require('fs');
+    const pkg = JSON.parse(fs.readFileSync('${pkg_file}', 'utf8'));
+    pkg.version = '${new_v}';
+    fs.writeFileSync('${pkg_file}', JSON.stringify(pkg, null, 2) + '\n');
+  "
+
+  git -C "${K8S_DIR}/.." add "${pkg_file}" >/dev/null 2>&1
+  git -C "${K8S_DIR}/.." commit -m "chore(release): bump patch version to ${new_v}" >/dev/null 2>&1 || true
+  git -C "${K8S_DIR}/.." push origin HEAD >/dev/null 2>&1 || true
+  echo "${new_v}"
+}
+
 # Build + push image with multiple tags.
 # Args: tag1 tag2 ...
 build_and_push() {
@@ -79,35 +102,25 @@ restart_rollout() {
 # --- commands ----------------------------------------------------------------
 
 cmd_testing() {
+  local new_v; new_v="$(bump_patch_version)"
   local sha; sha="$(short_sha)"
-  local pkg_v; pkg_v="$(current_pkg_version)"
   local branch; branch="$(git -C "${K8S_DIR}/.." rev-parse --abbrev-ref HEAD)"
   local slug;  slug="$(printf '%s' "${branch}" | tr -c 'a-zA-Z0-9._-' '-' | sed 's/--*/-/g; s/^-//; s/-$//')"
-  log "Deploy to TESTING (branch=${branch}, sha=${sha})"
-  build_and_push "testing" "sha-${sha}" "branch-${slug}"
+  log "Deploy to TESTING (version=v${new_v}, branch=${branch}, sha=${sha})"
+  build_and_push "testing" "sha-${sha}" "branch-${slug}" "v${new_v}"
   kubectl -n "${NAMESPACE}" apply -f "${K8S_DIR}/certificate-testing.yaml"
   kubectl -n "${NAMESPACE}" apply -f "${K8S_DIR}/deployment-testing.yaml"
   kubectl -n "${NAMESPACE}" apply -f "${K8S_DIR}/service-testing.yaml"
   kubectl -n "${NAMESPACE}" apply -f "${K8S_DIR}/ingress-testing.yaml"
   restart_rollout "aac-board-testing"
   echo
-  ok "Testing live at https://aac-testing.nexvision.cc  (image :sha-${sha})"
+  ok "Testing live at https://aac-testing.nexvision.cc  (version v${new_v}, image :sha-${sha})"
 }
 
 cmd_prod() {
-  local version="${1:-}"
+  local new_v; new_v="$(bump_patch_version)"
   local sha; sha="$(short_sha)"
-  local pkg_v; pkg_v="$(current_pkg_version)"
-
-  # If no explicit version, derive from package.json + existing tags.
-  if [[ -z "${version}" ]]; then
-    version="v${pkg_v}"
-    if git -C "${K8S_DIR}/.." tag -l "${version}" | grep -q .; then
-      local n; n=$(git -C "${K8S_DIR}/.." tag -l "${version}-r*" | wc -l)
-      version="${version}-r$((n+1))"
-    fi
-  fi
-  [[ "${version}" =~ ^v ]] || version="v${version}"
+  local version="v${new_v}"
 
   log "PROD RELEASE  sha=${sha}  version=${version}"
   build_and_push "stable" "sha-${sha}" "${version}"

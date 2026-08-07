@@ -9,19 +9,19 @@ const LottiePlayer = ({ src, animating, className }) => {
     if (!containerRef.current || !src) return;
 
     // Load SVG vector animation via lottie-web
-    animRef.current = lottie.loadAnimation({
+    const anim = lottie.loadAnimation({
       container: containerRef.current,
       renderer: 'svg',
       loop: true,
-      autoplay: false,
+      autoplay: true,
       path: src,
     });
 
+    animRef.current = anim;
+
     return () => {
-      if (animRef.current) {
-        animRef.current.destroy();
-        animRef.current = null;
-      }
+      anim.destroy();
+      animRef.current = null;
     };
   }, [src]);
 

@@ -109,20 +109,22 @@ const WordCard = ({ item, onItemClick }) => {
         <>
           <span className="word-icon" aria-hidden="true">
             {isFolder && <span className="folder-indicator">📁</span>}
-            {lottieUrl ? (
-              <LottiePlayer
-                src={lottieUrl}
-                animating={showAnimation}
-                className="word-card-anim"
-              />
-            ) : showAnimation ? (
-              <img
-                key={`anim-${pressCount}`}
-                src={animationUrl}
-                alt=""
-                className="word-card-anim"
-                draggable={false}
-              />
+            {showAnimation ? (
+              lottieUrl ? (
+                <LottiePlayer
+                  src={lottieUrl}
+                  animating={showAnimation}
+                  className="word-card-anim"
+                />
+              ) : (
+                <img
+                  key={`anim-${pressCount}`}
+                  src={animationUrl}
+                  alt=""
+                  className="word-card-anim"
+                  draggable={false}
+                />
+              )
             ) : imageUrl ? (
               <img src={imageUrl} alt="" className="word-card-image" draggable={false} />
             ) : (

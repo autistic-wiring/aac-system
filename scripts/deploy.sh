@@ -48,6 +48,15 @@ bump_patch_version() {
   patch=$((patch + 1))
   local new_v="${major}.${minor}.${patch}"
 
+  # Sync remote tags, then keep bumping until we land on a version whose
+  # tag isn't already used (locally or on origin) — avoids `git tag` conflicts.
+  git -C "${K8S_DIR}/.." fetch --tags origin >/dev/null 2>&1 || true
+  while git -C "${K8S_DIR}/.." rev-parse -q --verify "refs/tags/v${new_v}" >/dev/null 2>&1; do
+    log "Tag v${new_v} already exists — bumping again"
+    patch=$((patch + 1))
+    new_v="${major}.${minor}.${patch}"
+  done
+
   log "Auto-bumping patch version (+0.0.1): ${current_v} -> ${new_v}"
 
   node -e "

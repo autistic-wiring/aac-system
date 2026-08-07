@@ -15,6 +15,9 @@ const LottiePlayer = ({ src, animating, className }) => {
       loop: true,
       autoplay: true,
       path: src,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid meet',
+      },
     });
 
     animRef.current = anim;

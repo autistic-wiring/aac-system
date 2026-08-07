@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Generates clean, lightweight vector Lottie JSON animations into public/images/core/lottie/
-for all AAC vocabulary cards.
+Generates clean, 100% standard Bodymovin vector Lottie JSON animations into public/images/core/lottie/
 """
 
 import json
@@ -35,6 +34,23 @@ def make_layer(name, shapes, ks):
         "shapes": shapes
     }
 
+def make_group(name, items):
+    # Standard Bodymovin shape group with transform
+    items_with_tr = list(items)
+    items_with_tr.append({
+        "ty": "tr",
+        "p": {"a": 0, "k": [0, 0]},
+        "a": {"a": 0, "k": [0, 0]},
+        "s": {"a": 0, "k": [100, 100]},
+        "r": {"a": 0, "k": 0},
+        "o": {"a": 0, "k": 100}
+    })
+    return {
+        "ty": "gr",
+        "nm": name,
+        "it": items_with_tr
+    }
+
 # 1. Wipe card Lottie (tissue pulling upward out of box)
 def build_lottie_wipe():
     lottie = get_base_lottie("Wipe")
@@ -63,7 +79,7 @@ def build_lottie_wipe():
         "s": {"a": 0, "k": [100, 100, 100]}
     }
     
-    tissue1_shapes = [
+    tissue_group = make_group("Tissue Shape", [
         {
             "ty": "rc",
             "d": 1,
@@ -82,7 +98,7 @@ def build_lottie_wipe():
             "w": {"a": 0, "k": 10},
             "lc": 2, "lj": 2
         }
-    ]
+    ])
     
     # Tissue 2 layer (emerging from slot)
     t2_ks = {
@@ -118,8 +134,7 @@ def build_lottie_wipe():
         "s": {"a": 0, "k": [100, 100, 100]}
     }
     
-    box_shapes = [
-        # Box Rect
+    box_group = make_group("Box Rect", [
         {
             "ty": "rc",
             "d": 1,
@@ -137,8 +152,10 @@ def build_lottie_wipe():
             "c": {"a": 0, "k": [0.12, 0.12, 0.12, 1]},
             "w": {"a": 0, "k": 14},
             "lc": 2, "lj": 2
-        },
-        # Slot Oval
+        }
+    ])
+
+    slot_group = make_group("Slot Oval", [
         {
             "ty": "el",
             "d": 1,
@@ -155,15 +172,15 @@ def build_lottie_wipe():
             "c": {"a": 0, "k": [0.12, 0.12, 0.12, 1]},
             "w": {"a": 0, "k": 8}
         }
-    ]
+    ])
 
-    lottie["layers"].append(make_layer("Tissue2", tissue1_shapes, t2_ks))
-    lottie["layers"].append(make_layer("Tissue1", tissue1_shapes, t1_ks))
-    lottie["layers"].append(make_layer("Box", box_shapes, box_ks))
+    lottie["layers"].append(make_layer("Tissue2", [tissue_group], t2_ks))
+    lottie["layers"].append(make_layer("Tissue1", [tissue_group], t1_ks))
+    lottie["layers"].append(make_layer("Box", [box_group, slot_group], box_ks))
     return lottie
 
 def main():
-    print("Generating vector Lottie JSONs...")
+    print("Generating standard vector Lottie JSONs...")
     wipe_lottie = build_lottie_wipe()
     wipe_path = OUT_DIR / "wipe.json"
     with open(wipe_path, "w") as f:

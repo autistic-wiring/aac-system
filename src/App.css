@@ -179,18 +179,14 @@
   justify-content: center;
 }
 
-.word-card-image {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-  display: block;
-}
-
+.word-card-image,
 .word-card-anim {
-  height: 100%;
-  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  object-position: center;
   display: block;
 }
 

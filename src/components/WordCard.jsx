@@ -23,7 +23,8 @@ const WordCard = ({ item, onItemClick }) => {
   // Decoupled from isPressed: a quick tap mounts/unmounts the element in ~100ms,
   // so the user never sees it. Keep it mounted until it finishes its cycle
   // (looping while held, finishing once on release).
-  const showAnimation = animating && animationUrl;
+  // Animations are disabled in production builds (static image only).
+  const showAnimation = !import.meta.env.PROD && animating && animationUrl;
 
   useEffect(() => () => {
     if (endTimerRef.current) clearTimeout(endTimerRef.current);

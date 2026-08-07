@@ -172,7 +172,7 @@ function App() {
   useEffect(() => {
     if (showSplash) return;
 
-    const IDLE_TIMEOUT = 20000;
+    const IDLE_TIMEOUT = 20 * 60 * 1000;
     const wake = () => {
       setIsDimmed(false);
       clearTimeout(inactivityTimer.current);
@@ -182,6 +182,8 @@ function App() {
     wake();
     window.addEventListener('pointerdown', wake);
     window.addEventListener('keydown', wake);
+    window.addEventListener('mousemove', wake);
+    window.addEventListener('touchstart', wake);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') wake();
     });
@@ -190,6 +192,8 @@ function App() {
       clearTimeout(inactivityTimer.current);
       window.removeEventListener('pointerdown', wake);
       window.removeEventListener('keydown', wake);
+      window.removeEventListener('mousemove', wake);
+      window.removeEventListener('touchstart', wake);
     };
   }, [showSplash]);
 
@@ -238,7 +242,7 @@ function App() {
       <div
         className="dim-overlay"
         style={{
-          opacity: isDimmed ? 0.7 : 0,
+          opacity: isDimmed ? 0.98 : 0,
           transition: isDimmed ? 'opacity 4s ease' : 'opacity 0.4s ease',
         }}
       />

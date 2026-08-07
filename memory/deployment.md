@@ -147,6 +147,19 @@ Both deployments use 10m/100m CPU and 32Mi/64Mi memory. The single-node cluster 
 - Bump it (e.g. `1.0.0` → `1.0.1`) before promoting if you want a clean semver.
 - If you forget to bump, `promote` appends `-rN` (e.g. `v1.0.0-r1`, `v1.0.0-r2`).
 
+## Auto-Bump Tag Conflict Handling (2026-08-07)
+
+`bump_patch_version` in `scripts/deploy.sh` previously bumped only +0.0.1 without
+checking whether that version tag already existed. `deploy.sh prod` then died at
+`git tag -a vX.Y.Z` with "tag 'vX.Y.Z' already exists" **after** pushing images,
+leaving k8s un-rolled (rollout must be finished manually — `kubectl apply` + restart).
+
+Fix: the function now `git fetch --tags origin` first, then loops +0.0.1 until
+`refs/tags/v<new>` is unused (local AND remote), so it always lands on a free tag.
+If the script still aborts at the tag step, the images ARE already pushed —
+finish manually with:
+`kubectl -n asd apply -f k8s/{certificate,deployment,service,ingress}.yaml && kubectl -n asd rollout restart deployment/aac-board`
+
 ## Disaster Recovery
 
 - Any prior `:vX.Y.Z` or `:sha-xxxxxx` is a valid rollback target — they're immutable.

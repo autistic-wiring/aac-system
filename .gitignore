@@ -26,3 +26,8 @@ __pycache__/
 *.njsproj
 *.sln
 *.sw?
+
+# Graphify
+graphify-out/
+memory/graphify-out/
+

@@ -21,6 +21,66 @@ function App() {
     preloadWords(allWordsToPreload);
   }, []);
 
+  // Check for PWA updates on button press, updating the page after 3 seconds if an update is found
+  useEffect(() => {
+    let updateScheduled = false;
+
+    const scheduleUpdate = () => {
+      if (updateScheduled) return;
+      updateScheduled = true;
+      console.log('[PWA] Update detected. Reloading page in 3 seconds...');
+      setTimeout(() => {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistration().then((reg) => {
+            if (reg && reg.waiting) {
+              reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        }
+        window.location.reload();
+      }, 3000);
+    };
+
+    const triggerUpdateCheck = async () => {
+      if (!('serviceWorker' in navigator)) return;
+      try {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (!reg) return;
+
+        if (reg.waiting) {
+          scheduleUpdate();
+          return;
+        }
+
+        reg.onupdatefound = () => {
+          const installingWorker = reg.installing;
+          if (installingWorker) {
+            installingWorker.onstatechange = () => {
+              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                scheduleUpdate();
+              }
+            };
+          }
+        };
+
+        await reg.update();
+      } catch {
+        /* ignore offline network errors */
+      }
+    };
+
+    const handlePointerDown = (e) => {
+      if (e.target.closest('button, .word-card, .folder-card, .back-button')) {
+        triggerUpdateCheck();
+      }
+    };
+
+    window.addEventListener('pointerdown', handlePointerDown);
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, []);
+
   useEffect(() => {
     if (!('wakeLock' in navigator)) return;
 

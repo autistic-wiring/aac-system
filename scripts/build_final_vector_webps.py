@@ -139,14 +139,82 @@ def render_wait(frame_idx, total_frames=30):
     return downsample(img)
 
 def render_washroom(frame_idx, total_frames=30):
+    # Wash hands icon (green verb card)
     img = create_super_canvas()
     draw = ImageDraw.Draw(img, "RGBA")
     t = frame_idx / total_frames
-    y_bounce = int(math.sin(t * 2 * math.pi) * 20.0)
-    cx, cy = 512, 512 + y_bounce
-    draw_bold_circle(draw, (cx, cy), 360, fill_color=(255, 183, 77, 255), outline_color=(30, 30, 30, 255), width=24)
-    draw_bold_circle(draw, (cx, cy - 140), 70, fill_color=(255, 255, 255, 255), outline_color=(30, 30, 30, 255), width=16)
-    draw_bold_rounded_rect(draw, [cx - 100, cy - 40, cx + 100, cy + 180], radius=40, fill_color=(255, 255, 255, 255), outline_color=(30, 30, 30, 255), width=16)
+    
+    cx, cy = 512, 512
+    # Circle background (green verb theme)
+    draw_bold_circle(draw, (cx, cy), 360, fill_color=(129, 199, 132, 255), outline_color=(30, 30, 30, 255), width=24)
+    
+    # Hand rubbing animation offset
+    rub_x = int(math.sin(t * 2 * math.pi) * 15.0)
+    rub_y = int(math.cos(t * 2 * math.pi) * 8.0)
+    
+    # Left hand (skin tone)
+    draw_bold_rounded_rect(draw, [cx - 150 + rub_x, cy - 20 + rub_y, cx - 10 - rub_x, cy + 160], radius=40, fill_color=(255, 205, 80, 255), outline_color=(30, 30, 30, 255), width=16)
+    draw_bold_rounded_rect(draw, [cx - 150 + rub_x, cy - 100 + rub_y, cx - 100 + rub_x, cy], radius=25, fill_color=(255, 205, 80, 255), outline_color=(30, 30, 30, 255), width=16)
+    draw_bold_rounded_rect(draw, [cx - 90 + rub_x, cy - 120 + rub_y, cx - 40 + rub_x, cy], radius=25, fill_color=(255, 205, 80, 255), outline_color=(30, 30, 30, 255), width=16)
+    
+    # Right hand overlapping
+    draw_bold_rounded_rect(draw, [cx + 10 + rub_x, cy - 60 - rub_y, cx + 150 - rub_x, cy + 120], radius=40, fill_color=(255, 220, 120, 255), outline_color=(30, 30, 30, 255), width=16)
+    draw_bold_rounded_rect(draw, [cx + 40 + rub_x, cy - 140 - rub_y, cx + 90 + rub_x, cy - 40], radius=25, fill_color=(255, 220, 120, 255), outline_color=(30, 30, 30, 255), width=16)
+    draw_bold_rounded_rect(draw, [cx + 100 + rub_x, cy - 120 - rub_y, cx + 150 + rub_x, cy - 20], radius=25, fill_color=(255, 220, 120, 255), outline_color=(30, 30, 30, 255), width=16)
+
+    # Water stream coming down from top
+    draw_bold_rounded_rect(draw, [cx - 40, cy - 320, cx + 40, cy - 80], radius=20, fill_color=(100, 210, 255, 240), outline_color=(30, 30, 30, 255), width=14)
+
+    # Soap bubbles floating
+    bubble_offsets = [
+        (-120, -160, 45),
+        (140, -140, 55),
+        (-60, -220, 35),
+        (80, -230, 40),
+        (0, 180, 50)
+    ]
+    for bx, by, r in bubble_offsets:
+        b_float = int(math.sin((t + bx) * 2 * math.pi) * 12.0)
+        draw_bold_circle(draw, (cx + bx, cy + by + b_float), r, fill_color=(240, 250, 255, 230), outline_color=(30, 30, 30, 255), width=12)
+
+    return downsample(img)
+
+def render_wipe(frame_idx, total_frames=30):
+    # Tissue box with tissue sticking out (green verb card)
+    img = create_super_canvas()
+    draw = ImageDraw.Draw(img, "RGBA")
+    t = frame_idx / total_frames
+    
+    cx, cy = 512, 512
+    draw_bold_circle(draw, (cx, cy), 360, fill_color=(129, 199, 132, 255), outline_color=(30, 30, 30, 255), width=24)
+    
+    tissue_lift = int(math.sin(t * 2 * math.pi) * 15.0)
+    
+    # Tissue sticking out of top slot (white folded tissue paper peak)
+    tissue_pts = [
+        (cx - 100, cy - 20),
+        (cx - 140, cy - 140 - tissue_lift),
+        (cx - 50, cy - 230 - tissue_lift),
+        (cx, cy - 160 - tissue_lift),
+        (cx + 60, cy - 250 - tissue_lift),
+        (cx + 140, cy - 130 - tissue_lift),
+        (cx + 100, cy - 20),
+    ]
+    draw.polygon(tissue_pts, fill=(255, 255, 255, 255))
+    draw.line([(cx - 50, cy - 230 - tissue_lift), (cx - 20, cy - 60)], fill=(210, 230, 245, 255), width=10)
+    draw.line([(cx + 60, cy - 250 - tissue_lift), (cx + 30, cy - 60)], fill=(210, 230, 245, 255), width=10)
+    draw.polygon(tissue_pts, fill=None, outline=(30, 30, 30, 255))
+
+    # Tissue Box (Teal cuboid box)
+    box_left, box_top, box_right, box_bottom = cx - 180, cy - 20, cx + 180, cy + 180
+    draw_bold_rounded_rect(draw, [box_left, box_top, box_right, box_bottom], radius=30, fill_color=(77, 182, 172, 255), outline_color=(30, 30, 30, 255), width=20)
+    
+    # Top opening slot of tissue box (dark teal oval)
+    draw_bold_circle(draw, (cx, cy - 20), 90, fill_color=(38, 128, 120, 255), outline_color=(30, 30, 30, 255), width=12)
+    
+    # Decorative stripe on tissue box front
+    draw_bold_rounded_rect(draw, [box_left + 30, cy + 60, box_right - 30, cy + 110], radius=15, fill_color=(255, 255, 255, 220), outline_color=(30, 30, 30, 255), width=10)
+
     return downsample(img)
 
 def render_more(frame_idx, total_frames=30):
@@ -193,6 +261,7 @@ RENDERERS = {
     'i_drink': render_drink,
     'wait': render_wait,
     'washroom': render_washroom,
+    'wipe': render_wipe,
     'more': render_more,
     'all_done': render_all_done,
 }
@@ -226,6 +295,10 @@ def main():
             "-pix_fmt", "yuva420p",
             str(webp_path)
         ]
+        png_out_dir = Path("public/images/core")
+        png_out_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(tmp_dir / "frame_0000.png", png_out_dir / f"{card_id}.png")
+
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         shutil.rmtree(tmp_dir)
         durations[card_id] = 1.0

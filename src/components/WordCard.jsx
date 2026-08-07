@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { speakWord } from '../utils/speechAdapter';
+import LottiePlayer from './LottiePlayer';
 
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 const resolveAsset = (p) => (p ? `${baseUrl}/${p.replace(/^\//, '')}` : null);
@@ -14,6 +15,8 @@ const WordCard = ({ item, onItemClick }) => {
 
   const imageUrl = resolveAsset(item.image);
   const animationUrl = resolveAsset(item.animation);
+  const lottieUrl = resolveAsset(item.lottie || (item.animation?.endsWith('.json') ? item.animation : null));
+
   // One full animation cycle in ms. Needed because <img> (APNG/WebP) has no
   // `ended` event, so we time the cycle ourselves to revert to the static image
   // after a tap. Falls back to 4s if a future entry omits the duration.
@@ -106,11 +109,13 @@ const WordCard = ({ item, onItemClick }) => {
         <>
           <span className="word-icon" aria-hidden="true">
             {isFolder && <span className="folder-indicator">📁</span>}
-            {showAnimation ? (
-              // Transparent looping animation (APNG/WebP). key changes each
-              // press -> React remounts the <img> -> plays from frame 0.
-              // The .word-icon ancestor's drop-shadow filter does NOT freeze
-              // playback (verified via headless-Chrome CDP pixel-delta test).
+            {lottieUrl ? (
+              <LottiePlayer
+                src={lottieUrl}
+                animating={showAnimation}
+                className="word-card-anim"
+              />
+            ) : showAnimation ? (
               <img
                 key={`anim-${pressCount}`}
                 src={animationUrl}

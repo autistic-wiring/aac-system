@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lottie-web": "^5.13.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "sherpa-onnx": "^1.12.28"

@@ -36,14 +36,18 @@ IMG_DIR = REPO / "public" / "images" / "core"
 OUT_DIR = REPO / "public" / "images" / "core" / "animated"
 
 
+import shutil
+
 def _gcloud_token() -> str:
+    gcloud = shutil.which("gcloud") or str(Path.home() / "google-cloud-sdk" / "bin" / "gcloud")
     out = subprocess.run(
-        ["gcloud", "auth", "print-access-token"],
+        [gcloud, "auth", "print-access-token"],
         capture_output=True, text=True,
     )
     if out.returncode != 0:
         raise RuntimeError(f"gcloud auth failed: {out.stderr.strip()}")
     return out.stdout.strip()
+
 
 
 class GcloudCred(Credentials):
@@ -373,7 +377,22 @@ PROMPTS = {
         "CONSTRAINTS: hold the art style pixel-tight. No camera movement, no "
         "zoom, no text, no extra objects. First and last frames identical."
     ),
+    "wipe": (
+        "Clean minimalist 2D line-art animation EXACTLY matching the reference "
+        "image's art style: crisp black outlines, flat cyan tissue box, white "
+        "tissue paper, PURE SOLID WHITE background #FFFFFF in every frame. "
+        "The image shows a cyan tissue box with a white tissue paper sticking "
+        "out of the top opening slot. "
+        "MOTION: a tissue is pulled smoothly upward out of the tissue box "
+        "opening slot. As the tissue rises up and clears the slot, another "
+        "fresh white tissue emerges from inside the box slot and settles into "
+        "the resting tissue position. A clean, gentle, educational pulling motion. "
+        "CONSTRAINTS: hold the art style pixel-tight (same cyan box color, same "
+        "outline weight). No camera movement, no zoom, no text, no extra objects. "
+        "First and last frames identical."
+    ),
 }
+
 
 
 def generate(client: genai.Client, button_id: str, model: str, duration: int,

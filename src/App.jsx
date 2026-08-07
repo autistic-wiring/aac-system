@@ -23,49 +23,70 @@ function App() {
 
   // Check for PWA updates on button press, updating the page after 3 seconds if an update is found
   useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+
     let updateScheduled = false;
+    let regRef = null;
+
+    const applyUpdateAndReload = () => {
+      const reload = () => window.location.reload();
+      const waiting = regRef?.waiting;
+      if (!waiting) {
+        reload();
+        return;
+      }
+      // Reload once the new SW takes control; fall back to a forced reload
+      // if controllerchange never fires (e.g. corrupted SW).
+      navigator.serviceWorker.addEventListener('controllerchange', reload, { once: true });
+      waiting.postMessage({ type: 'SKIP_WAITING' });
+      setTimeout(reload, 1500);
+    };
 
     const scheduleUpdate = () => {
       if (updateScheduled) return;
       updateScheduled = true;
       console.log('[PWA] New version detected. Reloading page in 3 seconds...');
-      setTimeout(() => {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistration().then((reg) => {
-            if (reg && reg.waiting) {
-              reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-            }
-          });
-        }
-        window.location.reload();
-      }, 3000);
+      setTimeout(applyUpdateAndReload, 3000);
+    };
+
+    const setupUpdateListener = async () => {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (!reg) return;
+      regRef = reg;
+
+      // If an update is already waiting, schedule immediately.
+      if (reg.waiting) {
+        scheduleUpdate();
+        return;
+      }
+
+      // Attach the updatefound listener ONCE; pointerdown only triggers reg.update().
+      reg.addEventListener('updatefound', () => {
+        const installingWorker = reg.installing;
+        if (!installingWorker) return;
+        installingWorker.addEventListener('statechange', () => {
+          if (
+            installingWorker.state === 'installed' &&
+            navigator.serviceWorker.controller
+          ) {
+            scheduleUpdate();
+          }
+        });
+      });
     };
 
     const triggerUpdateCheck = async () => {
-      if (!('serviceWorker' in navigator)) return;
+      if (updateScheduled) return;
+      const reg = regRef;
+      if (!reg) return;
       try {
-        // Force HTTP revalidation of sw.js
+        // Force HTTP revalidation of sw.js so updatefound can fire.
         fetch('/sw.js', { cache: 'no-store' }).catch(() => {});
-
-        const reg = await navigator.serviceWorker.getRegistration();
-        if (!reg) return;
 
         if (reg.waiting) {
           scheduleUpdate();
           return;
         }
-
-        reg.onupdatefound = () => {
-          const installingWorker = reg.installing;
-          if (installingWorker) {
-            installingWorker.onstatechange = () => {
-              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                scheduleUpdate();
-              }
-            };
-          }
-        };
-
         await reg.update();
       } catch {
         /* ignore offline network errors */
@@ -78,9 +99,13 @@ function App() {
       }
     };
 
+    setupUpdateListener();
     window.addEventListener('pointerdown', handlePointerDown);
+    // Expose for testing / manual triggering
+    window.__checkForPwaUpdate = triggerUpdateCheck;
     return () => {
       window.removeEventListener('pointerdown', handlePointerDown);
+      delete window.__checkForPwaUpdate;
     };
   }, []);
 

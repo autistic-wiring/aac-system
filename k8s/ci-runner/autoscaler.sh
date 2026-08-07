@@ -51,7 +51,9 @@ get_repos() {
 }
 
 # ---------------------------------------------------------------------------
-# count_queued — count queued workflow runs across specified repos
+# count_queued_jobs — count queued workflow runs across specified repos.
+# The API reports not-yet-started runs as "queued" (legacy "pending" returns 0
+# now), so query both and sum to be safe.
 # ---------------------------------------------------------------------------
 count_queued_jobs() {
   local org="$1"
@@ -61,22 +63,46 @@ count_queued_jobs() {
 
   for repo in "${repos[@]}"; do
     [[ -z "$repo" ]] && continue
-    local response http_code run_count
-    response=$(curl -s -w '\n%{http_code}' \
-      -H "Authorization: token ${GITHUB_TOKEN}" \
-      -H "Accept: application/vnd.github.v3+json" \
-      "https://api.github.com/repos/${org}/${repo}/actions/runs?status=pending&per_page=100" \
-      2>/dev/null || echo -e '{}\n000')
-    http_code=$(echo "$response" | tail -1)
-    run_count=$(echo "$response" | sed '$d' | jq -r '.total_count // 0' 2>/dev/null || echo "0")
+    for status in queued pending; do
+      local response http_code run_count
+      response=$(curl -s -w '\n%{http_code}' \
+        -H "Authorization: token ${GITHUB_TOKEN}" \
+        -H "Accept: application/vnd.github.v3+json" \
+        "https://api.github.com/repos/${org}/${repo}/actions/runs?status=${status}&per_page=100" \
+        2>/dev/null || echo -e '{}\n000')
+      http_code=$(echo "$response" | tail -1)
+      run_count=$(echo "$response" | sed '$d' | jq -r '.total_count // 0' 2>/dev/null || echo "0")
 
-    if [[ "$http_code" != "200" ]]; then
-      log "  WARN: ${org}/${repo} HTTP ${http_code}"
-      continue
-    fi
-    if [[ "$run_count" -gt 0 ]]; then
-      log "  ${org}/${repo}: ${run_count} pending run(s)"
-    fi
+      if [[ "$http_code" != "200" ]]; then
+        log "  WARN: ${org}/${repo} HTTP ${http_code}"
+        continue
+      fi
+      if [[ "$run_count" -gt 0 ]]; then
+        log "  ${org}/${repo}: ${run_count} ${status} run(s)"
+      fi
+      total=$((total + run_count))
+    done
+  done
+  echo "$total"
+}
+
+# ---------------------------------------------------------------------------
+# count_in_progress — count actively running workflow jobs. Used to keep the
+# runner alive: scaling to 0 mid-job kills the build.
+# ---------------------------------------------------------------------------
+count_in_progress() {
+  local org="$1"
+  local total=0
+  local repos
+  mapfile -t repos < <(get_repos "$org" "ORG_REPOS_${org//-/_}")
+
+  for repo in "${repos[@]}"; do
+    [[ -z "$repo" ]] && continue
+    local response run_count
+    response=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+      "https://api.github.com/repos/${org}/${repo}/actions/runs?status=in_progress&per_page=100" \
+      2>/dev/null || echo '{}')
+    run_count=$(echo "$response" | jq -r '.total_count // 0' 2>/dev/null || echo "0")
     total=$((total + run_count))
   done
   echo "$total"
@@ -109,11 +135,15 @@ for org in "${!ORG_DEPLOYMENTS[@]}"; do
 
   log "Checking org: ${org}"
   queued=$(count_queued_jobs "$org")
-  log "Total queued runs: ${queued}"
+  in_progress=$(count_in_progress "$org")
+  log "Total queued runs: ${queued}  in-progress: ${in_progress}"
 
   desired=0
   if [[ "$queued" -gt 0 ]]; then
     desired=$((queued > max_runners ? max_runners : queued))
+  elif [[ "$in_progress" -gt 0 ]]; then
+    # Never scale down mid-job — killing the pod cancels the build.
+    desired=1
   fi
   log "Desired replicas: ${desired}  (max=${max_runners})"
 

@@ -23,7 +23,7 @@ export async function preloadWords(items) {
   await Promise.all(items.map(async ({ id, audioId }) => {
     const key = audioId || id;
     try {
-      const buf = await fetchAndDecode(`/audio/${key}.wav`);
+      const buf = await fetchAndDecode(`/audio/${key}.wav?v=${__APP_VERSION__}`);
       audioCache.set(key, buf);
     } catch {
       // static file missing, will fall back to TTS server or speech API on click

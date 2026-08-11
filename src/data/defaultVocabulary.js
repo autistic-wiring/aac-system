@@ -34,8 +34,6 @@ export const defaultVocabulary = {
     { id: 'wash',       word: 'Wash',       icon: '🧼', color: colors.verb, image: 'images/core/wash.png', animation: 'images/core/animated/wash.webp', animationDuration: 1.0 },
     { id: 'wipe',       word: 'Wipe',       icon: '🧻', color: colors.verb, image: 'images/core/wipe.png', animation: 'images/core/animated/wipe.webp', animationDuration: 1.0 },
     { id: 'wait',       word: 'Wait',       icon: '✋', color: colors.verb, image: 'images/core/wait.png', animation: 'images/core/animated/wait.webp', animationDuration: 1.0 },
-    { id: 'stop',       word: 'Stop',       icon: '🛑', color: colors.verb, pronounce: 'Stop!', image: 'images/core/stop.png' },
-    { id: 'go',         word: 'Go',         icon: '🟢', color: colors.verb },
     { id: 'eat',        word: 'Eat',        icon: '🍽️', color: colors.verb },
     { id: 'all_done',   word: 'All done',   icon: '🏁', color: colors.social, audioId: 'all-done', image: 'images/core/all_done.png', animation: 'images/core/animated/all_done.webp', animationDuration: 1.0 },
     { id: 'more',       word: 'More',       icon: '🤲', color: colors.social, image: 'images/core/more.png', animation: 'images/core/animated/more.webp', animationDuration: 1.0 },

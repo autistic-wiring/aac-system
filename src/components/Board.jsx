@@ -2,6 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import WordCard from './WordCard';
 
 const GAP = 12;
+// Penalty per empty slot in the last row. Strong enough that a perfect fill
+// wins over a slightly-squarest layout with gaps (e.g. 10 items → 5x2 not 4x3
+// with 2 empty), but small enough that prime counts (7/11/13) still pick a
+// near-square grid instead of forcing 1 or N columns.
+const EMPTY_SLOT_PENALTY = 200;
 
 // Cap card size relative to the available space so cards never become
 // absurdly large on big resolutions, but never smaller than a usable AAC
@@ -21,6 +26,7 @@ const Board = ({ vocabulary, onItemClick }) => {
   //    current container size and item count,
   //  - enforces a per-resolution max card size (adds columns when cards
   //    would exceed it),
+  //  - prefers layouts with no empty trailing slots,
   //  - re-runs on container resize and on card add/remove, so the grid
   //    always reflows to best fit.
   useEffect(() => {
@@ -41,10 +47,10 @@ const Board = ({ vocabulary, onItemClick }) => {
         // chosen layout scales cards up to (but never past) the cap.
         const squareErr = Math.abs(cardW - cardH);
         const oversize = Math.max(cardW - cap, cardH - cap, 0);
-        // Prefer layouts where the last row has more than one tile, so a
-        // lone trailing card doesn't stretch to a full-width bar.
-        const lopsided = count % C === 1 && C > 1 ? 80 : 0;
-        const score = squareErr + oversize * 10000 + lopsided;
+        // Penalize every empty slot in the trailing row so perfect fills
+        // win when shapes are comparable. (C - count%C) % C → 0 when full.
+        const emptySlots = (C - (count % C)) % C;
+        const score = squareErr + oversize * 10000 + emptySlots * EMPTY_SLOT_PENALTY;
         if (score < bestScore) {
           bestScore = score;
           best = C;

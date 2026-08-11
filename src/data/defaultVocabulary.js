@@ -25,8 +25,8 @@ export const defaultVocabulary = {
   // animates on press; new words currently use emoji placeholders.
   core: [
     { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.noun, image: 'images/core/strawberry.png' },
-    { id: 'orange',     word: 'Orange',     icon: '🍊', color: colors.noun, image: 'images/core/orange.png', hidden: true },
-    { id: 'apple',      word: 'Apple',      icon: '🍎', color: colors.noun, image: 'images/core/apple.png', hidden: true },
+    { id: 'orange',     word: 'Orange',     icon: '🍊', color: colors.noun, image: 'images/core/orange.png' },
+    { id: 'apple',      word: 'Apple',      icon: '🍎', color: colors.noun, image: 'images/core/apple.png' },
     { id: 'cracker',    word: 'Cracker',    icon: '🍘', color: colors.noun, image: 'images/core/cracker.png', hidden: true },
     { id: 'bread',      word: 'Bread',      icon: '🍞', color: colors.noun, image: 'images/core/bread.png', hidden: true },
     { id: 'toast',      word: 'Toast',      icon: '🍞', color: colors.noun, image: 'images/core/toast.png', hidden: true },
@@ -35,10 +35,10 @@ export const defaultVocabulary = {
     { id: 'wipe',       word: 'Wipe',       icon: '🧻', color: colors.verb, image: 'images/core/wipe.png', animation: 'images/core/animated/wipe.webp', animationDuration: 1.0 },
     { id: 'wait',       word: 'Wait',       icon: '✋', color: colors.verb, image: 'images/core/wait.png', animation: 'images/core/animated/wait.webp', animationDuration: 1.0 },
     { id: 'stop',       word: 'Stop',       icon: '🛑', color: colors.verb, pronounce: 'Stop!', image: 'images/core/stop.png' },
+    { id: 'go',         word: 'Go',         icon: '🟢', color: colors.verb },
+    { id: 'eat',        word: 'Eat',        icon: '🍽️', color: colors.verb },
     { id: 'all_done',   word: 'All done',   icon: '🏁', color: colors.social, audioId: 'all-done', image: 'images/core/all_done.png', animation: 'images/core/animated/all_done.webp', animationDuration: 1.0 },
     { id: 'more',       word: 'More',       icon: '🤲', color: colors.social, image: 'images/core/more.png', animation: 'images/core/animated/more.webp', animationDuration: 1.0 },
-    { id: 'yes',        word: 'Yes',        icon: '✅', color: colors.social, image: 'images/core/yes.png', animation: 'images/core/animated/yes.webp', animationDuration: 1.0 },
-    { id: 'no',         word: 'No',         icon: '❌', color: colors.social, image: 'images/core/no.png', animation: 'images/core/animated/no.webp', animationDuration: 1.0 },
   ],
   folders: [
     { id: 'food', word: 'Foods', icon: '🍔', type: 'folder', color: colors.folder },

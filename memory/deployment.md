@@ -111,11 +111,13 @@ Audited all workflow runs via GitHub API. Three distinct failure modes, all fixe
    (2 prod + 1 testing runs). Fix: retry loop (5 × 60s) around `rollout status` — it's idempotent.
 
 Extra hardening:
-- `retry-on-failure` job-level retries (testing 2, prod 1). Safe because docker pushes are idempotent
-  per tag and the prod git-tag step is now guarded (skips if the tag already exists on origin).
+- **`retry-on-failure` job-level retries NOT supported** (2026-08-16, verified: workflow fails
+  validation with 0 jobs and shows the file path as run name — it's absent from the current
+  workflow-syntax docs). Robustness lives in the in-step retry loops instead.
 - Prod "Resolve version" checks `git ls-remote origin` (not just local tags) and reuses the version if
-  the existing tag already points at HEAD — a retried job re-releases cleanly instead of bumping to -rN.
+  the existing tag already points at HEAD — a re-run re-releases cleanly instead of bumping to -rN.
 - `docker build` + push wrapped in a 3-attempt retry loop (transient registry/network flakes).
+- Verified end-to-end: run 41 (2026-08-16, commit 13257e1) — all 8 steps green, rollout in ~7s.
 
 ## Build
 

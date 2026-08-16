@@ -27,7 +27,8 @@ permissions:
 jobs:
   deploy-prod:
     runs-on: [self-hosted, k8s]
-    timeout-minutes: 20
+    timeout-minutes: 25
+    retry-on-failure: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,36 +51,67 @@ jobs:
           SHA=$(git rev-parse --short HEAD)
           PKG=$(node -p 'require("./package.json").version')
           VERSION="v${PKG}"
-          # Append -rN if this semver already has a tag (e.g. v1.0.0 exists -> v1.0.0-r1).
-          if git tag -l "${VERSION}" | grep -q .; then
-            N=$(git tag -l "${VERSION}-r*" | wc -l)
+          git fetch --tags origin
+          # If this semver already has a tag pointing at a DIFFERENT commit,
+          # append -rN (e.g. v1.0.0 exists -> v1.0.0-r1).
+          REMOTE_SHA=$(git ls-remote origin "refs/tags/${VERSION}" | cut -f1)
+          if [[ -n "$REMOTE_SHA" && "$REMOTE_SHA" != "$(git rev-parse HEAD)" ]]; then
+            N=$(git ls-remote --tags origin "${VERSION}-r*" | wc -l)
             VERSION="${VERSION}-r$((N+1))"
           fi
-          echo "sha=${SHA}"        >> "$GITHUB_OUTPUT"
+          echo "sha=${SHA}"         >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "Releasing ${VERSION} at sha ${SHA}"
+
+      - name: Wait for Docker daemon
+        run: |
+          # Fresh ephemeral runner pods start dockerd (dind sidecar) in parallel
+          # with the runner; docker build may fire before it is up.
+          for i in $(seq 1 30); do
+            if docker info >/dev/null 2>&1; then
+              echo "Docker daemon is ready"
+              exit 0
+            fi
+            echo "waiting for Docker daemon... (${i}/30)"
+            sleep 5
+          done
+          docker info
+          exit 1
 
       - name: Build & push image
         env:
           REGISTRY: registry.nexvision.cc/nexvisioncc/aac-board
         run: |
           REG="$REGISTRY"
-          docker build --pull \
-            -t "$REG:stable" \
-            -t "$REG:sha-${{ steps.v.outputs.sha }}" \
-            -t "$REG:${{ steps.v.outputs.version }}" \
-            .
-          docker push "$REG:stable"
-          docker push "$REG:sha-${{ steps.v.outputs.sha }}"
-          docker push "$REG:${{ steps.v.outputs.version }}"
+          # docker push is idempotent per tag, so retrying is safe.
+          for attempt in 1 2 3; do
+            echo "== build+push attempt ${attempt}/3 =="
+            if docker build --pull \
+              -t "$REG:stable" \
+              -t "$REG:sha-${{ steps.v.outputs.sha }}" \
+              -t "$REG:${{ steps.v.outputs.version }}" \
+              . \
+              && docker push "$REG:stable" \
+              && docker push "$REG:sha-${{ steps.v.outputs.sha }}" \
+              && docker push "$REG:${{ steps.v.outputs.version }}"; then
+              exit 0
+            fi
+            sleep 15
+          done
+          exit 1
 
       - name: Git tag the release
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ steps.v.outputs.version }}" \
-                  -m "Release ${{ steps.v.outputs.version }} (auto-tagged on merge to main)"
-          git push origin "${{ steps.v.outputs.version }}"
+          # Idempotent: a retried job must not fail because the tag already exists.
+          if git ls-remote --exit-code origin "refs/tags/${{ steps.v.outputs.version }}" >/dev/null 2>&1; then
+            echo "tag ${{ steps.v.outputs.version }} already on origin — skipping push"
+          else
+            git tag -a "${{ steps.v.outputs.version }}" \
+                    -m "Release ${{ steps.v.outputs.version }} (auto-tagged on merge to main)"
+            git push origin "${{ steps.v.outputs.version }}"
+          fi
 
       - name: Apply k8s manifests + roll out
         run: |
@@ -88,7 +120,16 @@ jobs:
           kubectl -n asd apply -f k8s/service.yaml
           kubectl -n asd apply -f k8s/ingress.yaml
           kubectl -n asd rollout restart deployment/aac-board
-          kubectl -n asd rollout status  deployment/aac-board --timeout=180s
+          # rollout status can time out while the saturated single-node cluster
+          # schedules/pulls; retry instead of failing the deploy.
+          for attempt in $(seq 1 5); do
+            if kubectl -n asd rollout status deployment/aac-board --timeout=60s; then
+              exit 0
+            fi
+            echo "rollout not finished (attempt ${attempt}/5), retrying..."
+            sleep 5
+          done
+          exit 1
 
       - name: Summary
         run: |

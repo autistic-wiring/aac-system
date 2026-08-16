@@ -1,6 +1,6 @@
 ---
 title: "AAC Deployment & SDLC"
-date_modified: 2026-07-17
+date_modified: 2026-08-16
 tags: [deployment, docker, kubernetes, github-pages, pwa, ci, sdlc, versioning]
 ---
 
@@ -94,6 +94,28 @@ Mirrors what CI does, runnable from any machine with `docker` + `kubectl` + clus
 - `.github/workflows/deploy-prod.yml`      — auto-deploy to aac.nexvision.cc on main merge + tag release
 
 If CI is broken, the local `scripts/deploy.sh {testing,prod}` produces the exact same result.
+
+## CI Failure History & Hardening (2026-08-16)
+
+Audited all workflow runs via GitHub API. Three distinct failure modes, all fixed in the workflows:
+
+1. **DinD not ready on fresh ephemeral pods** — `Cannot connect to the Docker daemon at tcp://localhost:2375`.
+   The k8s runner pod is created on demand; `github-runner` container starts running steps while the
+   `dind` sidecar's dockerd is still booting. Fix: "Wait for Docker daemon" step polls `docker info`
+   (30 × 5s) before any docker command, in both deploy-testing.yml and deploy-prod.yml.
+2. **`cancel-in-progress: true` + rapid pushes killed in-flight builds** — 9 failures + 25 cancelled
+   on 2026-08-07 (8 version-bump pushes in ~2h). Symptom: "runner has received a shutdown signal",
+   "failed to solve: Canceled: context canceled". Fix: `cancel-in-progress: false` — superseded pushes
+   queue serially (max 1 runner) instead of killing the active build.
+3. **`kubectl rollout status` timeout** — 120s/180s not enough on the CPU-saturated single-node cluster
+   (2 prod + 1 testing runs). Fix: retry loop (5 × 60s) around `rollout status` — it's idempotent.
+
+Extra hardening:
+- `retry-on-failure` job-level retries (testing 2, prod 1). Safe because docker pushes are idempotent
+  per tag and the prod git-tag step is now guarded (skips if the tag already exists on origin).
+- Prod "Resolve version" checks `git ls-remote origin` (not just local tags) and reuses the version if
+  the existing tag already points at HEAD — a retried job re-releases cleanly instead of bumping to -rN.
+- `docker build` + push wrapped in a 3-attempt retry loop (transient registry/network flakes).
 
 ## Build
 

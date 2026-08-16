@@ -20,7 +20,7 @@ on:
 
 concurrency:
   group: deploy-testing
-  cancel-in-progress: true
+  cancel-in-progress: false   # queue superseded pushes instead of killing in-flight builds
 
 permissions:
   contents: read
@@ -28,7 +28,8 @@ permissions:
 jobs:
   deploy-testing:
     runs-on: [self-hosted, k8s]
-    timeout-minutes: 15
+    timeout-minutes: 20
+    retry-on-failure: 2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,19 +52,42 @@ jobs:
           SLUG=$(git rev-parse --abbrev-ref HEAD | tr -c 'a-zA-Z0-9._-' '-' | sed 's/--*/-/g; s/^-//; s/-$//')
           echo "branch=${SLUG}" >> "$GITHUB_OUTPUT"
 
+      - name: Wait for Docker daemon
+        run: |
+          # Fresh ephemeral runner pods start dockerd (dind sidecar) in parallel
+          # with the runner; docker build may fire before it is up.
+          for i in $(seq 1 30); do
+            if docker info >/dev/null 2>&1; then
+              echo "Docker daemon is ready"
+              exit 0
+            fi
+            echo "waiting for Docker daemon... (${i}/30)"
+            sleep 5
+          done
+          docker info
+          exit 1
+
       - name: Build & push image
         env:
           REGISTRY: registry.nexvision.cc/nexvisioncc/aac-board
         run: |
           REG="$REGISTRY"
-          docker build --pull \
-            -t "$REG:testing" \
-            -t "$REG:sha-${{ steps.v.outputs.sha }}" \
-            -t "$REG:branch-${{ steps.v.outputs.branch }}" \
-            .
-          docker push "$REG:testing"
-          docker push "$REG:sha-${{ steps.v.outputs.sha }}"
-          docker push "$REG:branch-${{ steps.v.outputs.branch }}"
+          # docker push is idempotent per tag, so retrying is safe.
+          for attempt in 1 2 3; do
+            echo "== build+push attempt ${attempt}/3 =="
+            if docker build --pull \
+              -t "$REG:testing" \
+              -t "$REG:sha-${{ steps.v.outputs.sha }}" \
+              -t "$REG:branch-${{ steps.v.outputs.branch }}" \
+              . \
+              && docker push "$REG:testing" \
+              && docker push "$REG:sha-${{ steps.v.outputs.sha }}" \
+              && docker push "$REG:branch-${{ steps.v.outputs.branch }}"; then
+              exit 0
+            fi
+            sleep 15
+          done
+          exit 1
 
       - name: Apply k8s manifests
         run: |
@@ -74,7 +98,16 @@ jobs:
           kubectl -n asd apply -f k8s/service-testing.yaml
           kubectl -n asd apply -f k8s/ingress-testing.yaml
           kubectl -n asd rollout restart deployment/aac-board-testing
-          kubectl -n asd rollout status  deployment/aac-board-testing --timeout=120s
+          # rollout status can time out while the saturated single-node cluster
+          # schedules/pulls; retry instead of failing the deploy.
+          for attempt in $(seq 1 5); do
+            if kubectl -n asd rollout status deployment/aac-board-testing --timeout=60s; then
+              exit 0
+            fi
+            echo "rollout not finished (attempt ${attempt}/5), retrying..."
+            sleep 5
+          done
+          exit 1
 
       - name: Summary
         run: |

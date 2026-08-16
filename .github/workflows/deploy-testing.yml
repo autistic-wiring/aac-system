@@ -29,7 +29,6 @@ jobs:
   deploy-testing:
     runs-on: [self-hosted, k8s]
     timeout-minutes: 20
-    retry-on-failure: 2
     steps:
       - name: Checkout
         uses: actions/checkout@v4

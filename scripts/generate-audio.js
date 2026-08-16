@@ -13,13 +13,9 @@ const MODEL_DIR = path.join(__dirname, '../tts-models/vits-piper-en_US-lessac-me
 const OUT_DIR = path.join(__dirname, '../public/audio');
 
 // Import vocabulary directly
-const { defaultVocabulary } = await import('../src/data/defaultVocabulary.js');
+const { allGotalkButtons } = await import('../src/data/gotalkPages.js');
 
-const allItems = [
-  ...defaultVocabulary.core,
-  ...defaultVocabulary.folders,
-  ...Object.values(defaultVocabulary.categories).flat()
-];
+const allItems = allGotalkButtons;
 
 const createModule = require('../node_modules/sherpa-onnx/sherpa-onnx-wasm-nodejs.js');
 const sherpaOnnxTts = require('../node_modules/sherpa-onnx/sherpa-onnx-tts.js');

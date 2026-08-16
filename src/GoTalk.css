@@ -1,0 +1,214 @@
+/* ── GoTalk-style pages ── */
+/* Colors sampled from the therapist's GoTalk Lite screenshots:
+   page background #34C7D9 (bright teal), footer #006253 (dark teal). */
+
+.gotalk-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #34c7d9;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.gotalk-page-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  padding: 16px;
+  padding-bottom: 10px;
+}
+
+.gotalk-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 4px solid #000;
+  border-radius: 26px;
+  padding: 12px 10px 8px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
+}
+
+.gotalk-card.baked-label {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.gotalk-card:active,
+.gotalk-card.pressed {
+  transform: scale(0.965);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.gotalk-card.baked-label:active,
+.gotalk-card.baked-label.pressed {
+  box-shadow: none;
+}
+
+.gotalk-card-image {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.gotalk-card.baked-label .gotalk-card-image {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+}
+
+.gotalk-card-icon {
+  font-size: clamp(4rem, 26vmin, 12rem);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.gotalk-card-text {
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: clamp(1.2rem, 5vmin, 2.4rem);
+  color: #1a1a1a;
+  text-align: center;
+  line-height: 1.15;
+  padding-bottom: 4px;
+}
+
+/* ── Footer ── */
+.gotalk-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #006253;
+  padding: 8px 14px;
+  min-height: 64px;
+  gap: 10px;
+}
+
+.gotalk-footer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 14px;
+  width: 60px;
+  height: 52px;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.gotalk-footer-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.gotalk-footer-btn:active,
+.gotalk-footer-btn.pressed {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0.92);
+}
+
+.gotalk-footer-title {
+  margin: 0;
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(1.3rem, 4.5vmin, 2rem);
+  letter-spacing: 0.5px;
+  text-align: center;
+  flex: 1;
+}
+
+/* ── Home launcher ── */
+.gotalk-home {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-auto-rows: minmax(200px, 280px);
+  gap: 16px;
+  padding: 20px;
+  background: #34c7d9;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+}
+
+.gotalk-launcher-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: stretch;
+  background: #ffffff;
+  border: 4px solid #000;
+  border-radius: 24px;
+  padding: 10px 10px 12px;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
+}
+
+.gotalk-launcher-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.gotalk-launcher-card:active {
+  transform: scale(0.965);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.gotalk-launcher-thumb {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.gotalk-launcher-icon {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2.5rem, 12vmin, 6rem);
+  line-height: 1;
+}
+
+.gotalk-launcher-title {
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: clamp(1.1rem, 4vmin, 1.8rem);
+  color: #1a1a1a;
+  text-align: center;
+  line-height: 1.15;
+}

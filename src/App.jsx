@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Board from './components/Board';
+import GoTalkHome from './components/GoTalkHome';
+import GoTalkPage from './components/GoTalkPage';
 import SplashScreen from './components/SplashScreen';
-import { defaultVocabulary } from './data/defaultVocabulary';
+import { gotalkPages, allGotalkButtons } from './data/gotalkPages';
 import { preloadWords } from './utils/speechAdapter';
 import './App.css';
+import './GoTalk.css';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const [currentCategory, setCurrentCategory] = useState('home');
+  const [currentPageId, setCurrentPageId] = useState(null);
   const fullscreenLock = useRef(false);
   const [isDimmed, setIsDimmed] = useState(false);
   const inactivityTimer = useRef(null);
 
   useEffect(() => {
-    const allWordsToPreload = [
-      ...defaultVocabulary.core,
-      ...defaultVocabulary.folders,
-      ...Object.values(defaultVocabulary.categories).flat()
-    ];
-    preloadWords(allWordsToPreload);
+    preloadWords(allGotalkButtons);
   }, []);
 
   // Check for PWA updates on button press, updating the page after 3 seconds if an update is found
@@ -94,7 +91,7 @@ function App() {
     };
 
     const handlePointerDown = (e) => {
-      if (e.target.closest('button, .word-card, .folder-card, .back-button')) {
+      if (e.target.closest('button, .gotalk-card, .gotalk-launcher-card')) {
         triggerUpdateCheck();
       }
     };
@@ -197,77 +194,44 @@ function App() {
     };
   }, [showSplash]);
 
-  const [backPressed, setBackPressed] = useState(false);
-  const backPointerDownTime = useRef(0);
+  const currentIndex = currentPageId === null
+    ? -1
+    : gotalkPages.findIndex((p) => p.id === currentPageId);
 
-  const handleItemClick = (item) => {
-    if (item.type === 'folder') {
-      setCurrentCategory(item.id);
-    }
+  const handleNext = () => {
+    const nextIndex = (currentIndex + 1) % gotalkPages.length;
+    setCurrentPageId(gotalkPages[nextIndex].id);
   };
 
-  const handleBack = () => {
-    setCurrentCategory('home');
+  const handleHome = () => {
+    setCurrentPageId(null);
   };
-
-  const handleBackPointerDown = (e) => {
-    if (e.button !== 0) return;
-    setBackPressed(true);
-    backPointerDownTime.current = Date.now();
-    handleBack();
-  };
-
-  const handleBackPointerUp = () => {
-    setBackPressed(false);
-  };
-
-  const handleBackClick = () => {
-    if (Date.now() - backPointerDownTime.current < 800) {
-      return;
-    }
-    handleBack();
-  };
-
-  let currentItems = [];
-  if (currentCategory === 'home') {
-    currentItems = defaultVocabulary.core;
-  } else {
-    currentItems = defaultVocabulary.categories[currentCategory] || [];
-  }
 
   return (
     <>
-    {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
-    {!showSplash && (
-      <div
-        className="dim-overlay"
-        style={{
-          opacity: isDimmed ? 0.98 : 0,
-          transition: isDimmed ? 'opacity 4s ease' : 'opacity 0.4s ease',
-        }}
-      />
-    )}
-    <div className="app-container">
-      <main>
-        {currentCategory !== 'home' && (
-          <div className="navigation-bar">
-            <button 
-              className={`back-button ${backPressed ? 'pressed' : ''}`}
-              onPointerDown={handleBackPointerDown}
-              onPointerUp={handleBackPointerUp}
-              onPointerCancel={handleBackPointerUp}
-              onClick={handleBackClick}
-            >
-              <span className="icon">🔙</span> Back to Home
-            </button>
-            <h2 className="category-title">
-              {defaultVocabulary.folders.find(f => f.id === currentCategory)?.word || ''}
-            </h2>
-          </div>
-        )}
-        <Board vocabulary={currentItems} onItemClick={handleItemClick} />
-      </main>
-    </div>
+      {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
+      {!showSplash && (
+        <div
+          className="dim-overlay"
+          style={{
+            opacity: isDimmed ? 0.98 : 0,
+            transition: isDimmed ? 'opacity 4s ease' : 'opacity 0.4s ease',
+          }}
+        />
+      )}
+      <div className="app-container">
+        <main>
+          {currentPageId === null ? (
+            <GoTalkHome pages={gotalkPages} onSelect={setCurrentPageId} />
+          ) : (
+            <GoTalkPage
+              page={gotalkPages[currentIndex]}
+              onHome={handleHome}
+              onNext={handleNext}
+            />
+          )}
+        </main>
+      </div>
     </>
   );
 }

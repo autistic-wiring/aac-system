@@ -1,14 +1,17 @@
 ---
 title: "AAC Vocabulary System"
-date_modified: 2026-07-16
-tags: [vocabulary, fitzgerald-key, color-coding, motor-planning]
+date_modified: 2026-08-16
+tags: [vocabulary, gotalk, pages, motor-planning]
 ---
 
 # Vocabulary System
 
-Defined in `src/data/defaultVocabulary.js`.
+> [!warning] SUPERSEDED (2026-08-16)
+> The core-board vocabulary below was replaced by the GoTalk page system.
+> See [[gotalk-visual-supports]]. Data now lives in `src/data/gotalkPages.js`.
+> Fitzgerald color coding is retired; GoTalk pages use white cards on teal.
 
-## Modified Fitzgerald Key Color Coding
+## Historical: Modified Fitzgerald Key Color Coding
 
 | Color | HEX | Category |
 |-------|-----|---------|

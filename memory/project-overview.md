@@ -26,32 +26,33 @@ Augmentative and Alternative Communication web app for non-verbal individuals (a
 
 ## Architecture
 
-See [[speech-pipeline]] [[vocabulary-system]] [[component-tree]] [[deployment]].
+See [[speech-pipeline]] [[gotalk-visual-supports]] [[component-tree]] [[deployment]].
 
 ### Key Patterns
 
-1. **Motor Planning First** — hidden buttons retain grid space, vocabulary expands without layout shifts
-2. **Progressive Disclosure** — starts with 8 visible core words + food folder; unlock via `hidden: false`
+1. **GoTalk Page System** (2026-08-16) — app is a launcher + 2-picture pages per the SLP's GoTalk Lite setup; replaces the old core board. See [[gotalk-visual-supports]]
+2. **Motor Planning First** — page buttons stay at fixed positions; no layout shifts
 3. **3-Layer Speech Fallback** — pre-generated WAV > TTS server (port 5050) > browser SpeechSynthesis
-4. **Folder Navigation** — pure React state (`currentCategory`), no router
+4. **Page Navigation** — pure React state (`currentPageId`), no router; footer home + next
 5. **Wake Lock** — prevents screen sleep during AAC use
-6. **Haptic Feedback** — `navigator.vibrate()`: double pulse for folders, single for words
-7. **Instant Pointer Triggers** — WordCard and Back buttons trigger immediately on `pointerdown` (touch/mouse press) to prevent missed activations if users drag their fingers away before releasing.
+6. **Haptic Feedback** — `navigator.vibrate()`: single pulse on button press
+7. **Instant Pointer Triggers** — GoTalkCard and footer buttons trigger immediately on `pointerdown` (touch/mouse press) to prevent missed activations if users drag their fingers away before releasing.
 
 ### Source Layout
 
 ```
 src/
   main.jsx                 — createRoot entry
-  App.jsx                  — state, routing logic
-  App.css / index.css      — all styles
+  App.jsx                  — state, page routing logic
+  App.css / GoTalk.css     — styles (GoTalk pages: teal bg, white cards, dark-teal footer)
   components/
-    Board.jsx              — grid layout, Yes/No bar
-    WordCard.jsx           — word/folder button
+    GoTalkHome.jsx         — launcher grid (one card per page)
+    GoTalkPage.jsx         — 2-button page + footer (home / title / next)
+    GoTalkCard.jsx         — page button (speaks on press, haptics)
     SplashScreen.jsx       — PWA update check
     SplashScreen.css
   data/
-    defaultVocabulary.js   — all vocabulary (core, folders, categories)
+    gotalkPages.js         — all pages (Turn Taking, Yes No, More Block, Help, I Want)
   utils/
     speechAdapter.js       — speech layer with cache + fallback
 ```

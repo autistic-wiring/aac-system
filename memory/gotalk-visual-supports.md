@@ -20,7 +20,7 @@ Branch `feat/gotalk-visual-supports` (2026-08-16). Replaces the core board entir
 
 1. Turn Taking — My turn / Your turn (artwork extracted from her PDF)
 2. Yes No — Yes (green) / No (red)
-3. More Block — More / All done
+3. More Block — More / All done (using clean core images `images/core/more.png` and `images/core/all_done.png` matching standard card angle and styling)
 4. Help — Help me / Open
 5. I Want — I want / More
 

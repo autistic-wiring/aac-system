@@ -30,10 +30,10 @@ export const gotalkPages = [
   {
     id: 'more_block',
     title: 'More Block',
-    thumb: 'images/gotalk/more.webp',
+    thumb: 'images/core/more.png',
     buttons: [
-      { id: 'more', word: 'More', image: 'images/gotalk/more.webp', bakedLabel: true },
-      { id: 'all_done', word: 'All done', image: 'images/gotalk/all_done.webp', audioId: 'all-done', bakedLabel: true },
+      { id: 'more', word: 'More', image: 'images/core/more.png' },
+      { id: 'all_done', word: 'All done', image: 'images/core/all_done.png', audioId: 'all-done' },
     ],
   },
   {

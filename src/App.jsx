@@ -173,10 +173,26 @@ function App() {
     if (showSplash) return;
 
     const IDLE_TIMEOUT = 20 * 60 * 1000;
+    let charging = false;
+    let battery = null;
+
     const wake = () => {
       setIsDimmed(false);
       clearTimeout(inactivityTimer.current);
-      inactivityTimer.current = setTimeout(() => setIsDimmed(true), IDLE_TIMEOUT);
+      // While charging the device is parked on its stand, so keep the
+      // screen bright and never start the idle dim.
+      if (!charging) {
+        inactivityTimer.current = setTimeout(() => setIsDimmed(true), IDLE_TIMEOUT);
+      }
+    };
+
+    const onChargingChange = () => {
+      if (battery.charging) {
+        clearTimeout(inactivityTimer.current);
+        setIsDimmed(false);
+      } else {
+        wake();
+      }
     };
 
     wake();
@@ -188,12 +204,23 @@ function App() {
       if (document.visibilityState === 'visible') wake();
     });
 
+    // Battery Status API (Chromium only; silently no-op elsewhere).
+    if (navigator.getBattery) {
+      navigator.getBattery().then((b) => {
+        battery = b;
+        charging = b.charging;
+        b.addEventListener('chargingchange', onChargingChange);
+        if (charging) onChargingChange();
+      }).catch(() => {});
+    }
+
     return () => {
       clearTimeout(inactivityTimer.current);
       window.removeEventListener('pointerdown', wake);
       window.removeEventListener('keydown', wake);
       window.removeEventListener('mousemove', wake);
       window.removeEventListener('touchstart', wake);
+      if (battery) battery.removeEventListener('chargingchange', onChargingChange);
     };
   }, [showSplash]);
 

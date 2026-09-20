@@ -56,7 +56,7 @@ export const defaultVocabulary = {
     action: [
       { id: 'eat',         word: 'Eat',         icon: '🍽️', color: colors.gotalkWhite, image: `${G}eat.png` },
       { id: 'drink_water', word: 'Drink water', icon: '🥛', color: colors.gotalkWhite, image: `${G}drink_water.png` },
-      { id: 'go_washroom', word: 'Go washroom', icon: '🚻', color: colors.gotalkWhite, image: `${G}go_washroom.png` },
+      { id: 'go_washroom', word: 'Go washroom', icon: '🚻', color: colors.gotalkWhite, image: `${G}go_washroom.png`, audioId: 'peepee' },
       { id: 'wipe',        word: 'Wipe',        icon: '🧻', color: colors.gotalkWhite, image: `${G}wipe.png` },
       { id: 'wash',        word: 'Wash',        icon: '🧼', color: colors.gotalkWhite, image: `${G}wash.png` },
     ],

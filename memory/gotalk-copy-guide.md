@@ -57,9 +57,10 @@ with port reachable means wrong port type (pairing vs debug).
   yellow `#f5b301` ⌂ ↩ ❐ circles, raised white title tab.
 - Assets: `public/images/gotalk/*.png` (RGBA, transparent bg). Voice:
   `public/audio/*.wav` mono 16-bit 22050Hz (`ffmpeg -ar 22050 -ac 1 -sample_fmt s16`).
-- Missing recordings (Wipe had cache; Go washroom never caches) → tap button in app;
-  if still nothing, generate with repo Piper TTS (`scripts/generate-audio.js` pattern) —
-  same voice as the `:5050` TTS fallback. NEVER run generate-audio.js wholesale (overwrites Ivy wavs).
+- Missing recordings: card label ≠ spoken phrase is possible — Go washroom speaks
+  "pee pee" (`peepee.mp3`, wired via `audioId`). ADB taps never produce speech audio
+  (verified across 4 screen recordings: only tap thumps), so new words can't be
+  captured this way; per-tap mp3 caching does not happen (pack is downloaded).
 
 ## 6. App wiring
 

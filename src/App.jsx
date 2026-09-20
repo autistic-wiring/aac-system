@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board from './components/Board';
+import BottomBar from './components/BottomBar';
 import SplashScreen from './components/SplashScreen';
 import { defaultVocabulary } from './data/defaultVocabulary';
 import { preloadWords } from './utils/speechAdapter';
@@ -224,36 +225,41 @@ function App() {
     };
   }, [showSplash]);
 
-  const [backPressed, setBackPressed] = useState(false);
-  const backPointerDownTime = useRef(0);
+  // GoTalk-style page navigation: home is the Core words page, the rest
+  // follow the folder order. Prev/next cycle; back returns to the last page.
+  const prevPage = useRef('home');
+  const pageOrder = ['home', ...defaultVocabulary.folders.map((f) => f.id)];
+  const pages = pageOrder.map((id) => ({
+    id,
+    title: id === 'home'
+      ? 'Core words'
+      : defaultVocabulary.folders.find((f) => f.id === id)?.word || id,
+  }));
+
+  const goTo = (id) => {
+    setCurrentCategory((prev) => {
+      prevPage.current = prev;
+      return id;
+    });
+  };
 
   const handleItemClick = (item) => {
     if (item.type === 'folder') {
-      setCurrentCategory(item.id);
+      goTo(item.id);
     }
   };
 
-  const handleBack = () => {
-    setCurrentCategory('home');
-  };
+  const handleHome = () => goTo('home');
+  const handleBack = () => setCurrentCategory(prevPage.current);
+  const handleSelect = (id) => goTo(id);
 
-  const handleBackPointerDown = (e) => {
-    if (e.button !== 0) return;
-    setBackPressed(true);
-    backPointerDownTime.current = Date.now();
-    handleBack();
+  const stepPage = (dir) => {
+    const idx = pageOrder.indexOf(currentCategory);
+    const next = pageOrder[(idx + dir + pageOrder.length) % pageOrder.length];
+    goTo(next);
   };
-
-  const handleBackPointerUp = () => {
-    setBackPressed(false);
-  };
-
-  const handleBackClick = () => {
-    if (Date.now() - backPointerDownTime.current < 800) {
-      return;
-    }
-    handleBack();
-  };
+  const handlePrev = () => stepPage(-1);
+  const handleNext = () => stepPage(1);
 
   let currentItems = [];
   if (currentCategory === 'home') {
@@ -276,24 +282,17 @@ function App() {
     )}
     <div className="app-container">
       <main>
-        {currentCategory !== 'home' && (
-          <div className="navigation-bar">
-            <button 
-              className={`back-button ${backPressed ? 'pressed' : ''}`}
-              onPointerDown={handleBackPointerDown}
-              onPointerUp={handleBackPointerUp}
-              onPointerCancel={handleBackPointerUp}
-              onClick={handleBackClick}
-            >
-              <span className="icon">🔙</span> Back to Home
-            </button>
-            <h2 className="category-title">
-              {defaultVocabulary.folders.find(f => f.id === currentCategory)?.word || ''}
-            </h2>
-          </div>
-        )}
         <Board vocabulary={currentItems} onItemClick={handleItemClick} />
       </main>
+      <BottomBar
+        pages={pages}
+        currentId={currentCategory}
+        onHome={handleHome}
+        onBack={handleBack}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        onSelect={handleSelect}
+      />
     </div>
     </>
   );

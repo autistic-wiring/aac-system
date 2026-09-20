@@ -42,9 +42,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview",
       "community": 1,
-      "norm_label": "project overview document"
+      "norm_label": "project overview document",
+      "id": "project-overview"
     },
     {
       "label": "Speech Pipeline Document",
@@ -55,9 +55,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline",
       "community": 1,
-      "norm_label": "speech pipeline document"
+      "norm_label": "speech pipeline document",
+      "id": "speech-pipeline"
     },
     {
       "label": "Vocabulary System Document",
@@ -68,9 +68,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system",
       "community": 1,
-      "norm_label": "vocabulary system document"
+      "norm_label": "vocabulary system document",
+      "id": "vocabulary-system"
     },
     {
       "label": "Component Tree Document",
@@ -81,9 +81,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree",
       "community": 1,
-      "norm_label": "component tree document"
+      "norm_label": "component tree document",
+      "id": "component-tree"
     },
     {
       "label": "Deployment & Infrastructure Document",
@@ -94,9 +94,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment",
       "community": 1,
-      "norm_label": "deployment & infrastructure document"
+      "norm_label": "deployment & infrastructure document",
+      "id": "deployment"
     },
     {
       "label": "Motor Planning Design Principle",
@@ -107,9 +107,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_motor-planning",
-      "community": 7,
-      "norm_label": "motor planning design principle"
+      "community": 6,
+      "norm_label": "motor planning design principle",
+      "id": "project-overview_motor-planning"
     },
     {
       "label": "Progressive Disclosure Pattern",
@@ -120,9 +120,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_progressive-disclosure",
-      "community": 11,
-      "norm_label": "progressive disclosure pattern"
+      "community": 13,
+      "norm_label": "progressive disclosure pattern",
+      "id": "project-overview_progressive-disclosure"
     },
     {
       "label": "3-Layer Speech Fallback Architecture",
@@ -133,9 +133,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_3-layer-fallback",
-      "community": 0,
-      "norm_label": "3-layer speech fallback architecture"
+      "community": 2,
+      "norm_label": "3-layer speech fallback architecture",
+      "id": "project-overview_3-layer-fallback"
     },
     {
       "label": "Folder-Based Navigation by React State",
@@ -146,9 +146,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_folder-navigation",
-      "community": 3,
-      "norm_label": "folder-based navigation by react state"
+      "community": 7,
+      "norm_label": "folder-based navigation by react state",
+      "id": "project-overview_folder-navigation"
     },
     {
       "label": "Screen Wake Lock API",
@@ -159,9 +159,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_wake-lock",
-      "community": 4,
-      "norm_label": "screen wake lock api"
+      "community": 8,
+      "norm_label": "screen wake lock api",
+      "id": "project-overview_wake-lock"
     },
     {
       "label": "Haptic Feedback via navigator.vibrate()",
@@ -172,9 +172,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_haptic-feedback",
-      "community": 5,
-      "norm_label": "haptic feedback via navigator.vibrate()"
+      "community": 10,
+      "norm_label": "haptic feedback via navigator.vibrate()",
+      "id": "project-overview_haptic-feedback"
     },
     {
       "label": "Sherpa-ONNX + Piper VITS TTS Engine",
@@ -185,9 +185,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_sherpa-piper",
-      "community": 6,
-      "norm_label": "sherpa-onnx + piper vits tts engine"
+      "community": 5,
+      "norm_label": "sherpa-onnx + piper vits tts engine",
+      "id": "project-overview_sherpa-piper"
     },
     {
       "label": "PWA with Workbox Service Worker",
@@ -198,9 +198,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_pwa-workbox",
-      "community": 9,
-      "norm_label": "pwa with workbox service worker"
+      "community": 11,
+      "norm_label": "pwa with workbox service worker",
+      "id": "project-overview_pwa-workbox"
     },
     {
       "label": "Docker + nginx + Kubernetes Infrastructure",
@@ -211,9 +211,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_docker-k8s",
-      "community": 2,
-      "norm_label": "docker + nginx + kubernetes infrastructure"
+      "community": 3,
+      "norm_label": "docker + nginx + kubernetes infrastructure",
+      "id": "project-overview_docker-k8s"
     },
     {
       "label": "Pure JS/JSX (No TypeScript)",
@@ -224,9 +224,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_pure-js",
-      "community": 12,
-      "norm_label": "pure js/jsx (no typescript)"
+      "community": 14,
+      "norm_label": "pure js/jsx (no typescript)",
+      "id": "project-overview_pure-js"
     },
     {
       "label": "No Automated Test Framework",
@@ -237,9 +237,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "project-overview_no-tests",
-      "community": 13,
-      "norm_label": "no automated test framework"
+      "community": 15,
+      "norm_label": "no automated test framework",
+      "id": "project-overview_no-tests"
     },
     {
       "label": "Speech Synthesis Pipeline",
@@ -250,9 +250,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_speech-pipeline",
-      "community": 0,
-      "norm_label": "speech synthesis pipeline"
+      "community": 2,
+      "norm_label": "speech synthesis pipeline",
+      "id": "speech-pipeline_speech-pipeline"
     },
     {
       "label": "tts-server.js TTS HTTP Server (Port 5050)",
@@ -263,9 +263,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_tts-server",
-      "community": 0,
-      "norm_label": "tts-server.js tts http server (port 5050)"
+      "community": 2,
+      "norm_label": "tts-server.js tts http server (port 5050)",
+      "id": "speech-pipeline_tts-server"
     },
     {
       "label": "Layer 1: Pre-generated WAV AudioBuffer Cache",
@@ -276,9 +276,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_layer1-wav",
-      "community": 0,
-      "norm_label": "layer 1: pre-generated wav audiobuffer cache"
+      "community": 2,
+      "norm_label": "layer 1: pre-generated wav audiobuffer cache",
+      "id": "speech-pipeline_layer1-wav"
     },
     {
       "label": "Layer 2: TTS HTTP Server Fallback",
@@ -289,9 +289,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_layer2-tts",
-      "community": 0,
-      "norm_label": "layer 2: tts http server fallback"
+      "community": 2,
+      "norm_label": "layer 2: tts http server fallback",
+      "id": "speech-pipeline_layer2-tts"
     },
     {
       "label": "Layer 3: Browser SpeechSynthesis API Fallback",
@@ -302,9 +302,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_layer3-browser",
-      "community": 0,
-      "norm_label": "layer 3: browser speechsynthesis api fallback"
+      "community": 2,
+      "norm_label": "layer 3: browser speechsynthesis api fallback",
+      "id": "speech-pipeline_layer3-browser"
     },
     {
       "label": "generate-audio.js Pre-generation Script",
@@ -315,9 +315,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_generate-audio",
-      "community": 14,
-      "norm_label": "generate-audio.js pre-generation script"
+      "community": 16,
+      "norm_label": "generate-audio.js pre-generation script",
+      "id": "speech-pipeline_generate-audio"
     },
     {
       "label": "pad-audio.mjs 150ms Silence Padding",
@@ -328,9 +328,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_pad-audio",
-      "community": 0,
-      "norm_label": "pad-audio.mjs 150ms silence padding"
+      "community": 2,
+      "norm_label": "pad-audio.mjs 150ms silence padding",
+      "id": "speech-pipeline_pad-audio"
     },
     {
       "label": "fix-onset.mjs Quiet Onset Boost",
@@ -341,9 +341,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_fix-onset",
-      "community": 0,
-      "norm_label": "fix-onset.mjs quiet onset boost"
+      "community": 2,
+      "norm_label": "fix-onset.mjs quiet onset boost",
+      "id": "speech-pipeline_fix-onset"
     },
     {
       "label": "Piper VITS en_US-lessac-medium ONNX Model",
@@ -354,9 +354,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_piper-model",
-      "community": 6,
-      "norm_label": "piper vits en_us-lessac-medium onnx model"
+      "community": 5,
+      "norm_label": "piper vits en_us-lessac-medium onnx model",
+      "id": "speech-pipeline_piper-model"
     },
     {
       "label": "Custom Pronunciation Override (pronounce field)",
@@ -367,9 +367,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "speech-pipeline_custom-pronounce",
-      "community": 8,
-      "norm_label": "custom pronunciation override (pronounce field)"
+      "community": 9,
+      "norm_label": "custom pronunciation override (pronounce field)",
+      "id": "speech-pipeline_custom-pronounce"
     },
     {
       "label": "Vocabulary System",
@@ -380,9 +380,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_vocabulary-system",
-      "community": 15,
-      "norm_label": "vocabulary system"
+      "community": 17,
+      "norm_label": "vocabulary system",
+      "id": "vocabulary-system_vocabulary-system"
     },
     {
       "label": "Modified Fitzgerald Key Color Coding",
@@ -393,9 +393,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_fitzgerald-key",
-      "community": 16,
-      "norm_label": "modified fitzgerald key color coding"
+      "community": 18,
+      "norm_label": "modified fitzgerald key color coding",
+      "id": "vocabulary-system_fitzgerald-key"
     },
     {
       "label": "42 Core Vocabulary Items",
@@ -406,9 +406,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_core",
-      "community": 17,
-      "norm_label": "42 core vocabulary items"
+      "community": 19,
+      "norm_label": "42 core vocabulary items",
+      "id": "vocabulary-system_core"
     },
     {
       "label": "6 Vocabulary Folders",
@@ -419,9 +419,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_folders",
-      "community": 18,
-      "norm_label": "6 vocabulary folders"
+      "community": 20,
+      "norm_label": "6 vocabulary folders",
+      "id": "vocabulary-system_folders"
     },
     {
       "label": "6 Category Subarrays",
@@ -432,9 +432,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_categories",
-      "community": 19,
-      "norm_label": "6 category subarrays"
+      "community": 21,
+      "norm_label": "6 category subarrays",
+      "id": "vocabulary-system_categories"
     },
     {
       "label": "Hidden Grid Reservation for Motor Planning",
@@ -445,9 +445,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_hidden-field",
-      "community": 7,
-      "norm_label": "hidden grid reservation for motor planning"
+      "community": 6,
+      "norm_label": "hidden grid reservation for motor planning",
+      "id": "vocabulary-system_hidden-field"
     },
     {
       "label": "Word Item Schema (text, pronounce, emoji, color, hidden)",
@@ -458,9 +458,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "vocabulary-system_word-schema",
-      "community": 8,
-      "norm_label": "word item schema (text, pronounce, emoji, color, hidden)"
+      "community": 9,
+      "norm_label": "word item schema (text, pronounce, emoji, color, hidden)",
+      "id": "vocabulary-system_word-schema"
     },
     {
       "label": "React Component Tree",
@@ -471,9 +471,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_component-tree",
-      "community": 20,
-      "norm_label": "react component tree"
+      "community": 22,
+      "norm_label": "react component tree",
+      "id": "component-tree_component-tree"
     },
     {
       "label": "App.jsx Root Component",
@@ -484,9 +484,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_app",
-      "community": 21,
-      "norm_label": "app.jsx root component"
+      "community": 23,
+      "norm_label": "app.jsx root component",
+      "id": "component-tree_app"
     },
     {
       "label": "Board.jsx Grid Component",
@@ -497,9 +497,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_board",
-      "community": 22,
-      "norm_label": "board.jsx grid component"
+      "community": 24,
+      "norm_label": "board.jsx grid component",
+      "id": "component-tree_board"
     },
     {
       "label": "WordCard.jsx Button Component",
@@ -510,9 +510,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_wordcard",
-      "community": 23,
-      "norm_label": "wordcard.jsx button component"
+      "community": 25,
+      "norm_label": "wordcard.jsx button component",
+      "id": "component-tree_wordcard"
     },
     {
       "label": "SplashScreen.jsx PWA Update Component",
@@ -523,9 +523,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_splashscreen",
-      "community": 24,
-      "norm_label": "splashscreen.jsx pwa update component"
+      "community": 26,
+      "norm_label": "splashscreen.jsx pwa update component",
+      "id": "component-tree_splashscreen"
     },
     {
       "label": "main.jsx Entry Point",
@@ -536,9 +536,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_main",
-      "community": 25,
-      "norm_label": "main.jsx entry point"
+      "community": 27,
+      "norm_label": "main.jsx entry point",
+      "id": "component-tree_main"
     },
     {
       "label": "currentCategory State (Folder Navigation)",
@@ -549,9 +549,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_currentcategory",
-      "community": 3,
-      "norm_label": "currentcategory state (folder navigation)"
+      "community": 7,
+      "norm_label": "currentcategory state (folder navigation)",
+      "id": "component-tree_currentcategory"
     },
     {
       "label": "navigator.wakeLock API Integration",
@@ -562,9 +562,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_wakelock-api",
-      "community": 4,
-      "norm_label": "navigator.wakelock api integration"
+      "community": 8,
+      "norm_label": "navigator.wakelock api integration",
+      "id": "component-tree_wakelock-api"
     },
     {
       "label": "navigator.vibrate Haptic API Integration",
@@ -575,9 +575,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_haptic-api",
-      "community": 5,
-      "norm_label": "navigator.vibrate haptic api integration"
+      "community": 10,
+      "norm_label": "navigator.vibrate haptic api integration",
+      "id": "component-tree_haptic-api"
     },
     {
       "label": "Yes/No Fixed Bottom Bar",
@@ -588,9 +588,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_yesno-bar",
-      "community": 26,
-      "norm_label": "yes/no fixed bottom bar"
+      "community": 28,
+      "norm_label": "yes/no fixed bottom bar",
+      "id": "component-tree_yesno-bar"
     },
     {
       "label": "Landscape-First CSS Design",
@@ -601,9 +601,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_landscape-first",
-      "community": 27,
-      "norm_label": "landscape-first css design"
+      "community": 29,
+      "norm_label": "landscape-first css design",
+      "id": "component-tree_landscape-first"
     },
     {
       "label": "Hand-Written CSS (No Framework)",
@@ -614,9 +614,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "component-tree_handwritten-css",
-      "community": 28,
-      "norm_label": "hand-written css (no framework)"
+      "community": 30,
+      "norm_label": "hand-written css (no framework)",
+      "id": "component-tree_handwritten-css"
     },
     {
       "label": "Deployment & CI/CD Infrastructure",
@@ -627,9 +627,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_deployment",
-      "community": 29,
-      "norm_label": "deployment & ci/cd infrastructure"
+      "community": 31,
+      "norm_label": "deployment & ci/cd infrastructure",
+      "id": "deployment_deployment"
     },
     {
       "label": "Vite 7 Production Build",
@@ -640,9 +640,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_vite-build",
-      "community": 30,
-      "norm_label": "vite 7 production build"
+      "community": 32,
+      "norm_label": "vite 7 production build",
+      "id": "deployment_vite-build"
     },
     {
       "label": "vite-plugin-pwa Configuration",
@@ -653,9 +653,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_vite-pwa",
-      "community": 9,
-      "norm_label": "vite-plugin-pwa configuration"
+      "community": 11,
+      "norm_label": "vite-plugin-pwa configuration",
+      "id": "deployment_vite-pwa"
     },
     {
       "label": "Base Path /aac-system/",
@@ -666,9 +666,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_base-path",
-      "community": 10,
-      "norm_label": "base path /aac-system/"
+      "community": 12,
+      "norm_label": "base path /aac-system/",
+      "id": "deployment_base-path"
     },
     {
       "label": ".github/workflows/deploy.yml",
@@ -679,9 +679,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_deploy-yml",
-      "community": 10,
-      "norm_label": ".github/workflows/deploy.yml"
+      "community": 12,
+      "norm_label": ".github/workflows/deploy.yml",
+      "id": "deployment_deploy-yml"
     },
     {
       "label": "Multi-Stage Dockerfile (node:22 \u2192 nginx)",
@@ -692,9 +692,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_dockerfile",
-      "community": 2,
-      "norm_label": "multi-stage dockerfile (node:22 \u2192 nginx)"
+      "community": 3,
+      "norm_label": "multi-stage dockerfile (node:22 \u2192 nginx)",
+      "id": "deployment_dockerfile"
     },
     {
       "label": "nginx SPA Fallback + Asset Cache",
@@ -705,9 +705,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_nginx-config",
-      "community": 2,
-      "norm_label": "nginx spa fallback + asset cache"
+      "community": 3,
+      "norm_label": "nginx spa fallback + asset cache",
+      "id": "deployment_nginx-config"
     },
     {
       "label": "Kubernetes Infrastructure (asd ns, 1 replica)",
@@ -718,9 +718,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_k8s-infra",
-      "community": 2,
-      "norm_label": "kubernetes infrastructure (asd ns, 1 replica)"
+      "community": 3,
+      "norm_label": "kubernetes infrastructure (asd ns, 1 replica)",
+      "id": "deployment_k8s-infra"
     },
     {
       "label": "cert-manager + Let's Encrypt TLS",
@@ -731,9 +731,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_cert-manager",
-      "community": 2,
-      "norm_label": "cert-manager + let's encrypt tls"
+      "community": 3,
+      "norm_label": "cert-manager + let's encrypt tls",
+      "id": "deployment_cert-manager"
     },
     {
       "label": "donate.html PayPal Donation Page",
@@ -744,9 +744,243 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "deployment_donate",
-      "community": 31,
-      "norm_label": "donate.html paypal donation page"
+      "community": 33,
+      "norm_label": "donate.html paypal donation page",
+      "id": "deployment_donate"
+    },
+    {
+      "label": "GoTalk Visual Supports (SLP alignment)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports",
+      "community": 0,
+      "norm_label": "gotalk visual supports (slp alignment)"
+    },
+    {
+      "label": "GoTalk Page System (launcher + 2-picture pages)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_gotalk-page-system",
+      "community": 4,
+      "norm_label": "gotalk page system (launcher + 2-picture pages)"
+    },
+    {
+      "label": "gotalkPages.js Page Configuration (Turn Taking, Yes No, More Block, Help, I Want)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_gotalk-pages-data",
+      "community": 0,
+      "norm_label": "gotalkpages.js page configuration (turn taking, yes no, more block, help, i want)"
+    },
+    {
+      "label": "GoTalkHome / GoTalkPage / GoTalkCard Components",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_gotalk-components",
+      "community": 0,
+      "norm_label": "gotalkhome / gotalkpage / gotalkcard components"
+    },
+    {
+      "label": "bakedLabel Card Artwork (webp in public/images/gotalk/)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_baked-label",
+      "community": 0,
+      "norm_label": "bakedlabel card artwork (webp in public/images/gotalk/)"
+    },
+    {
+      "label": "GoTalk Visual Spec (teal #34C7D9, dark-teal footer, white cards)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_visual-spec",
+      "community": 0,
+      "norm_label": "gotalk visual spec (teal #34c7d9, dark-teal footer, white cards)"
+    },
+    {
+      "label": "Removed Core Board Files (Board.jsx, WordCard.jsx, defaultVocabulary.js)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_removed-board",
+      "community": 0,
+      "norm_label": "removed core board files (board.jsx, wordcard.jsx, defaultvocabulary.js)"
+    },
+    {
+      "label": "SLP Email: Visual Supports for AAC Device (Rezvan, 2026-08-14)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_slp-email",
+      "community": 0,
+      "norm_label": "slp email: visual supports for aac device (rezvan, 2026-08-14)"
+    },
+    {
+      "label": "Rationale: Keep Pages to 2-3 Pictures Max",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_rationale-simplicity",
+      "community": 4,
+      "norm_label": "rationale: keep pages to 2-3 pictures max"
+    },
+    {
+      "label": "Rationale: Hand-over-Hand Support + Functional Modelling (guide to Help me before helping)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_rationale-hand-over-hand",
+      "community": 4,
+      "norm_label": "rationale: hand-over-hand support + functional modelling (guide to help me before helping)"
+    },
+    {
+      "label": "Rationale: Functional Message Set (Help me, I want, more, all done, turns, yes, no)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_rationale-functional-messages",
+      "community": 0,
+      "norm_label": "rationale: functional message set (help me, i want, more, all done, turns, yes, no)"
+    },
+    {
+      "label": "Rationale: Consistency Across Therapy, Home, and Behavioural Therapy",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_rationale-consistency",
+      "community": 4,
+      "norm_label": "rationale: consistency across therapy, home, and behavioural therapy"
+    },
+    {
+      "label": "Rationale: Config via Source Code (no in-app UI, real photos)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_rationale-source-config",
+      "community": 0,
+      "norm_label": "rationale: config via source code (no in-app ui, real photos)"
+    },
+    {
+      "label": "Rationale: Replicate Therapist Rezvan's GoTalk Lite Setup",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_rationale-gotalk-lite",
+      "community": 4,
+      "norm_label": "rationale: replicate therapist rezvan's gotalk lite setup"
+    },
+    {
+      "label": "gTTS Audio Clips (help_me.wav, i_want.wav)",
+      "file_type": "document",
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gotalk-visual-supports_gtts-audio",
+      "community": 5,
+      "norm_label": "gtts audio clips (help_me.wav, i_want.wav)"
+    },
+    {
+      "label": "Core Board Superseded by GoTalk Pages (2026-08-16)",
+      "file_type": "document",
+      "source_file": "memory/vocabulary-system.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vocabulary-system_gotalk-supersession",
+      "community": 1,
+      "norm_label": "core board superseded by gotalk pages (2026-08-16)"
+    },
+    {
+      "label": "Page Navigation via currentPageId React State (no router)",
+      "file_type": "document",
+      "source_file": "memory/project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project-overview_page-navigation",
+      "community": 1,
+      "norm_label": "page navigation via currentpageid react state (no router)"
+    },
+    {
+      "label": "Instant Pointer Triggers on pointerdown",
+      "file_type": "document",
+      "source_file": "memory/project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project-overview_pointer-triggers",
+      "community": 1,
+      "norm_label": "instant pointer triggers on pointerdown"
     }
   ],
   "links": [
@@ -802,11 +1036,47 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "memory/project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "project-overview",
+      "_tgt": "gotalk-visual-supports",
+      "source": "project-overview",
+      "target": "gotalk-visual-supports"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "project-overview",
+      "_tgt": "project-overview_page-navigation",
+      "source": "project-overview",
+      "target": "project-overview_page-navigation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "project-overview",
+      "_tgt": "project-overview_pointer-triggers",
+      "source": "project-overview",
+      "target": "project-overview_pointer-triggers"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "memory/vocabulary-system.md",
       "source_location": null,
       "weight": 1.0,
-      "_src": "vocabulary-system",
-      "_tgt": "speech-pipeline",
+      "_src": "speech-pipeline",
+      "_tgt": "vocabulary-system",
       "source": "speech-pipeline",
       "target": "vocabulary-system"
     },
@@ -817,10 +1087,46 @@
       "source_file": "memory/component-tree.md",
       "source_location": null,
       "weight": 1.0,
-      "_src": "component-tree",
-      "_tgt": "vocabulary-system",
+      "_src": "vocabulary-system",
+      "_tgt": "component-tree",
       "source": "vocabulary-system",
       "target": "component-tree"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "vocabulary-system",
+      "source": "vocabulary-system",
+      "target": "gotalk-visual-supports"
+    },
+    {
+      "relation": "supersedes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_gotalk-page-system",
+      "_tgt": "vocabulary-system",
+      "source": "vocabulary-system",
+      "target": "gotalk-visual-supports_gotalk-page-system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "vocabulary-system",
+      "_tgt": "vocabulary-system_gotalk-supersession",
+      "source": "vocabulary-system",
+      "target": "vocabulary-system_gotalk-supersession"
     },
     {
       "relation": "references",
@@ -973,8 +1279,8 @@
       "source_file": "memory/speech-pipeline.md",
       "source_location": null,
       "weight": 1.0,
-      "_src": "speech-pipeline_layer2-tts",
-      "_tgt": "speech-pipeline_tts-server",
+      "_src": "speech-pipeline_tts-server",
+      "_tgt": "speech-pipeline_layer2-tts",
       "source": "speech-pipeline_tts-server",
       "target": "speech-pipeline_layer2-tts"
     },
@@ -1003,6 +1309,18 @@
       "target": "speech-pipeline_fix-onset"
     },
     {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_gtts-audio",
+      "_tgt": "speech-pipeline_piper-model",
+      "source": "speech-pipeline_piper-model",
+      "target": "gotalk-visual-supports_gtts-audio"
+    },
+    {
       "relation": "shares_data_with",
       "confidence": "INFERRED",
       "confidence_score": 0.85,
@@ -1021,8 +1339,8 @@
       "source_file": "memory/deployment.md",
       "source_location": null,
       "weight": 1.0,
-      "_src": "deployment_deploy-yml",
-      "_tgt": "deployment_base-path",
+      "_src": "deployment_base-path",
+      "_tgt": "deployment_deploy-yml",
       "source": "deployment_base-path",
       "target": "deployment_deploy-yml"
     },
@@ -1045,8 +1363,8 @@
       "source_file": "memory/deployment.md",
       "source_location": null,
       "weight": 1.0,
-      "_src": "deployment_nginx-config",
-      "_tgt": "deployment_dockerfile",
+      "_src": "deployment_dockerfile",
+      "_tgt": "deployment_nginx-config",
       "source": "deployment_dockerfile",
       "target": "deployment_nginx-config"
     },
@@ -1061,6 +1379,174 @@
       "_tgt": "deployment_cert-manager",
       "source": "deployment_k8s-infra",
       "target": "deployment_cert-manager"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_gotalk-page-system",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_gotalk-page-system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_gotalk-pages-data",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_gotalk-pages-data"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_gotalk-components",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_gotalk-components"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_baked-label",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_baked-label"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_visual-spec",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_visual-spec"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_removed-board",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_removed-board"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_slp-email",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_slp-email"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports",
+      "_tgt": "gotalk-visual-supports_gtts-audio",
+      "source": "gotalk-visual-supports",
+      "target": "gotalk-visual-supports_gtts-audio"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_rationale-gotalk-lite",
+      "_tgt": "gotalk-visual-supports_gotalk-page-system",
+      "source": "gotalk-visual-supports_gotalk-page-system",
+      "target": "gotalk-visual-supports_rationale-gotalk-lite"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_rationale-simplicity",
+      "_tgt": "gotalk-visual-supports_gotalk-page-system",
+      "source": "gotalk-visual-supports_gotalk-page-system",
+      "target": "gotalk-visual-supports_rationale-simplicity"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_rationale-hand-over-hand",
+      "_tgt": "gotalk-visual-supports_gotalk-page-system",
+      "source": "gotalk-visual-supports_gotalk-page-system",
+      "target": "gotalk-visual-supports_rationale-hand-over-hand"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_rationale-consistency",
+      "_tgt": "gotalk-visual-supports_gotalk-page-system",
+      "source": "gotalk-visual-supports_gotalk-page-system",
+      "target": "gotalk-visual-supports_rationale-consistency"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_rationale-functional-messages",
+      "_tgt": "gotalk-visual-supports_gotalk-pages-data",
+      "source": "gotalk-visual-supports_gotalk-pages-data",
+      "target": "gotalk-visual-supports_rationale-functional-messages"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/gotalk-visual-supports.md",
+      "source_location": null,
+      "weight": 1.0,
+      "_src": "gotalk-visual-supports_rationale-source-config",
+      "_tgt": "gotalk-visual-supports_gotalk-pages-data",
+      "source": "gotalk-visual-supports_gotalk-pages-data",
+      "target": "gotalk-visual-supports_rationale-source-config"
     }
   ],
   "hyperedges": [

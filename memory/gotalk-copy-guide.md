@@ -38,7 +38,7 @@ with port reachable means wrong port type (pairing vs debug).
 - Sprites via UnityPy 1.x API (`obj.read().m_Name`, `.image` saves RGBA):
   `eat_0, toilet_0, tissue_0, strawber_0, wave_0, want_1, help_0, done_0
   (All done), mother_0, father_0`. Bundle gaps (custom/photo cards) → screenshot crops.
-- `mother_0/father_0` fill Mommy/Daddy cards that are BLANK in GoTalk itself (Daddy card replaced with family photo in `public/images/gotalk/daddy.png`).
+- `mother_0/father_0` fill Mommy/Daddy cards that are BLANK in GoTalk itself. Mommy and Daddy cards are customized with real family photos on seamless pure black cards (`gotalkBlack: '#000000'`) with high-contrast white text (`#ffffff`), centered framing, and clean edge blending.
 
 ## 4. Screenshot page capture
 

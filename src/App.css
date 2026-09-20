@@ -166,6 +166,21 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255,255,255,0.5);
 }
 
+.word-card.dark-card {
+  background: #000000;
+  border-color: #555555;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.word-card.dark-card::after {
+  opacity: 0.08;
+}
+
+.word-card.dark-card .word-text {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
 .word-icon {
   flex: 1;
   min-height: 0;

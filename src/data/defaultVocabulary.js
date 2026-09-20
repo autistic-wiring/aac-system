@@ -32,6 +32,7 @@ const colors = {
   gotalkBlue: '#40a1de',
   gotalkGreen: '#0ed601',
   gotalkWhite: '#ffffff',
+  gotalkBlack: '#000000',
 };
 
 const G = 'images/gotalk/';
@@ -69,8 +70,8 @@ export const defaultVocabulary = {
     social: [
       { id: 'hi',    word: 'Hi',    icon: '👋', color: colors.gotalkWhite, image: `${G}hi.png` },
       { id: 'bye',   word: 'Bye',   icon: '👋', color: colors.gotalkWhite, image: `${G}bye.png` },
-      { id: 'mommy', word: 'Mommy', icon: '👩', color: colors.gotalkWhite, image: `${G}mommy.png` },
-      { id: 'daddy', word: 'Daddy', icon: '👨', color: colors.gotalkWhite, image: `${G}daddy.png` },
+      { id: 'mommy', word: 'Mommy', icon: '👩', color: colors.gotalkBlack, image: `${G}mommy.png` },
+      { id: 'daddy', word: 'Daddy', icon: '👨', color: colors.gotalkBlack, image: `${G}daddy.png` },
     ],
   }
 };

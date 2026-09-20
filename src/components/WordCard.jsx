@@ -89,10 +89,11 @@ const WordCard = ({ item, onItemClick }) => {
 
   const isFolder = item.type === 'folder';
   const isHidden = item.hidden;
+  const isDark = item.color === '#000000' || item.color === 'black';
 
   return (
     <button
-      className={`word-card ${isFolder ? 'folder-card' : ''} ${isHidden ? 'hidden-card' : ''} ${isPressed ? 'pressed' : ''}`}
+      className={`word-card ${isFolder ? 'folder-card' : ''} ${isHidden ? 'hidden-card' : ''} ${isPressed ? 'pressed' : ''} ${isDark ? 'dark-card' : ''}`}
       style={{ '--card-color': item.color }}
       onPointerDown={handlePointerDown}
       onPointerUp={handleRelease}

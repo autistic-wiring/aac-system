@@ -173,7 +173,12 @@
 }
 
 .word-card.dark-card::after {
-  opacity: 0.08;
+  display: none;
+}
+
+.word-card.dark-card .word-icon,
+.word-card.dark-card .word-card-image {
+  filter: none;
 }
 
 .word-card.dark-card .word-text {

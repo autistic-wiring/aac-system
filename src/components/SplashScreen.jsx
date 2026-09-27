@@ -1,12 +1,29 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { defaultVocabulary } from '../data/defaultVocabulary'
 import './SplashScreen.css'
+
+// Same key derivation as speechAdapter preloadWords (audioId || id).
+// Fetching each once here warms the service-worker precache / HTTP cache so
+// every button sound plays instantly, including fully offline.
+const audioKeys = [
+  ...new Set(
+    [
+      ...defaultVocabulary.core,
+      ...defaultVocabulary.folders,
+      ...Object.values(defaultVocabulary.categories).flat(),
+    ]
+      .filter((item) => item.type !== 'folder')
+      .map((item) => item.audioId || item.id)
+  ),
+]
 
 export default function SplashScreen({ onDone }) {
   const [status, setStatus] = useState('Checking for updates...')
   const [statusType, setStatusType] = useState('checking') // checking | updated | ready
   const timerDone = useRef(false)
   const swDone = useRef(false)
+  const audioDone = useRef(false)
   const hasUpdate = useRef(false)
 
   const { updateServiceWorker } = useRegisterSW({
@@ -30,7 +47,7 @@ export default function SplashScreen({ onDone }) {
   })
 
   function maybeFinish() {
-    if (!timerDone.current || !swDone.current) return
+    if (!timerDone.current || !swDone.current || !audioDone.current) return
 
     if (hasUpdate.current) {
       setStatus('New version found! Updating...')
@@ -44,7 +61,30 @@ export default function SplashScreen({ onDone }) {
     }
   }
 
+  // Warm every button sound into cache with visible progress. Failures are
+  // non-fatal (offline first visit, missing file) — splash still finishes.
+  async function warmAudioCache() {
+    let done = 0
+    setStatus(`Preparing sounds (0/${audioKeys.length})...`)
+    await Promise.all(
+      audioKeys.map(async (key) => {
+        try {
+          await fetch(`/audio/${key}.wav`)
+        } catch {
+          /* offline or missing — decode falls back to TTS/speech API */
+        }
+        done += 1
+        setStatus(`Preparing sounds (${done}/${audioKeys.length})...`)
+      })
+    )
+    audioDone.current = true
+    maybeFinish()
+  }
+
   useEffect(() => {
+    // Deferred so the initial setStatus runs outside the effect body
+    // (react-hooks/set-state-in-effect); still fires immediately on mount.
+    const kickoff = setTimeout(warmAudioCache, 0)
     // minimum splash display: 2s
     const t = setTimeout(() => {
       timerDone.current = true
@@ -60,6 +100,7 @@ export default function SplashScreen({ onDone }) {
     }, 6000)
 
     return () => {
+      clearTimeout(kickoff)
       clearTimeout(t)
       clearTimeout(fallback)
     }

@@ -1,0 +1,180 @@
+{
+  "communities": {
+    "0": [
+      "component_tree_md_board",
+      "component_tree_md_wordcard",
+      "deployment_md_donation_page",
+      "veo_button_animation_md_animation_script",
+      "veo_button_animation_md_animation_video",
+      "veo_button_animation_md_veo_model",
+      "vocabulary_system_md_default_vocabulary",
+      "vocabulary_system_md_fitzgerald_key",
+      "vocabulary_system_md_motor_planning"
+    ],
+    "1": [
+      "deployment_md_ci_workflow",
+      "deployment_md_deploy_script",
+      "deployment_md_k8s_manifests",
+      "deployment_md_prod_environment",
+      "deployment_md_testing_environment"
+    ],
+    "2": [
+      "project_overview_md_aac_system",
+      "project_overview_md_component_tree",
+      "project_overview_md_deployment",
+      "project_overview_md_speech_pipeline",
+      "project_overview_md_vocabulary_system"
+    ],
+    "3": [
+      "speech_pipeline_md_browser_speech_synthesis",
+      "speech_pipeline_md_gesture_unlock",
+      "speech_pipeline_md_pre_generated_wav",
+      "speech_pipeline_md_speech_adapter",
+      "speech_pipeline_md_tts_server"
+    ],
+    "4": [
+      "component_tree_md_app",
+      "component_tree_md_navigation_bar",
+      "component_tree_md_splashscreen",
+      "deployment_md_pwa_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.25,
+    "1": 0.6,
+    "2": 0.4,
+    "3": 0.4,
+    "4": 0.5
+  },
+  "gods": [
+    {
+      "id": "speech_pipeline_md_speech_adapter",
+      "label": "Speech Adapter",
+      "degree": 5
+    },
+    {
+      "id": "vocabulary_system_md_default_vocabulary",
+      "label": "Default Vocabulary",
+      "degree": 5
+    },
+    {
+      "id": "component_tree_md_app",
+      "label": "App",
+      "degree": 4
+    },
+    {
+      "id": "component_tree_md_board",
+      "label": "Board",
+      "degree": 4
+    },
+    {
+      "id": "project_overview_md_aac_system",
+      "label": "AAC System",
+      "degree": 4
+    },
+    {
+      "id": "component_tree_md_wordcard",
+      "label": "WordCard",
+      "degree": 3
+    },
+    {
+      "id": "deployment_md_prod_environment",
+      "label": "Prod Environment",
+      "degree": 3
+    },
+    {
+      "id": "deployment_md_testing_environment",
+      "label": "Testing Environment",
+      "degree": 3
+    },
+    {
+      "id": "deployment_md_ci_workflow",
+      "label": "CI Workflow",
+      "degree": 2
+    },
+    {
+      "id": "deployment_md_deploy_script",
+      "label": "Deploy Script",
+      "degree": 2
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Default Vocabulary",
+      "target": "Speech Adapter",
+      "source_files": [
+        "vocabulary-system.md",
+        "speech-pipeline.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "PWA Config",
+      "target": "App",
+      "source_files": [
+        "deployment.md",
+        "component-tree.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "Donation Page",
+      "target": "Board",
+      "source_files": [
+        "deployment.md",
+        "component-tree.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "Default Vocabulary",
+      "target": "Board",
+      "source_files": [
+        "vocabulary-system.md",
+        "component-tree.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "Animation Video",
+      "target": "WordCard",
+      "source_files": [
+        "veo-button-animation.md",
+        "component-tree.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `Default Vocabulary` connect `Default Vocabulary` to `Speech Adapter`?",
+      "why": "High betweenness centrality (0.231) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Board` connect `Default Vocabulary` to `App`?",
+      "why": "High betweenness centrality (0.182) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Speech Adapter` connect `Speech Adapter` to `Default Vocabulary`?",
+      "why": "High betweenness centrality (0.165) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `SplashScreen`, `Navigation Bar`, `PWA Config` to the rest of the system?",
+      "why": "15 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

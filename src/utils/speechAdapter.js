@@ -19,11 +19,14 @@ async function fetchAndDecode(url) {
 
 // Preload all vocabulary audio from static files into memory.
 // id = vocabulary item id (e.g. "want", "all-done")
+// NOTE: no ?v= query string — the URL must match the service-worker precache
+// key exactly or offline playback misses the cache. Invalidation is handled
+// by the SW precache revision (content hash) on each app update.
 export async function preloadWords(items) {
   await Promise.all(items.map(async ({ id, audioId }) => {
     const key = audioId || id;
     try {
-      const buf = await fetchAndDecode(`/audio/${key}.wav?v=${__APP_VERSION__}`);
+      const buf = await fetchAndDecode(`/audio/${key}.wav`);
       audioCache.set(key, buf);
     } catch {
       // static file missing, will fall back to TTS server or speech API on click

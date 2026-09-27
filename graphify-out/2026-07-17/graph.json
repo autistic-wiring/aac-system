@@ -1,0 +1,745 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "aac_system_architecture",
+        "label": "AAC System Architecture",
+        "nodes": [
+          "project_overview_md_aac_system",
+          "project_overview_md_speech_pipeline",
+          "project_overview_md_vocabulary_system",
+          "project_overview_md_component_tree",
+          "project_overview_md_deployment"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "project-overview.md"
+      },
+      {
+        "id": "speech_pipeline_fallback_chain",
+        "label": "Speech Pipeline Fallback Chain",
+        "nodes": [
+          "speech_pipeline_md_pre_generated_wav",
+          "speech_pipeline_md_tts_server",
+          "speech_pipeline_md_browser_speech_synthesis"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "speech-pipeline.md"
+      },
+      {
+        "id": "deployment_pipeline",
+        "label": "Deployment Pipeline",
+        "nodes": [
+          "deployment_md_ci_workflow",
+          "deployment_md_deploy_script",
+          "deployment_md_prod_environment",
+          "deployment_md_testing_environment",
+          "deployment_md_k8s_manifests"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "deployment.md"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "App",
+      "file_type": "code",
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "component_tree_md_app",
+      "community": 4,
+      "norm_label": "app"
+    },
+    {
+      "label": "SplashScreen",
+      "file_type": "code",
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "component_tree_md_splashscreen",
+      "community": 4,
+      "norm_label": "splashscreen"
+    },
+    {
+      "label": "Board",
+      "file_type": "code",
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "component_tree_md_board",
+      "community": 0,
+      "norm_label": "board"
+    },
+    {
+      "label": "WordCard",
+      "file_type": "code",
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "component_tree_md_wordcard",
+      "community": 0,
+      "norm_label": "wordcard"
+    },
+    {
+      "label": "Navigation Bar",
+      "file_type": "code",
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "component_tree_md_navigation_bar",
+      "community": 4,
+      "norm_label": "navigation bar"
+    },
+    {
+      "label": "Prod Environment",
+      "file_type": "document",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_prod_environment",
+      "community": 1,
+      "norm_label": "prod environment"
+    },
+    {
+      "label": "Testing Environment",
+      "file_type": "document",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_testing_environment",
+      "community": 1,
+      "norm_label": "testing environment"
+    },
+    {
+      "label": "CI Workflow",
+      "file_type": "document",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_ci_workflow",
+      "community": 1,
+      "norm_label": "ci workflow"
+    },
+    {
+      "label": "Deploy Script",
+      "file_type": "code",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_deploy_script",
+      "community": 1,
+      "norm_label": "deploy script"
+    },
+    {
+      "label": "K8s Manifests",
+      "file_type": "code",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_k8s_manifests",
+      "community": 1,
+      "norm_label": "k8s manifests"
+    },
+    {
+      "label": "PWA Config",
+      "file_type": "document",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_pwa_config",
+      "community": 4,
+      "norm_label": "pwa config"
+    },
+    {
+      "label": "Donation Page",
+      "file_type": "code",
+      "source_file": "deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "deployment_md_donation_page",
+      "community": 0,
+      "norm_label": "donation page"
+    },
+    {
+      "label": "AAC System",
+      "file_type": "concept",
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project_overview_md_aac_system",
+      "community": 2,
+      "norm_label": "aac system"
+    },
+    {
+      "label": "Speech Pipeline",
+      "file_type": "concept",
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project_overview_md_speech_pipeline",
+      "community": 2,
+      "norm_label": "speech pipeline"
+    },
+    {
+      "label": "Vocabulary System",
+      "file_type": "concept",
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project_overview_md_vocabulary_system",
+      "community": 2,
+      "norm_label": "vocabulary system"
+    },
+    {
+      "label": "Component Tree",
+      "file_type": "concept",
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project_overview_md_component_tree",
+      "community": 2,
+      "norm_label": "component tree"
+    },
+    {
+      "label": "Deployment",
+      "file_type": "concept",
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "project_overview_md_deployment",
+      "community": 2,
+      "norm_label": "deployment"
+    },
+    {
+      "label": "Speech Adapter",
+      "file_type": "code",
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "speech_pipeline_md_speech_adapter",
+      "community": 3,
+      "norm_label": "speech adapter"
+    },
+    {
+      "label": "TTS Server",
+      "file_type": "code",
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "speech_pipeline_md_tts_server",
+      "community": 3,
+      "norm_label": "tts server"
+    },
+    {
+      "label": "Pre-generated WAV",
+      "file_type": "document",
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "speech_pipeline_md_pre_generated_wav",
+      "community": 3,
+      "norm_label": "pre-generated wav"
+    },
+    {
+      "label": "Browser SpeechSynthesis",
+      "file_type": "code",
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "speech_pipeline_md_browser_speech_synthesis",
+      "community": 3,
+      "norm_label": "browser speechsynthesis"
+    },
+    {
+      "label": "Gesture Unlock",
+      "file_type": "code",
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "speech_pipeline_md_gesture_unlock",
+      "community": 3,
+      "norm_label": "gesture unlock"
+    },
+    {
+      "label": "Veo Model",
+      "file_type": "concept",
+      "source_file": "veo-button-animation.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "veo_button_animation_md_veo_model",
+      "community": 0,
+      "norm_label": "veo model"
+    },
+    {
+      "label": "Animation Script",
+      "file_type": "code",
+      "source_file": "veo-button-animation.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "veo_button_animation_md_animation_script",
+      "community": 0,
+      "norm_label": "animation script"
+    },
+    {
+      "label": "Animation Video",
+      "file_type": "document",
+      "source_file": "veo-button-animation.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "veo_button_animation_md_animation_video",
+      "community": 0,
+      "norm_label": "animation video"
+    },
+    {
+      "label": "Default Vocabulary",
+      "file_type": "code",
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vocabulary_system_md_default_vocabulary",
+      "community": 0,
+      "norm_label": "default vocabulary"
+    },
+    {
+      "label": "Fitzgerald Key",
+      "file_type": "concept",
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vocabulary_system_md_fitzgerald_key",
+      "community": 0,
+      "norm_label": "fitzgerald key"
+    },
+    {
+      "label": "Motor Planning",
+      "file_type": "concept",
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vocabulary_system_md_motor_planning",
+      "community": 0,
+      "norm_label": "motor planning"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "component_tree_md_app",
+      "target": "component_tree_md_board"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "component_tree_md_app",
+      "target": "component_tree_md_navigation_bar"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "component_tree_md_app",
+      "target": "component_tree_md_splashscreen"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_pwa_config",
+      "target": "component_tree_md_app"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "component-tree.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "component_tree_md_board",
+      "target": "component_tree_md_wordcard"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_donation_page",
+      "target": "component_tree_md_board"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vocabulary_system_md_default_vocabulary",
+      "target": "component_tree_md_board"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "veo-button-animation.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "veo_button_animation_md_animation_video",
+      "target": "component_tree_md_wordcard"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vocabulary_system_md_default_vocabulary",
+      "target": "component_tree_md_wordcard"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_ci_workflow",
+      "target": "deployment_md_prod_environment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_deploy_script",
+      "target": "deployment_md_prod_environment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_k8s_manifests",
+      "target": "deployment_md_prod_environment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_ci_workflow",
+      "target": "deployment_md_testing_environment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_deploy_script",
+      "target": "deployment_md_testing_environment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "deployment_md_k8s_manifests",
+      "target": "deployment_md_testing_environment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "project_overview_md_aac_system",
+      "target": "project_overview_md_component_tree"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "project_overview_md_aac_system",
+      "target": "project_overview_md_deployment"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "project_overview_md_aac_system",
+      "target": "project_overview_md_speech_pipeline"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "project-overview.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "project_overview_md_aac_system",
+      "target": "project_overview_md_vocabulary_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "speech_pipeline_md_gesture_unlock",
+      "target": "speech_pipeline_md_speech_adapter"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "speech_pipeline_md_speech_adapter",
+      "target": "speech_pipeline_md_browser_speech_synthesis"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "speech_pipeline_md_speech_adapter",
+      "target": "speech_pipeline_md_pre_generated_wav"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "speech-pipeline.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "speech_pipeline_md_speech_adapter",
+      "target": "speech_pipeline_md_tts_server"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vocabulary_system_md_default_vocabulary",
+      "target": "speech_pipeline_md_speech_adapter"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "veo-button-animation.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "veo_button_animation_md_veo_model",
+      "target": "veo_button_animation_md_animation_script"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "veo-button-animation.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "veo_button_animation_md_animation_script",
+      "target": "veo_button_animation_md_animation_video"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vocabulary_system_md_default_vocabulary",
+      "target": "vocabulary_system_md_fitzgerald_key"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "vocabulary-system.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vocabulary_system_md_default_vocabulary",
+      "target": "vocabulary_system_md_motor_planning"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "aac_system_architecture",
+      "label": "AAC System Architecture",
+      "nodes": [
+        "project_overview_md_aac_system",
+        "project_overview_md_speech_pipeline",
+        "project_overview_md_vocabulary_system",
+        "project_overview_md_component_tree",
+        "project_overview_md_deployment"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "project-overview.md"
+    },
+    {
+      "id": "speech_pipeline_fallback_chain",
+      "label": "Speech Pipeline Fallback Chain",
+      "nodes": [
+        "speech_pipeline_md_pre_generated_wav",
+        "speech_pipeline_md_tts_server",
+        "speech_pipeline_md_browser_speech_synthesis"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "speech-pipeline.md"
+    },
+    {
+      "id": "deployment_pipeline",
+      "label": "Deployment Pipeline",
+      "nodes": [
+        "deployment_md_ci_workflow",
+        "deployment_md_deploy_script",
+        "deployment_md_prod_environment",
+        "deployment_md_testing_environment",
+        "deployment_md_k8s_manifests"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "deployment.md"
+    }
+  ],
+  "built_at_commit": "1e91a84b7a810804ec0868e5882d3dfe1c80b537"
+}

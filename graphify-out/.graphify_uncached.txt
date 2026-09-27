@@ -1,0 +1,7 @@
+/home/herbert/nodejs/aac-remake/memory/speech-pipeline.md
+/home/herbert/nodejs/aac-remake/memory/animating-buttons.md
+/home/herbert/nodejs/aac-remake/memory/gotalk-copy-guide.md
+/home/herbert/nodejs/aac-remake/memory/project-overview.md
+/home/herbert/nodejs/aac-remake/memory/deployment.md
+/home/herbert/nodejs/aac-remake/memory/veo-button-animation.md
+/home/herbert/nodejs/aac-remake/memory/tts-voice-system.md

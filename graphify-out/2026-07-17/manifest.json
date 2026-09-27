@@ -1,0 +1,32 @@
+{
+  "speech-pipeline.md": {
+    "mtime": 1784295712.1715217,
+    "ast_hash": "1fef4bfc5de58c59e1e6e1505a4ce446",
+    "semantic_hash": "1fef4bfc5de58c59e1e6e1505a4ce446"
+  },
+  "vocabulary-system.md": {
+    "mtime": 1784215672.4680636,
+    "ast_hash": "95b337f1ee1b59aa10cda474c6ed33fd",
+    "semantic_hash": "95b337f1ee1b59aa10cda474c6ed33fd"
+  },
+  "project-overview.md": {
+    "mtime": 1784312176.7377958,
+    "ast_hash": "b3d8116596574e533040d8edbdb5e5aa",
+    "semantic_hash": "b3d8116596574e533040d8edbdb5e5aa"
+  },
+  "component-tree.md": {
+    "mtime": 1784215680.0011914,
+    "ast_hash": "0abc0d4a84bb61d0de73aaf209b8bd05",
+    "semantic_hash": "0abc0d4a84bb61d0de73aaf209b8bd05"
+  },
+  "deployment.md": {
+    "mtime": 1784312176.7366407,
+    "ast_hash": "5bd2b63dde404c7bea394c668a3ecfe9",
+    "semantic_hash": "5bd2b63dde404c7bea394c668a3ecfe9"
+  },
+  "veo-button-animation.md": {
+    "mtime": 1784317232.892834,
+    "ast_hash": "06bded7b68a83df1ec165f4b3b1740da",
+    "semantic_hash": "06bded7b68a83df1ec165f4b3b1740da"
+  }
+}

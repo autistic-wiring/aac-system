@@ -34,8 +34,19 @@ export async function preloadWords(items) {
   }));
 }
 
+// 1s cooldown between button sounds to avoid overlapping.
+const SOUND_COOLDOWN_MS = 1000;
+let lastPlayAt = 0;
+let currentSource = null;
+
 function playBuffer(audioBuffer) {
   const ctx = getAudioContext();
+  // Stop previous sound so rapid taps never overlap.
+  try {
+    currentSource?.stop();
+  } catch {
+    // Already stopped — safe to ignore.
+  }
   const source = ctx.createBufferSource();
   source.buffer = audioBuffer;
   source.detune.value = 50; // +50 cents: subtle warmth, calm
@@ -45,7 +56,12 @@ function playBuffer(audioBuffer) {
 
   source.connect(gainNode);
   gainNode.connect(ctx.destination);
+  currentSource = source;
+  source.onended = () => {
+    if (currentSource === source) currentSource = null;
+  };
   source.start();
+  lastPlayAt = Date.now();
 }
 
 let pendingSpeech = null;
@@ -81,6 +97,9 @@ function setupGestureUnlock() {
 setupGestureUnlock();
 
 export const speakWord = async (id, word, pronounce) => {
+  // Cooldown: drop taps within 1s of the last sound.
+  if (Date.now() - lastPlayAt < SOUND_COOLDOWN_MS) return;
+  lastPlayAt = Date.now(); // optimistic: also debounces slow TTS fetch
   const ttsText = pronounce || word;
   const ctx = getAudioContext();
   

@@ -29,6 +29,7 @@ After any fix, follow this exact sequence:
 
 ## Rules
 
+- Proceed through the SDLC automatically without asking for confirmation.
 - Prod NEVER moves before test env is verified OK on its URL.
 - `:testing` = disposable test builds; `:stable` = prod. Never edit tags directly.
 - Check status anytime: `./scripts/deploy.sh status`

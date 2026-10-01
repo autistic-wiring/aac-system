@@ -1,7 +1,7 @@
 ---
 title: "AAC Deployment & SDLC"
-date_modified: 2026-07-17
-tags: [deployment, docker, kubernetes, github-pages, pwa, ci, sdlc, versioning]
+date_modified: 2026-10-01
+tags: [deployment, docker, kubernetes, github-pages, pwa, ci, sdlc, versioning, android, kiosk]
 ---
 
 # Deployment & SDLC
@@ -159,6 +159,27 @@ Fix: the function now `git fetch --tags origin` first, then loops +0.0.1 until
 If the script still aborts at the tag step, the images ARE already pushed —
 finish manually with:
 `kubectl -n asd apply -f k8s/{certificate,deployment,service,ingress}.yaml && kubectl -n asd rollout restart deployment/aac-board`
+
+## Android Kiosk Shell (`android/`)
+
+Not covered by `deploy.sh` or CI — built and installed by hand.
+
+```bash
+cd android
+./gradlew assembleDebug                              # prod board URL
+./gradlew assembleDebug -PboardUrl=https://aac-testing.nexvision.cc/
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+`boardUrl` is a `resValue` declared in `app/build.gradle` (NOT strings.xml —
+a literal there causes a duplicate-resource failure). Debug builds use
+applicationId `cc.nexvision.aac.debug` so they coexist with a release install.
+
+Added `android` to `.dockerignore`; without it the Gradle tree inflates the web
+image build context.
+
+Kiosk behaviour and the device-owner provisioning steps are in
+[[kiosk-mode]].
 
 ## Disaster Recovery
 

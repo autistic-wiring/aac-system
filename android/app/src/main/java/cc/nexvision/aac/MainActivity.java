@@ -63,6 +63,15 @@ public class MainActivity extends Activity {
         web.setOnLongClickListener(v -> true);
         web.setHapticFeedbackEnabled(false);
 
+        // Debug builds only: lets a dev machine attach DevTools to the WebView
+        // over `adb forward localabstract:webview_devtools_remote_<pid>`.
+        // Exposes page internals, so it must never ship in a release build.
+        if (BuildConfig.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
+        web.addJavascriptInterface(new NativeBridge(this), "AACNative");
+
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest req) {

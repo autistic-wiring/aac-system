@@ -6,6 +6,7 @@ import ExitHotspot from './components/ExitHotspot';
 import { defaultVocabulary } from './data/defaultVocabulary';
 import { preloadWords } from './utils/speechAdapter';
 import { useKiosk, allowUnload } from './utils/kiosk';
+import { useCharging } from './utils/charging';
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const [currentCategory, setCurrentCategory] = useState('home');
   const [isDimmed, setIsDimmed] = useState(false);
   const inactivityTimer = useRef(null);
+  const charging = useCharging();
 
   // Kiosk is not active during the splash: the PWA update flow reloads the
   // page there, and beforeunload would turn that into a "leave site?" prompt.
@@ -146,26 +148,22 @@ function App() {
     if (showSplash) return;
 
     const IDLE_TIMEOUT = 20 * 60 * 1000;
-    let charging = false;
-    let battery = null;
+
+    // While charging the device is parked on its stand, so keep the screen
+    // bright and never start the idle dim.
+    if (charging) {
+      clearTimeout(inactivityTimer.current);
+      return;
+    }
 
     const wake = () => {
       setIsDimmed(false);
       clearTimeout(inactivityTimer.current);
-      // While charging the device is parked on its stand, so keep the
-      // screen bright and never start the idle dim.
-      if (!charging) {
-        inactivityTimer.current = setTimeout(() => setIsDimmed(true), IDLE_TIMEOUT);
-      }
+      inactivityTimer.current = setTimeout(() => setIsDimmed(true), IDLE_TIMEOUT);
     };
 
-    const onChargingChange = () => {
-      if (battery.charging) {
-        clearTimeout(inactivityTimer.current);
-        setIsDimmed(false);
-      } else {
-        wake();
-      }
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') wake();
     };
 
     wake();
@@ -173,19 +171,7 @@ function App() {
     window.addEventListener('keydown', wake);
     window.addEventListener('mousemove', wake);
     window.addEventListener('touchstart', wake);
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') wake();
-    });
-
-    // Battery Status API (Chromium only; silently no-op elsewhere).
-    if (navigator.getBattery) {
-      navigator.getBattery().then((b) => {
-        battery = b;
-        charging = b.charging;
-        b.addEventListener('chargingchange', onChargingChange);
-        if (charging) onChargingChange();
-      }).catch(() => {});
-    }
+    document.addEventListener('visibilitychange', onVisible);
 
     return () => {
       clearTimeout(inactivityTimer.current);
@@ -193,9 +179,9 @@ function App() {
       window.removeEventListener('keydown', wake);
       window.removeEventListener('mousemove', wake);
       window.removeEventListener('touchstart', wake);
-      if (battery) battery.removeEventListener('chargingchange', onChargingChange);
+      document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [showSplash]);
+  }, [showSplash, charging]);
 
   // GoTalk-style page navigation: home is the Core words page, the rest
   // follow the folder order. Prev/next cycle; back returns to the last page.
@@ -246,8 +232,10 @@ function App() {
     {!showSplash && (
       <div
         className="dim-overlay"
+        // Derived, not stored: on the charger the overlay is forced clear
+        // and `isDimmed` is left as-is so it resumes correctly on unplug.
         style={{
-          opacity: isDimmed ? 0.98 : 0,
+          opacity: isDimmed && !charging ? 0.98 : 0,
           transition: isDimmed ? 'opacity 4s ease' : 'opacity 0.4s ease',
         }}
       />

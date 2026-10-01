@@ -30,6 +30,12 @@ android {
         }
     }
 
+    buildFeatures {
+        // BuildConfig.DEBUG gates WebView remote debugging, which is how the
+        // kiosk behaviour is inspected from a dev machine.
+        buildConfig true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

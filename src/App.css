@@ -369,3 +369,55 @@
   line-height: 1.1;
   margin-bottom: 2px;
 }
+
+/* ── Kiosk exit hold indicator ── */
+/* pointer-events: none: the hold is tracked on window, so this must never
+   intercept a tap meant for the top-right word card. */
+.exit-hotspot {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: 96px;
+  height: 96px;
+  z-index: 1000;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.exit-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.exit-ring-track {
+  fill: rgba(0, 0, 0, 0.35);
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 6;
+}
+
+.exit-ring-fill {
+  fill: none;
+  stroke: #ffe14d;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 80ms linear;
+}
+
+.exit-label {
+  position: relative;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.exit-hotspot.done .exit-ring-fill {
+  stroke: #43a047;
+}

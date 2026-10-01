@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device-admin>
+    <!-- Limits the device to this one app. Requires device-owner provisioning
+         (Settings > Security > Device owner apps, or an NFC/ADB provisioning
+         run). Without it the app runs in immersive mode instead. -->
+    <uses-policies>
+        <force-lock />
+    </uses-policies>
+</device-admin>

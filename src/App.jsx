@@ -2,16 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import Board from './components/Board';
 import BottomBar from './components/BottomBar';
 import SplashScreen from './components/SplashScreen';
+import ExitHotspot from './components/ExitHotspot';
 import { defaultVocabulary } from './data/defaultVocabulary';
 import { preloadWords } from './utils/speechAdapter';
+import { useKiosk, allowUnload } from './utils/kiosk';
 import './App.css';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [currentCategory, setCurrentCategory] = useState('home');
-  const fullscreenLock = useRef(false);
   const [isDimmed, setIsDimmed] = useState(false);
   const inactivityTimer = useRef(null);
+
+  // Kiosk is not active during the splash: the PWA update flow reloads the
+  // page there, and beforeunload would turn that into a "leave site?" prompt.
+  const { holding } = useKiosk({ active: !showSplash });
 
   useEffect(() => {
     const allWordsToPreload = [
@@ -30,7 +35,10 @@ function App() {
     let regRef = null;
 
     const applyUpdateAndReload = () => {
-      const reload = () => window.location.reload();
+      const reload = () => {
+        allowUnload();
+        window.location.reload();
+      };
       const waiting = regRef?.waiting;
       if (!waiting) {
         reload();
@@ -131,42 +139,6 @@ function App() {
     return () => {
       document.removeEventListener('visibilitychange', onVisibilityChange);
       wakeLock?.release();
-    };
-  }, []);
-
-  useEffect(() => {
-    const enterFullscreen = async () => {
-      if (document.fullscreenElement) return;
-      try {
-        await document.documentElement.requestFullscreen();
-        if (screen.orientation?.lock) {
-          try { await screen.orientation.lock('landscape'); } catch { /* not supported */ }
-        }
-      } catch { /* needs user gesture on some browsers */ }
-    };
-
-    const startFullscreen = () => {
-      if (fullscreenLock.current) return;
-      fullscreenLock.current = true;
-      enterFullscreen();
-    };
-
-    const onFullscreenChange = () => {
-      if (!document.fullscreenElement) {
-        fullscreenLock.current = false;
-        document.addEventListener('click', startFullscreen, { once: true });
-        document.addEventListener('touchstart', startFullscreen, { once: true });
-      }
-    };
-
-    enterFullscreen();
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-    document.addEventListener('click', startFullscreen, { once: true });
-
-    return () => {
-      document.removeEventListener('fullscreenchange', onFullscreenChange);
-      document.removeEventListener('click', startFullscreen);
-      document.removeEventListener('touchstart', startFullscreen);
     };
   }, []);
 
@@ -280,6 +252,7 @@ function App() {
         }}
       />
     )}
+    {holding && <ExitHotspot />}
     <div className="app-container">
       <main>
         <Board vocabulary={currentItems} onItemClick={handleItemClick} />

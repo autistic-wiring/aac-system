@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AAC Board</string>
+    <!-- board_url is generated in app/build.gradle (resValue) so it can be
+         overridden per build with -PboardUrl=... -->
+    <string name="load_error">Could not load the AAC board. Check the connection and tap to retry.</string>
+</resources>

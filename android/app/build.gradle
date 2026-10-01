@@ -1,0 +1,37 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "cc.nexvision.aac"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "cc.nexvision.aac"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        // The board is served over HTTPS, so cleartext stays off.
+        //
+        // Override for the testing board:
+        //   ./gradlew assembleDebug -PboardUrl=https://aac-testing.nexvision.cc/
+        resValue "string", "board_url",
+                (project.findProperty("boardUrl") ?: "https://aac.nexvision.cc/")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            applicationIdSuffix ".debug"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

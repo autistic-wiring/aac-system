@@ -45,6 +45,46 @@ duplicate-resource conflict.
 Added `android` to `.dockerignore` so the SDK-sized build tree stays out of the
 web image context.
 
+## Charging / idle dim
+
+The board dims after 20 min idle. It must NOT dim while on the charger.
+
+**`navigator.getBattery` is unusable inside the WebView shell.** It EXISTS
+(WebView 153) but returns STALE state — with the OS at
+`BATTERY_STATUS_CHARGING` it still reported `charging=false`. This was a real
+bug, not a missing API, and the old code dimmed on the charger because of it.
+
+Fix: `NativeBridge.isCharging()` reads `ACTION_BATTERY_CHANGED` directly.
+`useCharging()` (src/utils/charging.js) prefers the bridge, polls every 5s
+(no power events reach a WebView), and falls back to the Battery Status API
+when absent so browser installs are unaffected.
+
+Overlay opacity is DERIVED: `isDimmed && !charging`. Do not reset `isDimmed`
+in an effect — keeps dim state intact across a charger connect, and dodges
+the `react-hooks/set-state-in-effect` lint rule.
+
+## Verifying on-device (WebView remote debugging)
+
+Debug builds call `WebView.setWebContentsDebuggingEnabled(true)`.
+
+```bash
+PID=$(adb shell pidof cc.nexvision.aac.debug | tr -d '\r')
+adb forward tcp:9333 localabstract:webview_devtools_remote_$PID
+# then a WebSocket client against /json/list
+```
+
+This is the only way to assert on in-page state (overlay opacity, bridge
+return value). Patching `.style` directly proves nothing — it bypasses React.
+To exercise the 20-minute idle timer, inject a `setTimeout` patch via
+`Page.addScriptToEvaluateOnNewDocument` that collapses delays >300000ms to
+2000ms, then `Page.reload`.
+
+Simulate charging without a cable:
+```bash
+adb shell dumpsys battery set status 2 && adb shell dumpsys battery set level 90
+adb shell dumpsys battery reset     # restore
+```
+
 ## Test device
 
 Blackview Tab A6 Kids, Android 15 (SDK 35), 800x1280 @ 213dpi, arm64.

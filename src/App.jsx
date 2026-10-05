@@ -235,7 +235,7 @@ function App() {
         // Derived, not stored: on the charger the overlay is forced clear
         // and `isDimmed` is left as-is so it resumes correctly on unplug.
         style={{
-          opacity: isDimmed && !charging ? 0.98 : 0,
+          opacity: isDimmed && !charging ? 0.4 : 0,
           transition: isDimmed ? 'opacity 4s ease' : 'opacity 0.4s ease',
         }}
       />

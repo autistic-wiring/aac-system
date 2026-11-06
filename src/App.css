@@ -143,6 +143,12 @@
   display: none;
 }
 
+/* Blank grid placeholder — occupies its cell but renders no button. */
+.empty-slot {
+  min-height: 0;
+  min-width: 0;
+}
+
 .word-card::after {
   content: '';
   position: absolute;

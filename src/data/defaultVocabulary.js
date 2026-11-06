@@ -38,14 +38,19 @@ const colors = {
 const G = 'images/gotalk/';
 
 export const defaultVocabulary = {
-  // Home board = GoTalk "Core words" page, in fixed display order for motor
-  // planning. The bottom bar navigates to the other three pages.
+  // Home board = first page, in fixed display order for motor planning.
+  // 3x3 grid: eat, drink, more / go, help, all done / empty, play, empty.
+  // Empty slots render as blank space (no button).
   core: [
+    { id: 'eat',      word: 'Eat',      icon: '🍽️', color: colors.gotalkWhite, image: `${G}eat.png` },
+    { id: 'drink',    word: 'Drink',    icon: '🥛', color: colors.gotalkWhite, image: `${G}drink_water.png` },
     { id: 'more',     word: 'More',     icon: '🤲', color: colors.gotalkBlue, image: `${G}more.png` },
-    { id: 'all_done', word: 'All done', icon: '🏁', color: colors.gotalkBlue, audioId: 'all-done', image: `${G}all_done.png` },
-    { id: 'no',       word: 'No',       icon: '🚫', color: colors.gotalkBlue, image: `${G}no.png` },
-    { id: 'want',     word: 'Want',     icon: '🙏', color: colors.gotalkGreen, image: `${G}want.png` },
+    { id: 'go',       word: 'Go',       icon: '🚶', color: colors.gotalkWhite },
     { id: 'help',     word: 'Help',     icon: '🆘', color: colors.gotalkGreen, image: `${G}help.png` },
+    { id: 'all_done', word: 'All done', icon: '🏁', color: colors.gotalkBlue, audioId: 'all-done', image: `${G}all_done.png` },
+    { id: 'empty_1', type: 'empty' },
+    { id: 'play',     word: 'Play',     icon: '▶️', color: colors.gotalkWhite },
+    { id: 'empty_2', type: 'empty' },
   ],
   folders: [
     { id: 'action', word: 'Core words (Action)', icon: '▶️', type: 'folder', color: colors.folder },

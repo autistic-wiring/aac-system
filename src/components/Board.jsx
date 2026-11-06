@@ -76,13 +76,17 @@ const Board = ({ vocabulary, onItemClick }) => {
           '--rows': rows || Math.ceil(count / (cols || count)),
         }}
       >
-        {visibleItems.map((item) => (
-          <WordCard
-            key={item.id}
-            item={item}
-            onItemClick={onItemClick}
-          />
-        ))}
+        {visibleItems.map((item) =>
+          item.type === 'empty' ? (
+            <div key={item.id} className="empty-slot" aria-hidden="true" />
+          ) : (
+            <WordCard
+              key={item.id}
+              item={item}
+              onItemClick={onItemClick}
+            />
+          )
+        )}
       </div>
     </div>
   );

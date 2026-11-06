@@ -204,6 +204,8 @@ function App() {
   const handleItemClick = (item) => {
     if (item.type === 'folder') {
       goTo(item.id);
+    } else if (item.goto) {
+      goTo(item.goto);
     }
   };
 

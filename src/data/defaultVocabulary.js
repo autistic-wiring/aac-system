@@ -42,8 +42,8 @@ export const defaultVocabulary = {
   // 3x3 grid: eat, drink, more / go, help, all done / empty, play, empty.
   // Empty slots render as blank space (no button).
   core: [
-    { id: 'eat',      word: 'Eat',      icon: '🍽️', color: colors.gotalkWhite, image: `${G}eat.png` },
-    { id: 'drink',    word: 'Drink',    icon: '🥛', color: colors.gotalkWhite, image: `${G}drink_water.png` },
+    { id: 'eat',      word: 'Eat',      icon: '🍽️', color: colors.gotalkWhite, image: `${G}eat.png`, goto: 'eat_drink' },
+    { id: 'drink',    word: 'Drink',    icon: '🥛', color: colors.gotalkWhite, image: `${G}drink_water.png`, goto: 'eat_drink' },
     { id: 'more',     word: 'More',     icon: '🤲', color: colors.gotalkBlue, image: `${G}more.png` },
     { id: 'go',       word: 'Go',       icon: '🚶', color: colors.gotalkWhite },
     { id: 'help',     word: 'Help',     icon: '🆘', color: colors.gotalkGreen, image: `${G}help.png` },
@@ -53,11 +53,23 @@ export const defaultVocabulary = {
     { id: 'empty_2', type: 'empty' },
   ],
   folders: [
+    { id: 'eat_drink', word: 'Eat & Drink', icon: '🍽️', type: 'folder', color: colors.folder },
     { id: 'action', word: 'Core words (Action)', icon: '▶️', type: 'folder', color: colors.folder },
     { id: 'favorites', word: 'Favorite things', icon: '⭐', type: 'folder', color: colors.folder },
     { id: 'social', word: 'Social greetings', icon: '👋', type: 'folder', color: colors.folder },
   ],
   categories: {
+    eat_drink: [
+      { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.gotalkWhite, image: `${G}strawberry.png` },
+      { id: 'orange',     word: 'Orange',     icon: '🍊', color: colors.gotalkWhite },
+      { id: 'apple',      word: 'Apple',      icon: '🍎', color: colors.gotalkWhite },
+      { id: 'empty_3', type: 'empty' },
+      { id: 'empty_4', type: 'empty' },
+      { id: 'empty_5', type: 'empty' },
+      { id: 'empty_6', type: 'empty' },
+      { id: 'water',      word: 'Water',      icon: '💧', color: colors.gotalkWhite },
+      { id: 'empty_7', type: 'empty' },
+    ],
     action: [
       { id: 'eat',         word: 'Eat',         icon: '🍽️', color: colors.gotalkWhite, image: `${G}eat.png` },
       { id: 'drink_water', word: 'Drink water', icon: '🥛', color: colors.gotalkWhite, image: `${G}drink_water.png` },

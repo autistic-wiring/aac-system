@@ -1,6 +1,6 @@
 ---
-date_modified: 2026-10-01
-tags: [aac, kiosk, android, webview, deploy, testing]
+date_modified: 2026-11-06
+tags: [aac, kiosk, android, webview, deploy, testing, power]
 ---
 
 # AAC kiosk mode
@@ -48,6 +48,9 @@ web image context.
 ## Charging / idle dim
 
 The board dims after 20 min idle. It must NOT dim while on the charger.
+2026-10-04: dim overlay opacity 0.98 → 0.4 (dims to 60% brightness, still
+readable; `src/App.jsx`). Fail-safe stays: only dims on confirmed battery
+(`isDimmed && !charging` derived), never on unknown state.
 
 **`navigator.getBattery` is unusable inside the WebView shell.** It EXISTS
 (WebView 153) but returns STALE state — with the OS at

@@ -1,0 +1,68 @@
+{
+  "MEMORY.md": {
+    "mtime": 1793985082.8745794,
+    "seen": 1793985173.1779284,
+    "ast_hash": "34414bb53144ad2efc6a195cb649f3a4",
+    "semantic_hash": "34414bb53144ad2efc6a195cb649f3a4"
+  },
+  "animating-buttons.md": {
+    "mtime": 1786096742.353017,
+    "seen": 1793985173.1779397,
+    "ast_hash": "81320ad55ebc1edb6e9093da34fbaa77",
+    "semantic_hash": "81320ad55ebc1edb6e9093da34fbaa77"
+  },
+  "component-tree.md": {
+    "mtime": 1784215680.0011914,
+    "seen": 1793985173.1779444,
+    "ast_hash": "0abc0d4a84bb61d0de73aaf209b8bd05",
+    "semantic_hash": "0abc0d4a84bb61d0de73aaf209b8bd05"
+  },
+  "deployment.md": {
+    "mtime": 1790880383.501959,
+    "seen": 1793985173.1779478,
+    "ast_hash": "a4d9b2588bb0dcc5f93c63f5e9f845ac",
+    "semantic_hash": "a4d9b2588bb0dcc5f93c63f5e9f845ac"
+  },
+  "gotalk-copy-guide.md": {
+    "mtime": 1789919202.0722294,
+    "seen": 1793985173.1779509,
+    "ast_hash": "88340729594350fb373407d7d52574b9",
+    "semantic_hash": "88340729594350fb373407d7d52574b9"
+  },
+  "kiosk-mode.md": {
+    "mtime": 1793985077.5924914,
+    "seen": 1793985173.1779537,
+    "ast_hash": "31a23e3e501e8d50aef3443013d375e2",
+    "semantic_hash": "31a23e3e501e8d50aef3443013d375e2"
+  },
+  "project-overview.md": {
+    "mtime": 1789865599.8393064,
+    "seen": 1793985173.1779573,
+    "ast_hash": "b3d8116596574e533040d8edbdb5e5aa",
+    "semantic_hash": "b3d8116596574e533040d8edbdb5e5aa"
+  },
+  "speech-pipeline.md": {
+    "mtime": 1784295712.1715217,
+    "seen": 1793985173.17796,
+    "ast_hash": "1fef4bfc5de58c59e1e6e1505a4ce446",
+    "semantic_hash": "1fef4bfc5de58c59e1e6e1505a4ce446"
+  },
+  "tts-voice-system.md": {
+    "mtime": 1793985063.3932552,
+    "seen": 1793985173.177963,
+    "ast_hash": "343d029ccbd978192c2e4925c0188723",
+    "semantic_hash": "343d029ccbd978192c2e4925c0188723"
+  },
+  "veo-button-animation.md": {
+    "mtime": 1786096742.354017,
+    "seen": 1793985173.1779659,
+    "ast_hash": "dedc43a10d0752dfacfab98b11979df2",
+    "semantic_hash": "dedc43a10d0752dfacfab98b11979df2"
+  },
+  "vocabulary-system.md": {
+    "mtime": 1793985053.713094,
+    "seen": 1793985173.177969,
+    "ast_hash": "68e5f9e257aba2cf3ffb1de893db212a",
+    "semantic_hash": "68e5f9e257aba2cf3ffb1de893db212a"
+  }
+}

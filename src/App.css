@@ -427,3 +427,52 @@
 .exit-hotspot.done .exit-ring-fill {
   stroke: #43a047;
 }
+
+/* ── Voice picker lab (/voice) ── */
+.voicelab {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+  font-family: 'Outfit', sans-serif;
+  color: #2c3e50;
+  overflow-y: auto;
+  height: 100dvh;
+  box-sizing: border-box;
+}
+.voicelab h1 { margin: 0 0 4px; font-size: 1.8rem; }
+.voicelab h2 { margin-top: 28px; font-size: 1.3rem; }
+.voicelab h3 { margin: 14px 0 6px; font-size: 1rem; opacity: 0.75; }
+.voicelab-sub { opacity: 0.8; }
+.voicelab section p { opacity: 0.8; margin: 4px 0 8px; }
+.voicelab-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.voicelab-words button {
+  border: 2px solid #1f6e7e;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1f6e7e;
+  cursor: pointer;
+}
+.voicelab-words button:active { transform: scale(0.95); }
+.voicelab select {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 100%;
+}
+.voicelab-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.voicelab-pick input { margin-right: 8px; transform: scale(1.3); }

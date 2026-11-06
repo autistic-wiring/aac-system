@@ -14,8 +14,10 @@
 //   4. Social greetings — Hi, Bye, Mommy, Daddy
 // Card images live in public/images/gotalk/ (extracted from the GoTalk APK
 // asset bundle, or cropped from app screenshots where the bundle differs).
-// Voice is the GoTalk "Ivy" TTS (public/audio/*.wav); wipe + go washroom
-// have no GoTalk recording and fall back to live TTS via speechAdapter.
+// Button audio is intentionally pre-baked (public/audio/*.wav) so playback is
+// instant and offline. Provenance is mixed: most files are GoTalk "Ivy"
+// recordings, some were generated with gTTS, newer words with local Piper
+// (lessac). Use the /voice page to compare voices before unifying.
 
 const colors = {
   pronoun: '#ffeb3b', // Yellow

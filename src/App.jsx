@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board from './components/Board';
+import VoiceLab from './components/VoiceLab';
 import BottomBar from './components/BottomBar';
 import SplashScreen from './components/SplashScreen';
 import ExitHotspot from './components/ExitHotspot';
@@ -10,6 +11,13 @@ import { useCharging } from './utils/charging';
 import './App.css';
 
 function App() {
+  // Voice picker lab: /voice shows a comparison page instead of the board.
+  const isVoiceLab =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.replace(/\/$/, '') === '/voice' ||
+      window.location.hash === '#/voice');
+  if (isVoiceLab) return <VoiceLab />;
+
   const [showSplash, setShowSplash] = useState(true);
   const [currentCategory, setCurrentCategory] = useState('home');
   const [isDimmed, setIsDimmed] = useState(false);

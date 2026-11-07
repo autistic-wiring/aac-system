@@ -14,7 +14,7 @@ const EMPTY_SLOT_PENALTY = 200;
 const capFor = (minDim) =>
   Math.max(180, Math.min(560, Math.round(minDim * 0.5)));
 
-const Board = ({ vocabulary, onItemClick }) => {
+const Board = ({ vocabulary, onItemClick, silent = false }) => {
   const visibleItems = vocabulary.filter(item => !item.hidden);
   const containerRef = useRef(null);
   const [cols, setCols] = useState(0);
@@ -76,13 +76,18 @@ const Board = ({ vocabulary, onItemClick }) => {
           '--rows': rows || Math.ceil(count / (cols || count)),
         }}
       >
-        {visibleItems.map((item) => (
-          <WordCard
-            key={item.id}
-            item={item}
-            onItemClick={onItemClick}
-          />
-        ))}
+        {visibleItems.map((item) =>
+          item.type === 'empty' ? (
+            <div key={item.id} className="empty-slot" aria-hidden="true" />
+          ) : (
+            <WordCard
+              key={item.id}
+              item={item}
+              onItemClick={onItemClick}
+              silent={silent}
+            />
+          )
+        )}
       </div>
     </div>
   );

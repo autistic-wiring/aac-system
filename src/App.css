@@ -22,6 +22,90 @@
   min-height: 0;
 }
 
+/* ── GoTalk-style Express message bar (top) ── */
+.express-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+.express-strip {
+  flex: 1 1 90%;
+  min-width: 0;
+  min-height: 64px;
+  max-height: 96px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #fff;
+  border: 2px solid #1f6e7e;
+  border-radius: 16px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.express-strip.has-items {
+  cursor: pointer;
+}
+
+.express-placeholder {
+  color: #9aa5b1;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.express-thumb {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #f2f5f7;
+  border: 1px solid #d5dde3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.express-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.express-thumb-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.express-controls {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.express-btn {
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+}
+
+.express-read {
+  width: 60px;
+  height: 60px;
+  font-size: 1.8rem;
+}
+
 .board-container {
   flex: 1;
   min-height: 0;
@@ -141,6 +225,12 @@
 
 .hidden-card {
   display: none;
+}
+
+/* Blank grid placeholder — occupies its cell but renders no button. */
+.empty-slot {
+  min-height: 0;
+  min-width: 0;
 }
 
 .word-card::after {
@@ -421,3 +511,52 @@
 .exit-hotspot.done .exit-ring-fill {
   stroke: #43a047;
 }
+
+/* ── Voice picker lab (/voice) ── */
+.voicelab {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+  font-family: 'Outfit', sans-serif;
+  color: #2c3e50;
+  overflow-y: auto;
+  height: 100dvh;
+  box-sizing: border-box;
+}
+.voicelab h1 { margin: 0 0 4px; font-size: 1.8rem; }
+.voicelab h2 { margin-top: 28px; font-size: 1.3rem; }
+.voicelab h3 { margin: 14px 0 6px; font-size: 1rem; opacity: 0.75; }
+.voicelab-sub { opacity: 0.8; }
+.voicelab section p { opacity: 0.8; margin: 4px 0 8px; }
+.voicelab-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.voicelab-words button {
+  border: 2px solid #1f6e7e;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1f6e7e;
+  cursor: pointer;
+}
+.voicelab-words button:active { transform: scale(0.95); }
+.voicelab select {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 100%;
+}
+.voicelab-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.voicelab-pick input { margin-right: 8px; transform: scale(1.3); }

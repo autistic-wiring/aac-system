@@ -1,7 +1,7 @@
 ---
 title: TTS Voice System — gTTS (Google) replaces Piper
-date_modified: 2026-08-03
-tags: [tts, audio, gtts, piper, aac, voice]
+date_modified: 2026-11-06
+tags: [tts, audio, gtts, piper, aac, voice, voicelab, voicebox]
 ---
 
 # TTS Voice System
@@ -62,3 +62,29 @@ Whisper blind spots regardless of engine — verify those by spectral burst anal
 ## Audio playback
 - `src/utils/speechAdapter.js` preloads `/audio/{audioId}.wav` into AudioBuffers, plays via Web Audio with `detune +50` cents and `gain 1.15`
 - Falls back to TTS server (port 5050) then browser speechSynthesis if wav missing
+
+## Voice comparison set + /voice picker lab (2026-11-06)
+
+Board still serves `public/audio/` (mixed recordings). A full single-voice
+Piper alternate set now lives in `public/audio-piper/` — comparison material
+only, NOT switched over.
+
+- Generator: `scripts/build-voice-set.js` — same lessac model/settings as
+  `scripts/generate-audio.js` (noiseScale 0.667 / 0.8, lengthScale 1.1,
+  speed 0.55). `stop` without pronounce renders as `"Stop."`.
+  Word list imported from `[[vocabulary-system]]` source of truth, skipping
+  folders/empties. Modes: `--missing-only` gap-fill into `public/audio`;
+  full run into `public/audio-piper`.
+- Gap-fill added 8 missing board wavs to `public/audio/`: cap, carry, cars,
+  class, gym, outdoor, playground, run.
+- `/voice` route (`src/components/VoiceLab.jsx`, early-return in `src/App.jsx`
+  before board render; matches pathname `/voice` or hash `#/voice`) compares
+  four options side by side: A = current board voice (`/audio/`), B = Piper
+  Leslie offline (`/audio-piper/`), C = live device voices
+  (speechSynthesis, rate 0.85, default first English), D = Voicebox clone
+  (planned). Pick stored per-device in `localStorage` under `voice-choice`.
+- Next step for D: clone from the Strawberry recording
+  (`public/audio/strawberry.wav`) in the Voicebox app, generate every word the
+  lab lists, drop wavs into the build — section D samples appear automatically.
+- Lesson (ponytail): one static word list grouped by page, shared by all voice
+  sections — no per-section copies to drift.

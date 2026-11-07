@@ -4,7 +4,7 @@ import { speakWord } from '../utils/speechAdapter';
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 const resolveAsset = (p) => (p ? `${baseUrl}/${p.replace(/^\//, '')}` : null);
 
-const WordCard = ({ item, onItemClick }) => {
+const WordCard = ({ item, onItemClick, silent = false }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [pressCount, setPressCount] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -33,7 +33,9 @@ const WordCard = ({ item, onItemClick }) => {
   const triggerAction = () => {
     if (item.hidden) return;
 
-    if (item.type !== 'folder') {
+    // Express mode: taps queue into the message bar silently; the bar's
+    // Read button plays the sequence. Folders never speak.
+    if (!silent && item.type !== 'folder') {
       speakWord(item.audioId || item.id, item.word, item.pronounce).catch(() => {});
     }
 

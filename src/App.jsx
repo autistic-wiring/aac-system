@@ -1,18 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board from './components/Board';
+import ExpressBar from './components/ExpressBar';
+import VoiceLab from './components/VoiceLab';
 import BottomBar from './components/BottomBar';
 import SplashScreen from './components/SplashScreen';
 import ExitHotspot from './components/ExitHotspot';
 import { defaultVocabulary } from './data/defaultVocabulary';
-import { preloadWords } from './utils/speechAdapter';
+import { preloadWords, speakSequence } from './utils/speechAdapter';
 import { useKiosk, allowUnload } from './utils/kiosk';
 import { useCharging } from './utils/charging';
 import './App.css';
 
 function App() {
+  // Voice picker lab: /voice shows a comparison page instead of the board.
+  const isVoiceLab =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.replace(/\/$/, '') === '/voice' ||
+      window.location.hash === '#/voice');
+  if (isVoiceLab) return <VoiceLab />;
+
   const [showSplash, setShowSplash] = useState(true);
   const [currentCategory, setCurrentCategory] = useState('home');
   const [isDimmed, setIsDimmed] = useState(false);
+  // GoTalk Express message bar: queued word taps, in order. _q is a unique
+  // queue id so the same word tapped twice renders twice. lastMessage holds
+  // the most recently cleared/spoken sequence for one-shot restore.
+  const [expressItems, setExpressItems] = useState([]);
+  const [lastMessage, setLastMessage] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const queueSeq = useRef(0);
   const inactivityTimer = useRef(null);
   const charging = useCharging();
 
@@ -202,8 +218,54 @@ function App() {
   };
 
   const handleItemClick = (item) => {
+    if (!item || item.hidden || item.type === 'empty') return;
+    // Folders navigate only — never queued, never spoken.
     if (item.type === 'folder') {
       goTo(item.id);
+      return;
+    }
+    // Speakable card (including home shortcuts that also navigate): queue
+    // silently into the Express bar, then navigate if it has a target page.
+    if (item.word) {
+      queueSeq.current += 1;
+      const queued = { ...item, _q: `${item.id}#${queueSeq.current}` };
+      setExpressItems((prev) => [...prev, queued]);
+      // A fresh build supersedes any stashed restore.
+      setLastMessage(null);
+    }
+    if (item.goto) {
+      goTo(item.goto);
+    }
+  };
+
+  const handleRollback = () => {
+    setExpressItems((prev) => prev.slice(0, -1));
+  };
+
+  const handleClear = () => {
+    if (expressItems.length > 0) setLastMessage(expressItems);
+    setExpressItems([]);
+  };
+
+  const handleRestore = () => {
+    if (expressItems.length === 0 && lastMessage) {
+      setExpressItems(lastMessage);
+      setLastMessage(null);
+    }
+  };
+
+  // Read the queued sequence aloud, then clear the bar (stashing it for
+  // restore, GoTalk-style "save one long term").
+  const handleRead = async () => {
+    if (expressItems.length === 0 || isSpeaking) return;
+    const snapshot = expressItems;
+    setIsSpeaking(true);
+    try {
+      await speakSequence(snapshot);
+    } finally {
+      setLastMessage(snapshot);
+      setExpressItems([]);
+      setIsSpeaking(false);
     }
   };
 
@@ -242,8 +304,17 @@ function App() {
     )}
     {holding && <ExitHotspot />}
     <div className="app-container">
+      <ExpressBar
+        items={expressItems}
+        canRestore={!!lastMessage}
+        isSpeaking={isSpeaking}
+        onRead={handleRead}
+        onRollback={handleRollback}
+        onClear={handleClear}
+        onRestore={handleRestore}
+      />
       <main>
-        <Board vocabulary={currentItems} onItemClick={handleItemClick} />
+        <Board vocabulary={currentItems} onItemClick={handleItemClick} silent />
       </main>
       <BottomBar
         pages={pages}

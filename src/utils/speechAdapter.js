@@ -64,6 +64,120 @@ function playBuffer(audioBuffer) {
   lastPlayAt = Date.now();
 }
 
+// Play a buffer and resolve when it finishes (for sequential playback).
+// Unlike playBuffer, this does NOT cut off the previous sound — sequential
+// messages must play seamlessly in order (GoTalk Express behaviour).
+function playBufferAndWait(audioBuffer) {
+  const ctx = getAudioContext();
+  return new Promise((resolve) => {
+    const source = ctx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.detune.value = 50; // +50 cents: subtle warmth, calm
+
+    const gainNode = ctx.createGain();
+    gainNode.gain.value = 1.15;
+
+    source.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    currentSource = source;
+    source.onended = () => {
+      if (currentSource === source) currentSource = null;
+      resolve();
+    };
+    source.start();
+    lastPlayAt = Date.now();
+    // Safety: never hang longer than the clip duration + 2s.
+    setTimeout(resolve, (audioBuffer.duration || 8) * 1000 + 2000);
+  });
+}
+
+const SEQUENCE_GAP_MS = 150;
+
+async function ensureRunning() {
+  const ctx = getAudioContext();
+  if (ctx.state === 'suspended') {
+    try {
+      await ctx.resume();
+    } catch {
+      // Expected if blocked by browser autoplay policy
+    }
+  }
+  return ctx;
+}
+
+function speakWithSynthesisAndWait(text) {
+  return new Promise((resolve) => {
+    if (!('speechSynthesis' in window)) {
+      resolve();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.72;
+    utterance.pitch = 1.1;
+    utterance.onend = () => resolve();
+    utterance.onerror = () => resolve();
+    window.speechSynthesis.speak(utterance);
+    // Safety: never hang if onend never fires.
+    setTimeout(resolve, Math.max(1500, text.length * 150 + 2000));
+  });
+}
+
+// GoTalk Express-style sequential playback: play each queued message in
+// order with a short gap. Reuses the preloaded wav cache, falls back to the
+// TTS server, then to device speech. Resolves when the full sequence ends.
+export async function speakSequence(items) {
+  if (!items || items.length === 0) return;
+  const ctx = await ensureRunning();
+  const TTS_SERVER = typeof window !== 'undefined'
+    ? `http://${window.location.hostname}:5050/speak`
+    : null;
+  for (const item of items) {
+    const key = item.audioId || item.id;
+    const text = item.pronounce || item.word || '';
+    // Stop any stray single-tap sound before starting the sequence step.
+    try {
+      currentSource?.stop();
+    } catch {
+      // Already stopped — safe to ignore.
+    }
+    currentSource = null;
+    try {
+      if (ctx.state === 'running') {
+        if (audioCache.has(key)) {
+          await playBufferAndWait(audioCache.get(key));
+        } else if (TTS_SERVER) {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 3000);
+          try {
+            const response = await fetch(
+              `${TTS_SERVER}?text=${encodeURIComponent(text)}`,
+              { signal: controller.signal }
+            );
+            if (!response.ok) throw new Error(`fetch error: ${response.status}`);
+            const arrayBuffer = await response.arrayBuffer();
+            const buf = await ctx.decodeAudioData(arrayBuffer);
+            audioCache.set(key, buf);
+            await playBufferAndWait(buf);
+          } catch {
+            await speakWithSynthesisAndWait(text);
+          } finally {
+            clearTimeout(timer);
+          }
+        } else {
+          await speakWithSynthesisAndWait(text);
+        }
+      } else {
+        await speakWithSynthesisAndWait(text);
+      }
+    } catch {
+      // One bad clip must not kill the rest of the sequence.
+    }
+    await new Promise((r) => setTimeout(r, SEQUENCE_GAP_MS));
+  }
+  lastPlayAt = Date.now();
+}
+
 let pendingSpeech = null;
 
 // Helper to resume context on any valid user gesture

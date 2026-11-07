@@ -14,12 +14,13 @@
 //   4. Social greetings — Hi, Bye, Mommy, Daddy
 // Card images live in public/images/gotalk/ (extracted from the GoTalk APK
 // asset bundle, or cropped from app screenshots where the bundle differs).
-// Button audio is intentionally pre-baked (public/audio/*.wav) so playback is
-// instant and offline. Default voice is ElevenLabs Kat
-// (RiK8PTtVIeKKoFFTk9fg, Multilingual v2); regenerate with
-// `npm run generate-audio` (key via ELEVENLABS_API_KEY or the
-// elevenlabs-api-key k8s secret). Older files were GoTalk Ivy recordings,
-// gTTS, or local Piper — all replaced by the Kat bake; compare on /voice.
+// Voice is ElevenLabs Kat (see scripts/generate-kat-audio.js).
+// Regenerate all button audio with `npm run generate-audio` (key via
+// ELEVENLABS_API_KEY or the elevenlabs-api-key k8s secret). Older files were
+// GoTalk Ivy recordings, gTTS, or local Piper — all replaced by the Kat bake;
+// compare voices on /voice.
+// Pictogram credit: "carry" piggyback symbol by ARASAAC (arasaac.org),
+// CC BY-NC-SA. All other card images as labeled per-file.
 
 const colors = {
   pronoun: '#ffeb3b', // Yellow

@@ -84,7 +84,7 @@ export const defaultVocabulary = {
       { id: 'empty_8', type: 'empty' },
       { id: 'playground', word: 'Playground', icon: '🛝', color: colors.gotalkWhite, image: `${G}playground.webp` },
       { id: 'empty_9', type: 'empty' },
-      { id: 'washroom',  word: 'Washroom',  icon: '🚻', color: colors.gotalkWhite, image: `${G}go_washroom.png`, audioId: 'peepee' },
+      { id: 'washroom',  word: 'Washroom',  icon: '🚻', color: colors.gotalkWhite, image: `${G}go_washroom.png`, audioId: 'peepee', pronounce: 'pee pee' },
       { id: 'empty_11', type: 'empty' },
       { id: 'home_place', word: 'Home',       icon: '🏠', color: colors.gotalkWhite, image: `${G}home.png`, audioId: 'home' },
     ],

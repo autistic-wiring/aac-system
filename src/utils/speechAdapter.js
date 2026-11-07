@@ -116,12 +116,22 @@ function playBufferAndWait(audioBuffer) {
 
 const SEQUENCE_GAP_MS = 150;
 
+// resume() can hang forever in a backgrounded tab — race it so playback
+// always falls through to the next fallback instead of stalling.
+const RESUME_TIMEOUT_MS = 800;
+function resumeWithTimeout(ctx) {
+  return Promise.race([
+    ctx.resume().catch(() => {}),
+    new Promise((r) => setTimeout(r, RESUME_TIMEOUT_MS)),
+  ]);
+}
+
 async function ensureRunning() {
   const ctx = getAudioContext();
   if (!ctx) return null;
   if (ctx.state === 'suspended') {
     try {
-      await ctx.resume();
+      await resumeWithTimeout(ctx);
     } catch {
       // Expected if blocked by browser autoplay policy
     }
@@ -259,7 +269,7 @@ export const speakWord = async (id, word, pronounce) => {
       if (ctx.state === 'suspended') {
         pendingSpeech = { id, word, pronounce };
         try {
-          await ctx.resume();
+          await resumeWithTimeout(ctx);
         } catch {
           // Expected if blocked by browser autoplay policy
         }

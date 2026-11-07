@@ -6,7 +6,7 @@ import BottomBar from './components/BottomBar';
 import SplashScreen from './components/SplashScreen';
 import ExitHotspot from './components/ExitHotspot';
 import { defaultVocabulary } from './data/defaultVocabulary';
-import { preloadWords, speakSequence } from './utils/speechAdapter';
+import { preloadWords, speakSequence, speakWord } from './utils/speechAdapter';
 import { useKiosk, allowUnload } from './utils/kiosk';
 import { useCharging } from './utils/charging';
 import './App.css';
@@ -224,14 +224,16 @@ function App() {
       goTo(item.id);
       return;
     }
-    // Speakable card (including home shortcuts that also navigate): queue
-    // silently into the Express bar, then navigate if it has a target page.
+    // Speakable card (including home shortcuts that also navigate): speak
+    // the word immediately AND queue it into the Express bar, then navigate
+    // if it has a target page.
     if (item.word) {
       queueSeq.current += 1;
       const queued = { ...item, _q: `${item.id}#${queueSeq.current}` };
       setExpressItems((prev) => [...prev, queued]);
       // A fresh build supersedes any stashed restore.
       setLastMessage(null);
+      speakWord(item.audioId || item.id, item.word, item.pronounce).catch(() => {});
     }
     if (item.goto) {
       goTo(item.goto);

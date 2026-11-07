@@ -136,7 +136,7 @@
   gap: 12px;
   padding-top: 10px;
   border-top: 2px solid rgba(0, 0, 0, 0.1);
-  height: clamp(80px, 18dvh, 130px);
+  height: clamp(72px, 16dvh, 117px);
 }
 
 .navigation-bar {

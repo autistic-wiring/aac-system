@@ -4,6 +4,14 @@ import { speakWord } from '../utils/speechAdapter';
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 const resolveAsset = (p) => (p ? `${baseUrl}/${p.replace(/^\//, '')}` : null);
 
+// Shared across all card instances: timestamp of the most recent pointerdown
+// on ANY card. After a tap navigates to a new page, the browser may dispatch
+// the tap's trailing `click` to the card now under the finger (a freshly
+// mounted element whose own pointerDownTime is 0, so the per-card guard
+// passes). That ghost click must be ignored — but a genuine fast tap on
+// another card carries its own recent pointerdown, so it still goes through.
+let lastAnyPointerDownAt = 0;
+
 const WordCard = ({ item, onItemClick, silent = false }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [pressCount, setPressCount] = useState(0);
@@ -33,8 +41,8 @@ const WordCard = ({ item, onItemClick, silent = false }) => {
   const triggerAction = () => {
     if (item.hidden) return;
 
-    // Express mode: taps queue into the message bar silently; the bar's
-    // Read button plays the sequence. Folders never speak.
+    // WordCard itself stays silent in Express mode: App.handleItemClick
+    // speaks the word immediately and queues it. Folders never speak.
     if (!silent && item.type !== 'folder') {
       speakWord(item.audioId || item.id, item.word, item.pronounce).catch(() => {});
     }
@@ -64,6 +72,7 @@ const WordCard = ({ item, onItemClick, silent = false }) => {
     setAnimating(true);
     pressStartRef.current = Date.now();
     pointerDownTime.current = Date.now();
+    lastAnyPointerDownAt = pointerDownTime.current;
     triggerAction();
   };
 
@@ -82,8 +91,15 @@ const WordCard = ({ item, onItemClick, silent = false }) => {
   // Only fires for mouse; touch with `pointerleave` won't fire during a
   // stationary press per the Pointer Events spec.
   const handleClick = () => {
+    const now = Date.now();
     // If pointerdown triggered the action recently, ignore the subsequent click
-    if (Date.now() - pointerDownTime.current < 800) {
+    if (now - pointerDownTime.current < 800) {
+      return;
+    }
+    // Ghost click after a navigation: another card handled this tap's
+    // pointerdown moments ago (this card just mounted under the finger).
+    // A genuine tap always has its own recent pointerdown, so it passes.
+    if (now - lastAnyPointerDownAt < 800) {
       return;
     }
     triggerAction();

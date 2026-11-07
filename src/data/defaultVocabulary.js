@@ -15,9 +15,11 @@
 // Card images live in public/images/gotalk/ (extracted from the GoTalk APK
 // asset bundle, or cropped from app screenshots where the bundle differs).
 // Button audio is intentionally pre-baked (public/audio/*.wav) so playback is
-// instant and offline. Provenance is mixed: most files are GoTalk "Ivy"
-// recordings, some were generated with gTTS, newer words with local Piper
-// (lessac). Use the /voice page to compare voices before unifying.
+// instant and offline. Default voice is ElevenLabs Kat
+// (RiK8PTtVIeKKoFFTk9fg, Multilingual v2); regenerate with
+// `npm run generate-audio` (key via ELEVENLABS_API_KEY or the
+// elevenlabs-api-key k8s secret). Older files were GoTalk Ivy recordings,
+// gTTS, or local Piper — all replaced by the Kat bake; compare on /voice.
 
 const colors = {
   pronoun: '#ffeb3b', // Yellow

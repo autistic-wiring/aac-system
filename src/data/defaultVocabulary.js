@@ -53,7 +53,7 @@ export const defaultVocabulary = {
     { id: 'help',     word: 'Help',     icon: '🆘', color: colors.gotalkGreen, image: `${G}help.png` },
     { id: 'all_done', word: 'All done', icon: '🏁', color: colors.gotalkBlue, audioId: 'all-done', image: `${G}all_done.png` },
     { id: 'empty_1', type: 'empty' },
-    { id: 'play',     word: 'Play',     icon: '▶️', color: colors.gotalkWhite, goto: 'play_page' },
+    { id: 'play',     word: 'Play',     icon: '▶️', color: colors.gotalkWhite, image: `${G}play.png`, goto: 'play_page' },
     { id: 'empty_2', type: 'empty' },
   ],
   folders: [
@@ -66,11 +66,11 @@ export const defaultVocabulary = {
   ],
   categories: {
     eat_drink: [
-      { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.gotalkWhite, image: `${G}strawberry.png` },
-      { id: 'orange',     word: 'Orange',     icon: '🍊', color: colors.gotalkWhite },
-      { id: 'apple',      word: 'Apple',      icon: '🍎', color: colors.gotalkWhite },
+      { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.gotalkWhite, image: `${G}strawberry.webp` },
+      { id: 'orange',     word: 'Orange',     icon: '🍊', color: colors.gotalkWhite, image: `${G}orange.webp` },
+      { id: 'apple',      word: 'Apple',      icon: '🍎', color: colors.gotalkWhite, image: `${G}apple.webp` },
       { id: 'cereal',     word: 'Cereal',     icon: '🥣', color: colors.gotalkWhite },
-      { id: 'cracker',    word: 'Cracker',    icon: '🍘', color: colors.gotalkWhite, image: `${G}crackers.png` },
+      { id: 'cracker',    word: 'Cracker',    icon: '🍘', color: colors.gotalkWhite, image: `${G}cracker.webp` },
       { id: 'empty_5', type: 'empty' },
       { id: 'empty_6', type: 'empty' },
       { id: 'water',      word: 'Water',      icon: '💧', color: colors.gotalkWhite },
@@ -78,7 +78,7 @@ export const defaultVocabulary = {
     ],
     place: [
       { id: 'class',      word: 'Class',      icon: '🏫', color: colors.gotalkWhite },
-      { id: 'gym',        word: 'Gym',        icon: '🏋️', color: colors.gotalkWhite },
+      { id: 'gym',        word: 'Gym',        icon: '🏋️', color: colors.gotalkWhite, image: `${G}gym.webp` },
       { id: 'outdoor',    word: 'Outdoor',    icon: '🌳', color: colors.gotalkWhite },
       { id: 'empty_8', type: 'empty' },
       { id: 'playground', word: 'Playground', icon: '🛝', color: colors.gotalkWhite },
@@ -106,7 +106,7 @@ export const defaultVocabulary = {
       { id: 'wash',        word: 'Wash',        icon: '🧼', color: colors.gotalkWhite, image: `${G}wash.png` },
     ],
     favorites: [
-      { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.gotalkWhite, image: `${G}strawberry.png` },
+      { id: 'strawberry', word: 'Strawberry', icon: '🍓', color: colors.gotalkWhite, image: `${G}strawberry.webp` },
       { id: 'crackers',   word: 'Crackers',   icon: '🍘', color: colors.gotalkWhite, image: `${G}crackers.png`, audioId: 'cracker' },
       { id: 'water_play', word: 'Water play', icon: '💦', color: colors.gotalkWhite, image: `${G}water_play.png` },
       { id: 'spinning',   word: 'Spinning',   icon: '🌀', color: colors.gotalkWhite, image: `${G}spinning.png` },

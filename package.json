@@ -1,12 +1,13 @@
 {
   "name": "aac-remake",
   "private": true,
-  "version": "1.2.40",
+  "version": "1.2.41",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "tts": "node tts-server.js",
-    "generate-audio": "node scripts/generate-audio.js",
+    "generate-audio": "node scripts/generate-kat-audio.js",
+    "generate-audio:piper": "node scripts/generate-audio.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

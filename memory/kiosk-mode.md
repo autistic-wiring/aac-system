@@ -1,6 +1,6 @@
 ---
-date_modified: 2026-11-06
-tags: [aac, kiosk, android, webview, deploy, testing, power]
+date_modified: 2026-11-10
+tags: [aac, kiosk, android, webview, deploy, testing, power, device-owner, locktask, adb]
 ---
 
 # AAC kiosk mode
@@ -92,9 +92,87 @@ adb shell dumpsys battery reset     # restore
 
 Blackview Tab A6 Kids, Android 15 (SDK 35), 800x1280 @ 213dpi, arm64.
 Wireless debugging: pairing port and connect port are DIFFERENT. `adb pair`
-takes the pairing port; `adb connect` needs the connect port, which mDNS did not
-advertise here — had to scan 30000-50000 to find it (was 44541).
+takes the pairing port; `adb connect` needs the connect port.
 
-`adb shell dpm set-device-owner` wipes the device, so lock task was NOT tested.
-Verified only: immersive bars hidden, back swallowed, HOME still leaves,
-keep-screen-on flag set, audio plays, exit ring fills and unlocks.
+## Wireless debugging quirks (learned 2026-11-10)
+
+- The toggle turns itself OFF on reboot, and the connect port CHANGES each
+  boot (seen 40781 → 46205 → 35389 on 192.168.50.231). After any reboot the
+  user must re-enable it on the tablet and report the new IP:port — the
+  tablet pings fine but refuses ADB and broadcasts no mDNS until then.
+- Clean up stale entries: `adb disconnect <old-ip:port>`.
+- Same physical tablet can appear twice (direct `IP:port` + mDNS
+  `adb-XXXX._adb-tls-connect._tcp`) — both work, either serial is fine.
+
+## True kiosk provisioning (done 2026-11-10, no wipe needed)
+
+`adb shell dpm set-device-owner` succeeded on the already-provisioned tablet
+because all accounts had been removed first (0 accounts, `dpm list-owners`
+empty). With accounts present it fails — that is the only precondition.
+
+Required ADB state (all persist across reboot except wireless debugging):
+
+```bash
+adb shell dpm set-device-owner cc.nexvision.aac.debug/cc.nexvision.aac.KioskDeviceAdminReceiver
+adb shell cmd package set-home-activity cc.nexvision.aac.debug/cc.nexvision.aac.MainActivity  # needs HOME intent-filter
+adb shell locksettings set-disabled true   # never-lock: no PIN/swipe
+adb shell settings put system screen_off_timeout 2147483647
+adb shell svc power stayon true
+adb shell settings put global stay_on_while_plugged_in 7
+adb shell dumpsys deviceidle whitelist +cc.nexvision.aac.debug
+```
+
+Verify: `dpm list-owners` shows 1 owner; `dumpsys activity activities |
+grep mLockTaskModeState` shows `LOCKED`.
+
+## Code lessons: what the CLIs can no longer do on Android 15
+
+- **`dpm set-locktask-packages` is GONE** (also absent from `cmd device_policy`).
+  The app self-whitelists in `MainActivity.startLockTaskIfAllowed()` when it
+  sees it is device owner: `setLockTaskPackages(admin, [own package])`.
+- **Bars need `setLockTaskFeatures(NONE)`.** Immersive-sticky alone does NOT
+  hide status/nav on 15 (verified via screencap). With device owner,
+  `setLockTaskFeatures(admin, LOCK_TASK_FEATURE_NONE)` (API 28+, guarded)
+  empties lock-task system UI. The old `settings put global policy_control
+  immersive.full=...` trick is ignored on 15 — tested, reverted.
+- **`BOOT_COMPLETED` receiver cannot foreground the app** (background-start
+  block). `BootReceiver` is registered but boot-to-board depends on the HOME
+  setting. After reboot + unlock the board auto-launches; any manual tap
+  into Settings drops lock to NONE.
+- **Re-pin in `onResume`, not `onCreate`.** `singleTask` relaunch (launcher
+  icon tap, Home press) goes `onNewIntent → onResume` without `onCreate`, so
+  lock would stay NONE. Calling `startLockTaskIfAllowed()` in `onResume`
+  makes Home / the AAC Board icon a no-ADB "re-enter kiosk" shortcut —
+  verified: Settings (NONE) → HOME key → board LOCKED.
+- **Device owner cannot be force-stopped.** `am force-stop` returns 0 but the
+  process keeps its PID. Caregiver exit = reboot or remove the owner.
+  (android/README.md documents this.)
+
+## Refreshing the board without reboot
+
+Killing the app is impossible (above) and reboot drops ADB. For web-only
+changes, reload the WebView over its debug socket (enabled in debug builds):
+
+```bash
+PID=$(adb shell pidof cc.nexvision.aac.debug | tr -d '\r')
+adb forward tcp:9222 localabstract:webview_devtools_remote_$PID
+python3 -c "
+import websocket, json
+ws = websocket.create_connection(
+  'ws://localhost:9222/devtools/page/<id-from-http://localhost:9222/json>',
+  suppress_origin=True)   # without this: 403 origin rejection
+ws.send(json.dumps({'id':1,'method':'Page.reload','params':{'ignoreCache':True}}))
+print(ws.recv()); ws.close()"
+```
+
+`Page.reload` without `ignoreCache` serves the hashed-asset cache; with it
+the new build loads and lock stays engaged.
+
+## Bottom bar size (2026-11-10)
+
+`.bb-btn` 52px → 42px, bar padding 10px → 8px, `margin-top` 12px → 10px,
+title font `clamp(1rem,3.5vmin,1.4rem)` → `clamp(0.8rem,2.8vmin,1.15rem)`
+(~111px → ~92px measured on 1280x800 screencap). Bar docked flush:
+`.app-container` padding `12px 12px 0`, bar `border-radius: 16px 16px 0 0`.
+Do NOT shrink buttons further unprompted — 42px is already small for kid
+touch targets.

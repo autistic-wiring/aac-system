@@ -136,6 +136,15 @@ public class MainActivity extends Activity {
                 dpm.setLockTaskPackages(admin, new String[]{getPackageName()});
             } catch (Exception ignored) {
             }
+            // LOCK_TASK_FEATURE_NONE hides notifications, home, recents,
+            // keyguard and global actions inside lock task, so the system
+            // bars have nothing to show. Needs API 28+.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                try {
+                    dpm.setLockTaskFeatures(admin, DevicePolicyManager.LOCK_TASK_FEATURE_NONE);
+                } catch (Exception ignored) {
+                }
+            }
         }
         if (!dpm.isLockTaskPermitted(getPackageName())) return;
         try {

@@ -18,6 +18,33 @@ const BLOCKED_WITH_CTRL = new Set(['r', 'w', 'l', 't', 'n', 'p']);
 // Set by allowUnload() so our own PWA-update reload is not stopped.
 let allowNextUnload = false;
 
+/**
+ * Enter kiosk from a user gesture (e.g. a lock button). Fullscreen and
+ * orientation lock both require a tap — calling this from a button is what
+ * makes them stick where auto-enter is rejected. Also re-acquires the wake
+ * lock so the screen stays on. Idempotent: safe to tap when already locked.
+ */
+export async function requestKiosk() {
+  try {
+    if (!document.fullscreenElement) {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch {
+    // iPadOS has no Fullscreen API; Chrome may still refuse — the hook's
+    // pointerdown retry covers the rest.
+  }
+  try {
+    if (screen.orientation?.lock) await screen.orientation.lock('landscape');
+  } catch {
+    // Unsupported — the shell already pins landscape via the manifest.
+  }
+  try {
+    if ('wakeLock' in navigator) await navigator.wakeLock.request('screen');
+  } catch {
+    // Denied (e.g. low battery) — the App-level re-acquire keeps trying.
+  }
+}
+
 /** Let the next page unload happen. Call before an intentional reload. */
 export function allowUnload() {
   allowNextUnload = true;

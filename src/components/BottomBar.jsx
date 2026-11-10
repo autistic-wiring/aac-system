@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { requestKiosk } from '../utils/kiosk';
 
 // GoTalk-style bottom navigation bar (mirrors the GoTalk NOW app):
 // white-circle prev/next chevrons, yellow-circle home/back/pages buttons,
@@ -66,6 +67,14 @@ const BottomBar = ({ pages, currentId, onHome, onBack, onPrev, onNext, onSelect 
         <div className="bb-title" aria-live="polite">{current?.title || ''}</div>
         <button className="bb-btn bb-yellow" aria-label="Select page" onClick={openSelect}>
           <span aria-hidden="true">❐</span>
+        </button>
+        <button
+          className="bb-btn bb-yellow"
+          aria-label="Lock full screen"
+          title="Lock: full screen, always on, cannot exit. Long-press top-right corner 3s to unlock."
+          onClick={requestKiosk}
+        >
+          <span aria-hidden="true">⛶</span>
         </button>
         <button className="bb-btn bb-white" aria-label="Next page" onClick={onNext}>
           <span aria-hidden="true">›</span>

@@ -150,8 +150,25 @@ grep mLockTaskModeState` shows `LOCKED`.
 
 ## Refreshing the board without reboot
 
-Killing the app is impossible (above) and reboot drops ADB. For web-only
-changes, reload the WebView over its debug socket (enabled in debug builds):
+Killing the app to force a fresh load is IMPOSSIBLE for a device owner —
+verified 2026-11-10, every path refused with the process (and lock) intact:
+`am force-stop` (rc=0, no-op), `am kill`, `am crash`, `pm clear`
+(`SecurityException: CLEAR_APP_USER_DATA` denied), `run-as` cache delete
+(permission denied). This is the kiosk protecting itself — by design.
+
+Remote page reload is ALSO blocked, by our own `beforeunload` guard: direct
+`location.reload()`, `Page.reload` (even `ignoreCache`), and `Page.navigate`
+(`ERR_ABORTED`, no dialog in WebView) all die. The ONLY sanctioned reloader
+is the app's PWA update flow (`__checkForPwaUpdate` → `allowUnload()` →
+reload), which fires on every button/card tap via `pointerdown`.
+
+Consequences:
+- After deploying web changes, tap any card on the tablet and wait ~10s:
+  the board detects the new build and reloads itself with the update.
+- If the SW registration was ever removed (DevTools), the update flow is
+  dead until a fresh load re-registers it — only a reboot fixes that.
+- After reboot: unlock, re-enable wireless debugging (toggle resets, port
+  changes — get the new IP:port from the tablet), reconnect, verify.
 
 ```bash
 PID=$(adb shell pidof cc.nexvision.aac.debug | tr -d '\r')

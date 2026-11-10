@@ -121,15 +121,27 @@ public class MainActivity extends Activity {
 
     /**
      * Lock task is the real thing, but it is only permitted for the device
-     * owner. Silently skip otherwise and stay in immersive mode.
+     * owner. Self-whitelist when we are the owner (the `dpm`/`device_policy`
+     * CLIs no longer expose set-locktask-packages on Android 15), then pin.
+     * Silently skip otherwise and stay in immersive mode.
      */
     private void startLockTaskIfAllowed() {
         DevicePolicyManager dpm = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        if (dpm == null || !dpm.isAdminActive(new ComponentName(this, KioskDeviceAdminReceiver.class))) {
+        ComponentName admin = new ComponentName(this, KioskDeviceAdminReceiver.class);
+        if (dpm == null || !dpm.isAdminActive(admin)) {
             return;
         }
+        if (dpm.isDeviceOwnerApp(getPackageName())) {
+            try {
+                dpm.setLockTaskPackages(admin, new String[]{getPackageName()});
+            } catch (Exception ignored) {
+            }
+        }
         if (!dpm.isLockTaskPermitted(getPackageName())) return;
-        startLockTask();
+        try {
+            startLockTask();
+        } catch (Exception ignored) {
+        }
     }
 
     /**

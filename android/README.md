@@ -44,8 +44,16 @@ device, so do it before the tablet is set up for the user.
 3. Connect over ADB and run:
    ```bash
    adb shell dpm set-device-owner cc.nexvision.aac.debug/cc.nexvision.aac.KioskDeviceAdminReceiver
+   adb shell cmd package set-home-activity cc.nexvision.aac.debug/cc.nexvision.aac.MainActivity
    ```
 4. Confirm with `adb shell dpm list-owners` — it must list the package.
+
+The app whitelists itself for lock task on launch (`setLockTaskPackages`
+when it sees it is the device owner), so no manual lock-task step is
+needed. `set-home-activity` makes Home return to the board and boots
+straight into it; a `BOOT_COMPLETED` receiver restarts it after a reboot.
+Screen-on is held by `FLAG_KEEP_SCREEN_ON` plus `svc power stayon true`
+and a max `screen_off_timeout`, and the package is whitelisted from Doze.
 
 After that, Home, recents, and the status bar are unavailable until the owner
 is removed with `adb shell dpm remove-active-admin --user 0 <component>`.

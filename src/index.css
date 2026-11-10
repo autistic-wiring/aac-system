@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+/* Self-hosted Outfit (variable wght 100-900) so the board works fully
+   offline — no Google Fonts CDN request. public/fonts is copied to dist. */
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);

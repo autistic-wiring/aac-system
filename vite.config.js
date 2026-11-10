@@ -62,7 +62,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,webp}', 'audio/*.wav'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,woff,ttf,webp}', 'audio/*.wav'],
         // Precache only button sounds in use; orphan wavs stay out of the SW install.
         manifestTransforms: [
           (entries) => ({

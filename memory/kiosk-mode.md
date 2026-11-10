@@ -169,6 +169,26 @@ Consequences:
   dead until a fresh load re-registers it — only a reboot fixes that.
 - After reboot: unlock, re-enable wireless debugging (toggle resets, port
   changes — get the new IP:port from the tablet), reconnect, verify.
+- NEVER unregister the SW on the device (`getRegistrations().unregister()`).
+  The app captures its registration once at mount (`regRef`); after an
+  unregister every later update check early-returns and the page can never
+  self-update again — only a reboot (fresh mount) recovers it. Lesson paid
+  for 2026-11-10.
+
+## Offline support (verified 2026-11-10, prod v1.2.78)
+
+- All 39 speakable cards resolve to 34 unique `/audio/*.wav` files, all
+  present in `public/audio/` and all in the SW precache (build-checked
+  against `dist/sw.js`). Folders/empties/hidden items need no sound.
+- All 36 card images exist and ride the same precache (`**/*.{png,webp,…}`).
+- Google Fonts was the one online dependency — replaced with self-hosted
+  variable `Outfit.ttf` in `public/fonts/` + local `@font-face`; `ttf` added
+  to workbox `globPatterns`. Bundle now has zero external URLs.
+- Proven on-device with network fully cut (CDP offline emulation): `/`,
+  `/audio/want.wav`, icon all return 200 from cache.
+- Sound chain offline: preloaded wav → `<audio>` element → device
+  `speechSynthesis` (on-device voices). The `:5050` TTS server is dev-only
+  (`NetworkOnly`) — fetch fails fast offline, falls through to synthesis.
 
 ```bash
 PID=$(adb shell pidof cc.nexvision.aac.debug | tr -d '\r')

@@ -66,11 +66,9 @@ the app. That is the intended degradation for a shared tablet.
 
 The web layer has its own long-press exit gesture (top-right corner, 3
 seconds). That unlocks the browser kiosk only — the shell stays in lock task
-until the app is stopped from ADB. To leave the app entirely:
-
-```bash
-adb shell am force-stop cc.nexvision.aac.debug
-```
+until it is relaunched. Note: as device owner the shell cannot be
+force-stopped (`am force-stop` is ignored); reboot the tablet or remove the
+device owner to leave the app entirely.
 
 ## Screen and orientation
 

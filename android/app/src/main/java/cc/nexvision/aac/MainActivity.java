@@ -98,7 +98,6 @@ public class MainActivity extends Activity {
         setContentView(root);
 
         applyImmersive();
-        startLockTaskIfAllowed();
     }
 
     private boolean isBoardUrl(android.net.Uri uri) {
@@ -190,6 +189,9 @@ public class MainActivity extends Activity {
         super.onResume();
         web.onResume();
         applyImmersive();
+        // Re-pin on every return (launcher icon tap, Home press), not just
+        // first launch, so no ADB is needed to re-enter kiosk.
+        startLockTaskIfAllowed();
     }
 
     @Override

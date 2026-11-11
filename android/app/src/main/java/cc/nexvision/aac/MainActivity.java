@@ -5,10 +5,14 @@ import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebResourceError;
@@ -38,6 +42,17 @@ public class MainActivity extends Activity {
     private WebView web;
     private FrameLayout root;
 
+    // Caregiver exit, top-left corner (top-right belongs to the web layer's
+    // own 3s unlock). Either tap 5x within 3s or slide inward from the
+    // corner. Touches pass through to the page untouched.
+    private static final int EXIT_CORNER_DP = 96;
+    private static final int EXIT_TAPS = 5;
+    private static final long EXIT_WINDOW_MS = 3000;
+    private static final int EXIT_SLIDE_DP = 200;
+    private final java.util.ArrayList<Long> cornerTaps = new java.util.ArrayList<>();
+    private float slideStartX = -1;
+    private float slideStartY = -1;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +77,13 @@ public class MainActivity extends Activity {
         web.setLongClickable(false);
         web.setOnLongClickListener(v -> true);
         web.setHapticFeedbackEnabled(false);
+
+        // Caregiver exit watcher. Returns false so every touch still reaches
+        // the page (a tap here may also hit the sentence strip — harmless).
+        web.setOnTouchListener((v, e) -> {
+            watchExitGesture(e);
+            return false;
+        });
 
         // Debug builds only: lets a dev machine attach DevTools to the WebView
         // over `adb forward localabstract:webview_devtools_remote_<pid>`.
@@ -198,6 +220,95 @@ public class MainActivity extends Activity {
     public void onPause() {
         web.onPause();
         super.onPause();
+    }
+
+    /** Top-left tap-x5 or slide-inward exits kiosk to the real launcher. */
+    private void watchExitGesture(MotionEvent e) {
+        float density = getResources().getDisplayMetrics().density;
+        float corner = EXIT_CORNER_DP * density;
+        switch (e.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                if (e.getX() < corner && e.getY() < corner) {
+                    slideStartX = e.getX();
+                    slideStartY = e.getY();
+                    long now = SystemClock.uptimeMillis();
+                    cornerTaps.add(now);
+                    while (!cornerTaps.isEmpty() && now - cornerTaps.get(0) > EXIT_WINDOW_MS) {
+                        cornerTaps.remove(0);
+                    }
+                    if (cornerTaps.size() >= EXIT_TAPS) {
+                        cornerTaps.clear();
+                        slideStartX = -1;
+                        exitKioskToLauncher();
+                    }
+                } else {
+                    slideStartX = -1;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (slideStartX >= 0) {
+                    float dx = e.getX() - slideStartX;
+                    float dy = e.getY() - slideStartY;
+                    if (Math.hypot(dx, dy) > EXIT_SLIDE_DP * density) {
+                        slideStartX = -1;
+                        cornerTaps.clear();
+                        exitKioskToLauncher();
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                slideStartX = -1;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Caregiver exit: drop the pin and open the real launcher. Launches it
+     * explicitly — a generic HOME intent would resolve back to us (we are the
+     * default home) and re-pin on resume. Tapping the AAC icon re-enters
+     * kiosk. Falls back to Settings if no other launcher is found.
+     */
+    private void exitKioskToLauncher() {
+        try {
+            stopLockTask();
+        } catch (Exception ignored) {
+        }
+        String self = getPackageName();
+        String targetPkg = null;
+        String targetCls = null;
+        try {
+            Intent query = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
+            java.util.List<ResolveInfo> candidates =
+                    getPackageManager().queryIntentActivities(query, 0);
+            // Prefer a real launcher; some OEMs expose game/child modes as
+            // HOME too (e.g. com.blackview.gamemode is NOT home).
+            for (int pass = 0; pass < 2 && targetCls == null; pass++) {
+                for (ResolveInfo ri : candidates) {
+                    String pkg = ri.activityInfo.packageName;
+                    if (self.equals(pkg)) continue;
+                    if (pass == 0 && !pkg.toLowerCase().contains("launcher")) continue;
+                    targetPkg = pkg;
+                    targetCls = ri.activityInfo.name;
+                    break;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        try {
+            Intent i;
+            if (targetCls != null) {
+                i = new Intent(Intent.ACTION_MAIN);
+                i.setClassName(targetPkg, targetCls);
+            } else {
+                i = new Intent(android.provider.Settings.ACTION_SETTINGS);
+            }
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+        } catch (Exception ignored) {
+        }
     }
 
     /** Swallow hardware back. The board handles navigation in-page. */

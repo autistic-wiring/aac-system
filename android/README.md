@@ -64,11 +64,18 @@ the app. That is the intended degradation for a shared tablet.
 
 ## Caregiver exit
 
-The web layer has its own long-press exit gesture (top-right corner, 3
-seconds). That unlocks the browser kiosk only — the shell stays in lock task
-until it is relaunched. Note: as device owner the shell cannot be
-force-stopped (`am force-stop` is ignored); reboot the tablet or remove the
-device owner to leave the app entirely.
+No ADB needed. In the **top-left corner** of the screen, either tap 5 times
+within 3 seconds or slide a finger inward from the corner. The shell drops
+the pin and opens the real launcher (or Settings if none is found). Touches
+pass through to the board, so normal use is unaffected — 5 quick taps in
+that exact corner never happens by accident.
+
+To re-enter kiosk: tap the **AAC Board** icon (or Home) — the shell re-pins
+on resume. The web layer keeps its own long-press exit (top-right, 3s),
+which unlocks the browser kiosk only.
+
+Note: as device owner the shell cannot be force-stopped (`am force-stop`
+is ignored). To remove the owner entirely needs a factory reset.
 
 ## Screen and orientation
 

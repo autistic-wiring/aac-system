@@ -180,6 +180,12 @@ Consequences:
   unregister every later update check early-returns and the page can never
   self-update again — only a reboot (fresh mount) recovers it. Lesson paid
   for 2026-11-10.
+- `settings put global http_proxy` does NOT apply to a running WebView
+  process — the change only takes effect after the app restarts. Symptom of a
+  stale proxy: page skeleton loads (disk cache) while EVERY subresource
+  fetches 0 bytes (`performance` transferSize all zero, `fetch()` rejects) and the
+  root never mounts, with no console error. Diagnose via CDP resource sizes,
+  fix with a reboot, never with more reload attempts. Lesson paid 2026-11-11.
 
 ## Offline support (verified 2026-11-10, prod v1.2.78)
 

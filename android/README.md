@@ -14,15 +14,29 @@ immersive mode otherwise, so it is safe to install on a normal tablet.
 
 ## Build
 
-Requires JDK 17+ and an Android SDK with platform 34.
+Requires JDK 17+ and an Android SDK with platform 34. Build the web board
+first — `syncWebAssets` copies `../../dist` into the APK as the offline
+fallback (skipped if `dist` is missing, and the shell then shows its error text
+instead of a board when the network is dead):
 
 ```bash
+npm run build
 cd android
 ./gradlew assembleDebug            # → app/build/outputs/apk/debug/app-debug.apk
 ./gradlew assembleDebug -PboardUrl=https://aac-testing.nexvision.cc/
 ```
 
 `boardUrl` defaults to prod. It must be HTTPS — `usesCleartextTraffic` is off.
+
+## Offline fallback
+
+The shell loads `boardUrl` first and keeps auto-updating over the network.
+If that load fails (no WiFi, dead server), it serves `file:///android_asset/www`
+bundled at build time instead, with `shouldInterceptRequest` mapping the
+board's absolute `/assets|/audio|/fonts|…` paths onto the bundle (the built
+HTML/JS uses absolute paths that `file://` cannot resolve alone). The bundled
+copy goes stale with web updates but always renders — reliability over
+freshness. Remote is primary whenever the network answers.
 
 ## Install
 

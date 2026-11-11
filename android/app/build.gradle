@@ -41,3 +41,22 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 }
+
+// Offline fallback: bundle the built web board so the tablet works with zero
+// network (restart with no WiFi, dead server). Runs before every build; skips
+// quietly when ../../dist is missing (needs `npm run build` first), in which
+// case the shell falls back to its load-error text. audio-piper/ is dev-only
+// TTS data the board never requests — stays out of the APK.
+tasks.register("syncWebAssets", Copy) {
+    def webDist = file("../../dist")
+    onlyIf { webDist.exists() }
+    // Exact mirror: hashed bundles change names every build, so wipe first
+    // or stale copies bloat the APK forever.
+    doFirst { delete("src/main/assets/www") }
+    from(webDist) {
+        exclude("audio-piper/**")
+    }
+    into("src/main/assets/www")
+    doFirst { println "syncWebAssets: bundling web board into APK assets" }
+}
+tasks.named("preBuild") { dependsOn("syncWebAssets") }

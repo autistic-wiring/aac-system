@@ -26,3 +26,6 @@ __pycache__/
 *.njsproj
 *.sln
 *.sw?
+
+# Generated: web board bundled into the Android APK (gradle syncWebAssets)
+android/app/src/main/assets/

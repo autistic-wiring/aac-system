@@ -125,6 +125,12 @@ adb shell dumpsys deviceidle whitelist +cc.nexvision.aac.debug
 Verify: `dpm list-owners` shows 1 owner; `dumpsys activity activities |
 grep mLockTaskModeState` shows `LOCKED`.
 
+Uninstalling the app wipes the default-HOME setting (but the owner entry
+survived a remove/reinstall 2026-11-10 — always re-check both after any
+reinstall). If HOME lands on `com.blackview.gamemode` instead of the board,
+re-run `set-home-activity` for the AAC component. The corner exit prefers a
+real launcher package (name contains "launcher") for the same reason.
+
 ## Code lessons: what the CLIs can no longer do on Android 15
 
 - **`dpm set-locktask-packages` is GONE** (also absent from `cmd device_policy`).

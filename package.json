@@ -1,7 +1,7 @@
 {
   "name": "aac-remake",
   "private": true,
-  "version": "1.2.83",
+  "version": "1.2.84",
   "type": "module",
   "scripts": {
     "dev": "vite",

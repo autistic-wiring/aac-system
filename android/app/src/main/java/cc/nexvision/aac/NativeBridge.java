@@ -3,6 +3,7 @@ package cc.nexvision.aac;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.webkit.JavascriptInterface;
 
 /**
@@ -36,7 +37,26 @@ public class NativeBridge {
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         if (status == null) return false;
         int value = status.getIntExtra("status", -1);
-        return value == android.os.BatteryManager.BATTERY_STATUS_CHARGING
-                || value == android.os.BatteryManager.BATTERY_STATUS_FULL;
+        return value == BatteryManager.BATTERY_STATUS_CHARGING
+                || value == BatteryManager.BATTERY_STATUS_FULL;
+    }
+
+    /**
+     * Battery percent and charging state as "level,charging", e.g. "87,true".
+     * Empty string when unknown. Lets the board show a battery gauge that
+     * works fully offline (WebView has no Battery Status API at all).
+     */
+    @JavascriptInterface
+    public String getBattery() {
+        Intent status = context.registerReceiver(null,
+                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (status == null) return "";
+        int level = status.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = status.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+        if (level < 0) return "";
+        int value = status.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean charging = value == BatteryManager.BATTERY_STATUS_CHARGING
+                || value == BatteryManager.BATTERY_STATUS_FULL;
+        return Math.round(level * 100f / scale) + "," + charging;
     }
 }

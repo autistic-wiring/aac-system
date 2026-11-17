@@ -352,6 +352,18 @@
   color: #fff;
 }
 
+.bb-batt {
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.bb-batt small {
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
 .bb-title {
   flex: 1;
   background: #fff;

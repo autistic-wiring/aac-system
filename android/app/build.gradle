@@ -2,6 +2,13 @@ plugins {
     id "com.android.application"
 }
 
+dependencies {
+    // Serves the bundled offline board over https://appassets… (official
+    // file:// replacement: correct MIME/fetch/SW semantics, no file-access
+    // holes). Small, no transitive UI deps.
+    implementation("androidx.webkit:webkit:1.10.0")
+}
+
 android {
     namespace "cc.nexvision.aac"
     compileSdk 34
@@ -52,11 +59,15 @@ tasks.register("syncWebAssets", Copy) {
     onlyIf { webDist.exists() }
     // Exact mirror: hashed bundles change names every build, so wipe first
     // or stale copies bloat the APK forever.
-    doFirst { delete("src/main/assets/www") }
+    doFirst {
+        delete("src/main/assets")
+        println "syncWebAssets: bundling web board into APK assets"
+    }
+    // Syncs the built web board into src/main/assets (served at the local
+    // origin root, so dist/index.html becomes https://…/index.html).
     from(webDist) {
         exclude("audio-piper/**")
     }
-    into("src/main/assets/www")
-    doFirst { println "syncWebAssets: bundling web board into APK assets" }
+    into("src/main/assets")
 }
 tasks.named("preBuild") { dependsOn("syncWebAssets") }

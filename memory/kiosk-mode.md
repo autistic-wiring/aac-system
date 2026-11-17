@@ -1,6 +1,6 @@
 ---
-date_modified: 2026-11-10
-tags: [aac, kiosk, android, webview, deploy, testing, power, device-owner, locktask, adb]
+date_modified: 2026-11-12
+tags: [aac, kiosk, android, webview, deploy, testing, power, locktask, adb, offline, webviewassetloader]
 ---
 
 # AAC kiosk mode
@@ -218,10 +218,45 @@ print(ws.recv()); ws.close()"
 the new build loads and lock stays engaged.
 
 ## Bottom bar size (2026-11-10)
-
 `.bb-btn` 52px → 42px, bar padding 10px → 8px, `margin-top` 12px → 10px,
 title font `clamp(1rem,3.5vmin,1.4rem)` → `clamp(0.8rem,2.8vmin,1.15rem)`
 (~111px → ~92px measured on 1280x800 screencap). Bar docked flush:
 `.app-container` padding `12px 12px 0`, bar `border-radius: 16px 16px 0 0`.
 Do NOT shrink buttons further unprompted — 42px is already small for kid
 touch targets.
+
+## Bundled offline board fallback (2026-11-11, working tree)
+
+The shell loads `boardUrl` first and keeps auto-updating over the network.
+If that load fails (no WiFi, dead server), `onReceivedError` serves a copy
+bundled in the APK instead, synced by the `syncWebAssets` gradle task
+(`npm run build` first — skipped quietly when `../../dist` is missing, and
+the shell then shows its load-error text). `triedLocalFallback` guards so a
+broken bundle shows the error text instead of looping back to the network.
+
+Two implementations, one lesson: the first cut (committed 2026-11-11) used
+`file:///android_asset/www` + a hand-rolled `shouldInterceptRequest` mapping
+absolute `/assets|/audio|/fonts|…` paths onto the bundle with a manual mime
+table and `setAllowFileAccess(true)`. The working tree replaces it with
+`androidx.webkit:webkit:1.10.0` `WebViewAssetLoader` serving APK assets at
+`https://appassets.androidxplatform.org` — the official `file://`
+replacement, so absolute paths, `fetch()` and the service worker all behave,
+the mime table is deleted, and file access is back to `false`. Assets moved
+from `src/main/assets/www/` to the assets root (`dist/index.html` becomes
+`https://…/index.html`); `shouldOverrideUrlLoading` allows the local domain,
+everything else still gated by `isBoardUrl`. Tradeoff is permanent: the
+bundled copy goes stale with web updates but always renders — reliability
+over freshness, remote primary whenever the network answers.
+
+## Battery gauge in the bottom bar (2026-11-11, working tree)
+
+`NativeBridge.getBattery()` returns `"level,charging"` (e.g. `"87,true"`,
+from `EXTRA_LEVEL/SCALE` + `EXTRA_STATUS`; empty when unknown). The lock
+button in `BottomBar.jsx` shows the percent (`bb-yellow` while charging —
+same affordance as the old lock color); tap keeps its old job (enter kiosk).
+`src/utils/battery.js` `useBattery()` prefers the bridge (poll 30s +
+re-poll on visible — fully offline, plain WebView has no Battery Status API)
+and falls back to `navigator.getBattery()` events in a normal browser.
+No bridge at all (desktop browser) shows an inline SVG padlock — the old ⛶
+glyph rendered as a tofu box on-device (fixed 2026-11-11).
+See [[component-tree]] for the `BottomBar` wiring.

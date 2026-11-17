@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { requestKiosk } from '../utils/kiosk';
+import { useBattery } from '../utils/battery';
 
 // GoTalk-style bottom navigation bar (mirrors the GoTalk NOW app):
 // white-circle prev/next chevrons, yellow-circle home/back/pages buttons,
@@ -9,6 +10,9 @@ const BottomBar = ({ pages, currentId, onHome, onBack, onPrev, onNext, onSelect 
   const [selectOpen, setSelectOpen] = useState(false);
   const [pending, setPending] = useState(currentId);
   const current = pages.find((p) => p.id === currentId);
+  // Battery gauge in place of the old lock glyph. Tap keeps the old job:
+  // enter kiosk fullscreen. No bridge (plain browser) shows the padlock.
+  const batt = useBattery();
 
   const openSelect = () => {
     setPending(currentId);
@@ -69,15 +73,23 @@ const BottomBar = ({ pages, currentId, onHome, onBack, onPrev, onNext, onSelect 
           <span aria-hidden="true">❐</span>
         </button>
         <button
-          className="bb-btn bb-yellow"
-          aria-label="Lock full screen"
-          title="Lock: full screen, always on, cannot exit. Long-press top-right corner 3s to unlock."
+          className={`bb-btn ${batt?.charging ? 'bb-yellow' : 'bb-white'}`}
+          aria-label={batt ? `Battery ${batt.level} percent${batt.charging ? ', charging' : ''}. Tap to lock full screen.` : 'Lock full screen'}
+          title={batt ? `Battery ${batt.level}%${batt.charging ? ' ⚡' : ''} — tap to lock full screen` : 'Lock: full screen, always on, cannot exit. Long-press top-right corner 3s to unlock.'}
           onClick={requestKiosk}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="4" y="10" width="16" height="10" rx="2" fill="currentColor" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="2.4" />
-          </svg>
+          {batt ? (
+            <span className="bb-batt" aria-hidden="true">
+              {batt.level}
+              <small>%</small>
+              {batt.charging ? '⚡' : ''}
+            </span>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="10" rx="2" fill="currentColor" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="2.4" />
+            </svg>
+          )}
         </button>
         <button className="bb-btn bb-white" aria-label="Next page" onClick={onNext}>
           <span aria-hidden="true">›</span>

@@ -1,7 +1,68 @@
 {
-  "/home/herbert/nodejs/aac-remake/memory/speech-pipeline.md": 1784215666.594964,
-  "/home/herbert/nodejs/aac-remake/memory/vocabulary-system.md": 1784215672.4680636,
-  "/home/herbert/nodejs/aac-remake/memory/project-overview.md": 1784215658.770831,
-  "/home/herbert/nodejs/aac-remake/memory/component-tree.md": 1784215680.0011914,
-  "/home/herbert/nodejs/aac-remake/memory/deployment.md": 1784215686.9003086
+  "speech-pipeline.md": {
+    "mtime": 1794061587.2775679,
+    "seen": 1794061771.4826007,
+    "ast_hash": "5b7d9477fa6b87c9c4e80f9f9548e89f",
+    "semantic_hash": "5b7d9477fa6b87c9c4e80f9f9548e89f"
+  },
+  "vocabulary-system.md": {
+    "mtime": 1794061582.2292037,
+    "seen": 1794061771.4826086,
+    "ast_hash": "a9ffc4a806854cc99b0c9124104d2c69",
+    "semantic_hash": "a9ffc4a806854cc99b0c9124104d2c69"
+  },
+  "project-overview.md": {
+    "mtime": 1789865599.8393064,
+    "seen": 1794061771.4825983,
+    "ast_hash": "b3d8116596574e533040d8edbdb5e5aa",
+    "semantic_hash": "b3d8116596574e533040d8edbdb5e5aa"
+  },
+  "component-tree.md": {
+    "mtime": 1794445630.7109835,
+    "seen": 1794445723.0983362,
+    "ast_hash": "5704d29daca97acb7b2ffe31021eb1d0",
+    "semantic_hash": "5704d29daca97acb7b2ffe31021eb1d0"
+  },
+  "deployment.md": {
+    "mtime": 1790880383.501959,
+    "seen": 1794061771.48259,
+    "ast_hash": "a4d9b2588bb0dcc5f93c63f5e9f845ac",
+    "semantic_hash": "a4d9b2588bb0dcc5f93c63f5e9f845ac"
+  },
+  "MEMORY.md": {
+    "mtime": 1794051922.433384,
+    "seen": 1794061771.4825726,
+    "ast_hash": "34414bb53144ad2efc6a195cb649f3a4",
+    "semantic_hash": "34414bb53144ad2efc6a195cb649f3a4"
+  },
+  "animating-buttons.md": {
+    "mtime": 1786096742.353017,
+    "seen": 1794061771.4825816,
+    "ast_hash": "81320ad55ebc1edb6e9093da34fbaa77",
+    "semantic_hash": "81320ad55ebc1edb6e9093da34fbaa77"
+  },
+  "gotalk-copy-guide.md": {
+    "mtime": 1789919202.0722294,
+    "seen": 1794061771.482593,
+    "ast_hash": "88340729594350fb373407d7d52574b9",
+    "semantic_hash": "88340729594350fb373407d7d52574b9"
+  },
+  "kiosk-mode.md": {
+    "mtime": 1794445605.4037135,
+    "seen": 1794445723.0983362,
+    "ast_hash": "73c29c2d23c0616a149b215009bb705b",
+    "semantic_hash": "73c29c2d23c0616a149b215009bb705b"
+  },
+  "tts-voice-system.md": {
+    "mtime": 1794051922.440384,
+    "seen": 1794061771.4826035,
+    "ast_hash": "343d029ccbd978192c2e4925c0188723",
+    "semantic_hash": "343d029ccbd978192c2e4925c0188723"
+  },
+  "veo-button-animation.md": {
+    "mtime": 1786096742.354017,
+    "seen": 1794061771.482606,
+    "ast_hash": "dedc43a10d0752dfacfab98b11979df2",
+    "semantic_hash": "dedc43a10d0752dfacfab98b11979df2"
+  }
 }

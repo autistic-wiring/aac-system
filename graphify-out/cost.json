@@ -5,6 +5,19 @@
       "input_tokens": 4800,
       "output_tokens": 5400,
       "files": 5
+    },
+    {
+      "date": "2026-11-07T14:29:31.486554+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 11
+    },
+    {
+      "date": "2026-11-12T01:08:43.105886+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 2,
+      "note": "host-agent inline extraction (no-key flow), 5 nodes + 6 edges"
     }
   ],
   "total_input_tokens": 4800,

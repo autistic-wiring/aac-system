@@ -1,6 +1,6 @@
 ---
 title: "AAC Speech Pipeline"
-date_modified: 2026-07-16
+date_modified: 2026-11-07
 tags: [speech, tts, audio, sherpa-onnx, offline]
 ---
 
@@ -30,6 +30,15 @@ TTS server at `http://127.0.0.1:5050/` uses `NetworkOnly` Workbox strategy — n
 ## Custom Pronunciation
 
 Vocabulary items can have a `pronounce` field to override TTS text for words the engine mispronounces.
+Live example: `washroom` (`word: 'Washroom'`) carries `audioId: 'peepee'` + `pronounce: 'pee pee'`,
+so the card label reads Washroom while all three fallback layers say "pee pee".
+
+## Pre-generated WAV iteration (peepee.wav lesson, 2026-11-07)
+
+- Rebaking a word-specific wav (`public/audio/peepee.wav`) beats fighting the TTS engine.
+- First bake had a trailing pop: fixed by cutting 0.75s off the tail + fade-out.
+- Second pass was a cleaner take with natural decay and trimmed tail — prefer re-recording
+  a clean take over patching artifacts when the tail sounds processed.
 
 ## Autoplay Policy & Gesture Unlock
 

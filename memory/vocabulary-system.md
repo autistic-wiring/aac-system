@@ -1,6 +1,6 @@
 ---
 title: "AAC Vocabulary System"
-date_modified: 2026-11-06
+date_modified: 2026-11-07
 tags: [vocabulary, fitzgerald-key, color-coding, motor-planning, board-layout]
 ---
 
@@ -37,16 +37,16 @@ Items with `hidden: true` keep their grid position but are invisible. Allows voc
 
 Initial state: 8 visible core words (Go, Stop, Want, Need, Eat, Drink, More, Yes, No) + Food folder.
 
-## Current board layout (2026-11-06)
+## Current board layout (2026-11-07)
 
 First page is a 3×3 grid: eat / drink / more / go / help / all-done / blank / play / blank.
 `type: 'empty'` slots render as blank space (no button) — see `src/components/Board.jsx`.
-Three first-page buttons navigate via `goto` to sub-pages:
+All sub-pages are fixed 3×3 grids. Three first-page buttons navigate via `goto` to sub-pages:
 
 | Button | Target page | Contents |
 |--------|-------------|----------|
 | Eat, Drink | `eat_drink` (Eat & Drink) | strawberry, orange, apple, cereal, cracker, water + blanks (row 2 = cereal, cracker) |
-| Go | `place` (Place) | class, gym, outdoor, playground, home (`audioId: home`) + blanks |
+| Go | `place` (Place) | class, gym, outdoor, playground, home (`audioId: home`), washroom (row 3 col 1, speaks "pee pee" via `audioId: peepee` + `pronounce: 'pee pee'`) + blanks |
 | Play | `play_page` (Play) | blocks, cars, spin (`audioId: spinning`, image `spinning.png`), carry, run, cap + blanks |
 
 `folders[]` now lists `eat_drink`, `place`, `play_page` first, then the legacy

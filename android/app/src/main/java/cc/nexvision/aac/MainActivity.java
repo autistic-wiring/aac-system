@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,12 +47,11 @@ public class MainActivity extends Activity {
     // Set once the bundled fallback has been tried, so a broken bundle
     // shows the error text instead of looping back to the network.
     private boolean triedLocalFallback = false;
-    private static final String LOCAL_URL = "file:///android_asset/www/index.html";
-    // Scheme of the page currently shown. While on file:// (offline mode) every
-    // absolute-path subrequest (/assets/…, /audio/…, /fonts/…) is served from the
-    // bundle — the built HTML/JS uses absolute paths that file:// cannot
-    // resolve on its own.
-    private String pageScheme = "https";
+    // Offline board, served from APK assets over a local https origin
+    // (WebViewAssetLoader — file:// breaks absolute paths, fetch and SW).
+    private static final String LOCAL_DOMAIN = "appassets.androidxplatform.org";
+    private static final String LOCAL_URL = "https://" + LOCAL_DOMAIN + "/index.html";
+    private androidx.webkit.WebViewAssetLoader assetLoader;
 
     // Caregiver exit, top-left corner (top-right belongs to the web layer's
     // own 3s unlock). Either tap 5x within 3s or slide inward from the
@@ -81,11 +79,7 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        // File access stays as tight as possible: the bundled offline
-        // fallback (assets/www) needs same-directory file loads. Universal
-        // access stays OFF — the local board never touches the network.
-        s.setAllowFileAccess(true);
-        s.setAllowFileAccessFromFileURLs(true);
+        s.setAllowFileAccess(false);
         s.setSupportZoom(false);
         s.setBuiltInZoomControls(false);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -111,39 +105,31 @@ public class MainActivity extends Activity {
 
         web.addJavascriptInterface(new NativeBridge(this), "AACNative");
 
-        web.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView v, String url, Bitmap favicon) {
-                super.onPageStarted(v, url, favicon);
-                pageScheme = android.net.Uri.parse(url).getScheme();
-            }
+        // Offline board: APK assets served over a local https origin, so
+        // absolute paths, fetch() and service workers all behave.
+        assetLoader = new androidx.webkit.WebViewAssetLoader.Builder()
+                .setDomain(LOCAL_DOMAIN)
+                .addPathHandler("/", new androidx.webkit.WebViewAssetLoader.AssetsPathHandler(
+                        this))
+                .build();
 
+        web.setWebViewClient(new WebViewClient() {
             @Override
             public android.webkit.WebResourceResponse shouldInterceptRequest(
                     WebView v, WebResourceRequest req) {
-                // Offline mode: serve absolute-path requests from the bundle.
-                if ("file".equals(pageScheme)) {
-                    String path = req.getUrl().getPath();
-                    if (path != null && !path.endsWith("/")) {
-                        try {
-                            java.io.InputStream is = v.getContext().getAssets()
-                                    .open("www" + path);
-                            return new android.webkit.WebResourceResponse(
-                                    mimeFor(path), null, 200, "OK", null, is);
-                        } catch (Exception ignored) {
-                            // Not bundled — let WebView try (and fail) normally.
-                        }
-                    }
-                }
-                return null;
+                // Local origin only; everything else loads normally. The
+                // loader returns null for foreign URLs by itself.
+                return assetLoader.shouldInterceptRequest(req.getUrl());
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest req) {
-                // The bundled offline fallback lives on file:// — always allow.
-                // The board never navigates otherwise. Anything else would be an
-                // exit attempt, so keep it in the shell instead of the browser.
-                if ("file".equals(req.getUrl().getScheme())) return false;
+                // The bundled offline board lives on the local origin — always
+                // allow. The board never navigates otherwise. Anything else
+                // would be an exit attempt, so keep it in the shell instead
+                // of the browser.
+                String host = req.getUrl().getHost();
+                if (LOCAL_DOMAIN.equals(host)) return false;
                 return !isBoardUrl(req.getUrl());
             }
 
@@ -182,27 +168,11 @@ public class MainActivity extends Activity {
     /** True when a web build was bundled into the APK (see syncWebAssets). */
     private boolean hasBundledBoard() {
         try {
-            getAssets().open("www/index.html").close();
+            getAssets().open("index.html").close();
             return true;
         } catch (Exception ignored) {
             return false;
         }
-    }
-
-    /** Minimal mime map for the bundled board's subresources. */
-    private static String mimeFor(String path) {
-        if (path.endsWith(".html")) return "text/html";
-        if (path.endsWith(".js")) return "text/javascript";
-        if (path.endsWith(".css")) return "text/css";
-        if (path.endsWith(".json") || path.endsWith(".webmanifest")) return "application/json";
-        if (path.endsWith(".svg")) return "image/svg+xml";
-        if (path.endsWith(".png")) return "image/png";
-        if (path.endsWith(".webp")) return "image/webp";
-        if (path.endsWith(".wav")) return "audio/wav";
-        if (path.endsWith(".ttf")) return "font/ttf";
-        if (path.endsWith(".woff2")) return "font/woff2";
-        if (path.endsWith(".ico")) return "image/x-icon";
-        return "application/octet-stream";
     }
 
     private void showLoadError() {

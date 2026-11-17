@@ -199,6 +199,18 @@ function App() {
     };
   }, [showSplash, charging]);
 
+  // Auto-clear the Express bar after 30 min with no change to its contents.
+  // Any change (a new word, rollback, restore) restarts the clock. Stash the
+  // message for one-shot restore, matching the Clear button.
+  useEffect(() => {
+    if (expressItems.length === 0) return undefined;
+    const timer = setTimeout(() => {
+      setLastMessage(expressItems);
+      setExpressItems([]);
+    }, 30 * 60 * 1000);
+    return () => clearTimeout(timer);
+  }, [expressItems]);
+
   // GoTalk-style page navigation: home is the Core words page, the rest
   // follow the folder order. Prev/next cycle; back returns to the last page.
   const prevPage = useRef('home');
